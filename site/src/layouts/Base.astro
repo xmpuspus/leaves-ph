@@ -1,0 +1,61 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  pathname?: string;
+  image?: string;
+}
+
+const SITE_URL = "https://leaves.ph";
+const DEFAULT_IMAGE = "/og-preview.png";
+
+const {
+  title,
+  description = "Fresh 2026 Metro Manila tree-cover validation against Sentinel-2, Hansen Global Forest Change, ESA WorldCover, Dynamic World, and Meta Canopy Height. Per-LGU canopy curves 2016 to 2026 for the 17 NCR LGUs.",
+  pathname = Astro.url.pathname,
+  image = DEFAULT_IMAGE,
+} = Astro.props;
+
+const canonical = `${SITE_URL}${pathname}`;
+const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#2d5a3d" />
+
+    <meta property="og:site_name" content="Leaves.PH" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2016 to 2026" />
+    <meta property="og:locale" content="en_PH" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2016 to 2026" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header pathname={pathname} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

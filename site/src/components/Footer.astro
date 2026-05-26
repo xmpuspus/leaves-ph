@@ -1,0 +1,41 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-ink-300/30 bg-paper-alt mt-12">
+  <div class="max-w-6xl mx-auto px-6 py-8 text-sm text-ink-500 grid gap-4 md:grid-cols-4">
+    <div>
+      <p class="text-ink-700 font-medium">Leaves.PH</p>
+      <p>
+        Open-source tree-cover validation for Metro Manila. v1.0 covers the 17 NCR LGUs (16 cities + Pateros). Code MIT, data CC-BY-4.0. Not affiliated with DENR, Global Forest Watch, or any LGU.
+      </p>
+    </div>
+    <div>
+      <p class="text-ink-700 font-medium">What this isn't</p>
+      <p>
+        A primary forest survey. A per-tree census. Legal evidence of unpermitted cutting. We stack canonical public canopy datasets (Hansen, ESA WorldCover, Dynamic World, Meta) and publish a reconciled 2026 per-LGU measurement. Specific allegations require independent investigation.
+      </p>
+    </div>
+    <div>
+      <p class="text-ink-700 font-medium">Found a wrong number?</p>
+      <p>
+        Open an LGU correction on <a href="https://github.com/xmpuspus/leaves-ph/issues" class="no-underline text-ink-700 hover:text-ink-900">GitHub</a> with the LGU name, year, your alternative, and a citable source. Per-barangay corrections welcome for v1.1 prep.
+      </p>
+    </div>
+    <div>
+      <p class="text-ink-700 font-medium">Privacy &amp; takedown</p>
+      <p>
+        <a href="/privacy" class="no-underline text-ink-700 hover:text-ink-900">Privacy &amp; responsible use</a> &middot;
+        <a href="/faq" class="no-underline text-ink-700 hover:text-ink-900">FAQ</a> &middot;
+        <a href="https://github.com/xmpuspus/leaves-ph/security/advisories/new" class="no-underline text-ink-700 hover:text-ink-900">request takedown</a>. DPO: xpuspus@gmail.com.
+      </p>
+    </div>
+    <div class="md:col-span-4 text-xs text-ink-500 pt-4 border-t border-ink-300/20 leading-relaxed">
+      <p class="mb-1">
+        Imagery contains modified Copernicus Sentinel data 2016-2026 processed by ESA. Tree-cover-loss layer: Hansen et al. 2013 via Global Forest Watch (UMD GLAD). Land cover: ESA WorldCover v200 (CC-BY-4.0) and Google Dynamic World v1. Canopy height: Meta AI / Land &amp; Carbon Lab Global Canopy Height v2 (CC-BY-4.0). Administrative boundaries: OpenStreetMap contributors (ODbL) and Philippine Statistics Authority. All inputs are public-record.
+      </p>
+      <p>
+        &copy; {year} Leaves.PH. Cite as: Leaves.PH (YYYY-Q-N), https://github.com/xmpuspus/leaves-ph.
+      </p>
+    </div>
+  </div>
+</footer>

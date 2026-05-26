@@ -1,0 +1,14 @@
+{
+  "asset": "UMD/hansen/global_forest_change_2025_v1_13",
+  "bands": [
+    "treecover2000",
+    "lossyear",
+    "gain"
+  ],
+  "bbox": [
+    120.9,
+    14.4,
+    121.15,
+    14.8
+  ]
+}

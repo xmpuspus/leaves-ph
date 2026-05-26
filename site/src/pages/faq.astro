@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Leaves.PH · FAQ" pathname="/faq">
+  <article class="max-w-prose mx-auto px-6 pt-12 pb-16 text-ink-700 leading-relaxed">
+    <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-3 font-mono">FAQ</p>
+    <h1 class="text-3xl text-ink-900 mb-8 font-semibold tracking-tight">Frequently asked questions.</h1>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Why do the four 2024+ figures disagree?</h2>
+    <p class="mb-4 text-sm">Different definitions, different sensors, different vintages. DENR FMB's "open forest" sub-category is not the same thing as Hansen's "tree cover" pixel classification, which is not the same thing as ESA WorldCover's class-10 trees. Leaves.PH stacks all four and publishes the per-LGU number our own pipeline computes from the canonical inputs. The four prior figures still get their own row in the BENCHMARKS table so the disagreement is visible, not hidden.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Is the 6 percent DENR figure wrong?</h2>
+    <p class="mb-4 text-sm">It is not in any public DENR 2024+ document we have been able to locate (as of 2026-05-26). It is repeated in news coverage and in EJN's October 2024 piece. We do not claim it is wrong: we claim it is not reproducible. Our 2026 measurement is reproducible. If DENR-NCR publishes the underlying inventory, we will update the reconciliation row.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Does this prove the SALEX expressway clearing was illegal?</h2>
+    <p class="mb-4 text-sm">No. The 225 trees felled along Quirino Avenue in May 2026 had an Environmental Compliance Certificate; whether the ECC's conditions were met is a separate question and not one Leaves.PH answers. We will publish a before/after canopy strip of the SALEX corridor when the 2026 Sentinel-2 composite catches up; that is descriptive, not legal evidence.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Why per-LGU and not per-barangay?</h2>
+    <p class="mb-4 text-sm">Per-LGU (17 polygons) is the v1.0 scope. Per-barangay (142 polygons in NCR) is the v1.1 target. The OSM barangay-level admin boundaries have name-reconciliation issues we have not yet handled cleanly; the v1.1 PR will include the canonical PSA-to-OSM name mapping.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Why 30 m resolution and not 10 m?</h2>
+    <p class="mb-4 text-sm">GEE's synchronous URL export limit is 50 MB. At 10 m native, a 4-band NCR Sentinel-2 composite is ~190 MB. At 30 m it fits inside the limit. The choice trades off some urban-tree detail for build simplicity (no chunked exports + mosaic step). v1.1 may move to 10 m chunked.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">What is the deal with the La Mesa watershed?</h2>
+    <p class="mb-4 text-sm">It is the NCR canopy story most people miss. Estoque et al. 2018 (Forest Ecology and Management vol. 430) documents a net forest gain of 557 hectares in La Mesa from 2002 to 2016 thanks to MWSI / Bantay Kalikasan reforestation. The decline narrative for Metro Manila is real but not monotone: Quezon City and Marikina hold the NE green zone and have been climbing while Manila and Caloocan continue to lose canopy.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">Can I cite Leaves.PH in a paper?</h2>
+    <p class="mb-4 text-sm">Yes. See <a href="https://github.com/xmpuspus/leaves-ph/blob/main/CITATION.cff" class="no-underline text-accent-steel">CITATION.cff</a>. A versioned Zenodo DOI is minted at every release tag.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">How do I report a wrong number?</h2>
+    <p class="mb-4 text-sm">Open an issue at <a href="https://github.com/xmpuspus/leaves-ph/issues/new?template=lgu_correction.md" class="no-underline text-accent-steel">github.com/xmpuspus/leaves-ph</a> using the LGU correction template. We need the LGU name, the year, your alternative value, and a citable source. Per-barangay corrections are welcome as v1.1 prep work.</p>
+
+    <h2 class="text-lg text-ink-900 mt-8 mb-2">What if I find what looks like a private residence in the data?</h2>
+    <p class="mb-4 text-sm">v1.0 publishes only per-LGU aggregates (17 polygons, no per-building geometry, no household-level inference). Vegetation is not personal data under RA 10173 and we go an extra mile to keep granularity well above the household scale. If you still spot something concerning, file a private security advisory: <a href="https://github.com/xmpuspus/leaves-ph/security/advisories/new" class="no-underline text-accent-steel">github.com/xmpuspus/leaves-ph/security</a>. Acknowledged within 5 working days.</p>
+  </article>
+</Base>

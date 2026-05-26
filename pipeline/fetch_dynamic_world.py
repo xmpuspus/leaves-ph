@@ -1,8 +1,10 @@
 """Fetch Dynamic World v1 annual median 'trees' probability per year 2016..2026.
 
 For each year, compute median of the `trees` band (class 1) across all
-Sentinel-2-derived classifications. The output is a single-band float raster
-at 10 m where pixel = median P(trees) over the year.
+Sentinel-2-derived classifications. Output: single-band float raster at
+**30 m** (downsampled from Dynamic World's native 10 m to match Hansen's
+30 m grid and share the GEE 50 MB sync-URL limit with Sentinel-2; rationale
+in fetch_sentinel2_yearly.py).
 
 Idempotent.
 """
@@ -64,13 +66,14 @@ def main() -> int:
         geemap.ee_export_image(
             composite,
             filename=str(out_path),
-            scale=10,
+            scale=30,
             region=geom,
             file_per_band=False,
         )
 
         manifest[str(year)] = {
             "n_source_images": n,
+            "scale_m": 30,
             "bbox": list(NCR_BBOX),
             "start": start,
             "end": end,

@@ -1,0 +1,64 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Leaves.PH · Metro Manila canopy 2016 to 2026" pathname="/">
+  <section class="max-w-5xl mx-auto px-6 pt-14 pb-8">
+    <div class="grid md:grid-cols-[1.4fr_1fr] gap-10 items-end">
+      <div>
+        <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-4 font-mono">Leaves.PH &middot; 17 LGUs, 11 years, 5 canonical sources</p>
+        <h1 class="text-4xl md:text-5xl leading-[1.05] mb-5 text-ink-900 font-semibold tracking-tight">
+          What is actually happening to Metro Manila's tree cover?
+        </h1>
+        <p class="text-lg text-ink-700 leading-relaxed mb-2">
+          DENR says 6 percent. Global Forest Watch says 4 percent. Earth Journalism reports 2,071 hectares of "open forest" in 2020. ScienceKonek published a 2024 map that nobody can find. We measured all of NCR from Sentinel-2 in 2026 and reconciled the four numbers, per LGU, per year.
+        </p>
+        <p class="text-sm text-ink-500 leading-relaxed">
+          Free, open source, reproducible. Sentinel-2 + Hansen GFC v1.13 + ESA WorldCover + Dynamic World + Meta Canopy Height v2 stacked over a per-LGU disjoint holdout. <a href="/methodology" class="no-underline text-accent-steel">How we did it &rarr;</a>
+        </p>
+      </div>
+      <aside class="border-l-2 border-accent-forest pl-5 text-sm text-ink-700 leading-relaxed">
+        <p class="mb-2 font-mono text-xs text-ink-500 uppercase tracking-wider">what's inside</p>
+        <ul class="space-y-1.5 text-sm">
+          <li>Per-LGU canopy curve 2016 to 2026</li>
+          <li>Reconciliation against the four public 2024+ figures</li>
+          <li>SALEX corridor before/after (225 trees, Quirino Ave)</li>
+          <li>La Mesa watershed regrowth, 2002 to 2026</li>
+          <li>Per-LGU CSV + GeoJSON downloads, CC-BY-4.0</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="max-w-prose mx-auto px-6 py-12 mt-8 border-t border-ink-300/30">
+    <p class="text-xs uppercase tracking-wider text-ink-500 font-mono mb-3">why this exists</p>
+    <h2 class="text-2xl mb-4 leading-tight">Four numbers disagree by half. None of them is reproducible.</h2>
+    <p class="text-base text-ink-700 leading-relaxed mb-4">
+      The 6 percent / 3,565 hectare figure cited everywhere does not appear in any public 2024+ DENR document. GFW's dashboard puts Metro Manila at 4.0 percent. The Earth Journalism Network October 2024 piece reports "open forest" of 2,071 hectares in 2020, a different definition. ScienceKonek's 2024 map is referenced by name in news coverage but the underlying raster, methodology, and reproducibility artifacts are not findable.
+    </p>
+    <p class="text-base text-ink-700 leading-relaxed mb-4">
+      A fifth measurement, taken fresh from canonical satellite sources in 2026, with per-LGU granularity and a hash-verified pipeline, is the cleanest way to find out which of those four is closest to reality. It is also the cleanest way to track what the SALEX expressway clearing in May 2026 is going to do to Quirino Avenue's canopy strip.
+    </p>
+    <p class="text-base text-ink-700 leading-relaxed">
+      The pipeline is committed end to end. Run <code>make fetch &amp;&amp; make compute &amp;&amp; make verify</code> from a fresh clone and you should reproduce every number on this site bit-exact. <a href="/methodology" class="no-underline text-accent-steel">Read the methodology &rarr;</a>
+    </p>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 pb-12 grid gap-px bg-ink-300/40 md:grid-cols-2 border border-ink-300/40">
+    <a href="/map" class="bg-paper p-6 md:p-8 no-underline group hover:bg-white transition-colors">
+      <p class="text-xs uppercase tracking-wider text-ink-500 font-mono mb-2">interactive choropleth</p>
+      <h2 class="text-xl mb-2 text-ink-900">The map</h2>
+      <p class="text-sm text-ink-500 mb-4 leading-relaxed">
+        Per-LGU canopy percent over 11 years with a year slider. Click an LGU to see its 2016 to 2026 curve and how it compares to the four public 2024+ figures.
+      </p>
+      <span class="text-sm font-medium text-accent-forest group-hover:text-ink-900">Open the map &rarr;</span>
+    </a>
+    <a href="/methodology" class="bg-paper p-6 md:p-8 no-underline group hover:bg-white transition-colors">
+      <p class="text-xs uppercase tracking-wider text-ink-500 font-mono mb-2">how it works</p>
+      <h2 class="text-xl mb-2 text-ink-900">Methodology</h2>
+      <p class="text-sm text-ink-500 mb-4 leading-relaxed">
+        Cloud-masked Sentinel-2 yearly composites, NDVI threshold calibrated against Meta canopy height, Hansen GFC for loss context, ESA WorldCover for the 2021 cross-check, Dynamic World for fuzzy probability.
+      </p>
+      <span class="text-sm font-medium text-accent-forest group-hover:text-ink-900">Read methodology &rarr;</span>
+    </a>
+  </section>
+</Base>

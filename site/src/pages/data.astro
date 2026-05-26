@@ -1,0 +1,63 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Leaves.PH · data downloads" pathname="/data">
+  <article class="max-w-prose mx-auto px-6 pt-12 pb-16 text-ink-700 leading-relaxed">
+    <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-3 font-mono">data downloads</p>
+    <h1 class="text-3xl text-ink-900 mb-2 font-semibold tracking-tight">Reproducible. CC-BY-4.0. Cite us.</h1>
+    <p class="text-sm text-ink-500 mb-8">Every published artifact is regenerable from the committed manifests via <code>make fetch &amp;&amp; make compute</code>. The per-LGU CSV is the hash-pinned canonical.</p>
+
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Published v1.0 artifacts</h2>
+    <table class="text-sm w-full border border-ink-300/40">
+      <thead class="bg-paper-alt">
+        <tr class="text-left">
+          <th class="px-3 py-2 border-b border-ink-300/30">Artifact</th>
+          <th class="px-3 py-2 border-b border-ink-300/30">Format</th>
+          <th class="px-3 py-2 border-b border-ink-300/30">Schema</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="/data/per_lgu_canopy.geojson" class="no-underline text-accent-steel">per_lgu_canopy.geojson</a></td>
+          <td class="px-3 py-2">GeoJSON</td>
+          <td class="px-3 py-2">17 LGU polygons; canopy_&lt;year&gt;_ha and canopy_&lt;year&gt;_pct for year in 2016..2026; canopy_delta_2016_2026_pct; hansen_loss_ha_cumulative_2024; esa_tree_pct_2021</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/per_lgu/per_lgu_canopy_2016_2026.csv" class="no-underline text-accent-steel">per_lgu_canopy_2016_2026.csv</a></td>
+          <td class="px-3 py-2">CSV</td>
+          <td class="px-3 py-2">One row per (lgu_name, year). Columns: lgu_name, year, canopy_ha, canopy_pct, total_ha, hansen_loss_ha_cumulative, esa_tree_pct_2021</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="no-underline text-accent-steel">BENCHMARKS.md</a></td>
+          <td class="px-3 py-2">Markdown</td>
+          <td class="px-3 py-2">Reconciliation table against DENR / GFW / EJN / ScienceKonek 2024+ figures + per-LGU MAE vs Meta calibration</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/docs/methodology.md" class="no-underline text-accent-steel">methodology.md</a></td>
+          <td class="px-3 py-2">Markdown</td>
+          <td class="px-3 py-2">Input layers, NDVI threshold derivation, per-LGU aggregation math, known limitations</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/MODEL_CARD.md" class="no-underline text-accent-steel">MODEL_CARD.md</a></td>
+          <td class="px-3 py-2">Markdown</td>
+          <td class="px-3 py-2">Pipeline overview, known biases, evaluation slices, optional Phase 4 head card if shipped</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Reproducibility</h2>
+    <pre class="bg-paper-alt p-4 rounded text-sm overflow-x-auto">git clone https://github.com/xmpuspus/leaves-ph
+cd leaves-ph
+make hash-verify       # asserts data/per_lgu/per_lgu_canopy_2016_2026.csv sha256 matches the canonical</pre>
+    <p class="text-sm mt-2">If the hash differs, your pinned dependencies have drifted. Reinstall from <code>requirements.txt</code>.</p>
+
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Citation</h2>
+    <pre class="bg-paper-alt p-4 rounded text-sm overflow-x-auto">@software&#123;puspus_leaves_ph_2026,
+  author = &#123;Puspus, Xavier&#125;,
+  title  = &#123;&#123;Leaves.PH: open-source tree-cover validation for Metro Manila&#125;&#125;,
+  year   = &#123;2026&#125;,
+  url    = &#123;https://github.com/xmpuspus/leaves-ph&#125;,
+  doi    = &#123;(minted at v1.0.0 release tag)&#125;
+&#125;</pre>
+  </article>
+</Base>

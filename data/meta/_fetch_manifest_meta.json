@@ -1,0 +1,35 @@
+{
+  "bbox": [
+    120.9,
+    14.4,
+    121.15,
+    14.8
+  ],
+  "bucket": "dataforgood-fb-data",
+  "mosaic": "canopy_height_ncr.tif",
+  "mosaic_size_mb": 64.2,
+  "prefix": "forests/v1/alsgedi_global_v6_float/chm/",
+  "tiles": [
+    {
+      "download_s": 56.4,
+      "quadkey": "132303033",
+      "size_mb": 314.5
+    },
+    {
+      "download_s": 86.6,
+      "quadkey": "132303031",
+      "size_mb": 460.8
+    },
+    {
+      "download_s": 171.8,
+      "quadkey": "132303120",
+      "size_mb": 832.6
+    },
+    {
+      "download_s": 192.7,
+      "quadkey": "132303122",
+      "size_mb": 670.6
+    }
+  ],
+  "zoom": 9
+}

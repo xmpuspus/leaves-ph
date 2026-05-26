@@ -69,7 +69,7 @@ area["ISO3166-2"="PH-00"]->.ncr;
   relation["admin_level"="5"](area.ncr);
   relation["admin_level"="6"](area.ncr);
 );
-out tags geom;
+out geom;
 """
 
 

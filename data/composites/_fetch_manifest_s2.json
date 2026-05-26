@@ -1,0 +1,16 @@
+{
+  "2024": {
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 40,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2025-01-01",
+    "n_source_images": 178,
+    "scale_m": 30,
+    "start": "2024-01-01"
+  }
+}
