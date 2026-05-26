@@ -1,17 +1,33 @@
-"""Leaves.PH animation: generate_salex_corridor. Phase 5 stub.
+"""SALEX corridor canopy timeline (Quirino Ave, the 225-tree May 2026 felling).
 
-Phase 5 fills in the matplotlib + imageio frame generation. Stub raises so a
-missing Phase 5 cannot ship a silent no-op into release.
+The Southern Access Link Expressway clears 3.97 km along Quirino Avenue,
+San Marcelino, and connects Skyway to Roxas Boulevard.
+
+Output:
+    docs/demo/salex-timeline.gif
 """
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 
-def main() -> None:
-    raise NotImplementedError(
-        "generate_salex_corridor is provided in Phase 5. See docs/methodology.md section 7."
-    )
+sys.path.insert(0, str(Path(__file__).parent))
+from _zoomed import REPO_ROOT, make_timeline  # noqa: E402
+
+# Quirino Avenue corridor: roughly from Manila City Hall area south-west to
+# the San Marcelino / Roxas Blvd intersection.
+TARGET_BBOX = (120.978, 14.575, 121.000, 14.605)
+ZOOM = 15
+LABEL = "SALEX corridor (Quirino Ave)"
+SUB_LABEL = "225 trees felled May 2026; 50+yr narra confirmed"
+YEARS = list(range(2019, 2027))
+OUT = REPO_ROOT / "docs" / "demo" / "salex-timeline.gif"
+
+
+def main() -> int:
+    return make_timeline(OUT, TARGET_BBOX, ZOOM, LABEL, SUB_LABEL, YEARS, fig_size=(9, 9))
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -1,17 +1,29 @@
-"""Leaves.PH animation: generate_la_mesa_watershed. Phase 5 stub.
+"""La Mesa watershed + Marikina canopy timeline (NE NCR green zone).
 
-Phase 5 fills in the matplotlib + imageio frame generation. Stub raises so a
-missing Phase 5 cannot ship a silent no-op into release.
+Output:
+    docs/demo/la-mesa-watershed.gif
 """
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 
-def main() -> None:
-    raise NotImplementedError(
-        "generate_la_mesa_watershed is provided in Phase 5. See docs/methodology.md section 7."
-    )
+sys.path.insert(0, str(Path(__file__).parent))
+from _zoomed import REPO_ROOT, make_timeline  # noqa: E402
+
+# La Mesa watershed + Marikina + UP Diliman: the NE green zone (largely QC).
+TARGET_BBOX = (121.03, 14.66, 121.13, 14.78)
+ZOOM = 13
+LABEL = "La Mesa watershed + Marikina"
+SUB_LABEL = "NE NCR green zone (QC + Marikina)"
+YEARS = list(range(2019, 2027))
+OUT = REPO_ROOT / "docs" / "demo" / "la-mesa-watershed.gif"
+
+
+def main() -> int:
+    return make_timeline(OUT, TARGET_BBOX, ZOOM, LABEL, SUB_LABEL, YEARS)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
