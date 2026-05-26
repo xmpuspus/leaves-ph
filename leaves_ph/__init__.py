@@ -12,7 +12,7 @@ Everything else is internal and may change between versions.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from .api import (
     aggregate_lgu,

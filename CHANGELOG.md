@@ -6,6 +6,21 @@ follow strict semantic versioning before v1.0.0.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-26
+
+Phase 3 compute layer code-complete. Per-pixel NDVI canopy + Meta-calibrated
+threshold + per-LGU aggregation + site-ready GeoJSON. Runs `make compute` once
+`make fetch` has populated `data/`.
+
+### Added
+- `pipeline/compute_canopy.py`: NDVI per year + threshold -> uint8 canopy mask. Reads calibrated threshold from `data/calibration_report.json` if present, falls back to 0.50.
+- `pipeline/calibrate_ndvi_threshold.py`: F1-maximising NDVI sweep against Meta canopy height > 5 m, recall floor 0.85, 10k random pixels by default. Writes `data/calibration_report.json` with full sweep table.
+- `pipeline/aggregate_lgu.py`: per-LGU canopy_ha / canopy_pct / total_ha for each year, plus Hansen cumulative loss + ESA 2021 tree percent. Writes `data/per_lgu/per_lgu_canopy_2016_2026.csv` (the deterministic-build canonical).
+- `pipeline/csv_to_geojson.py`: merges the per-LGU CSV into the LGU polygon GeoJSON for the Astro site. Adds `canopy_<year>_pct` per year + `canopy_delta_2016_2026_pct` per feature.
+
+### Total Phase 3 LoC
+- 4 scripts, 586 lines.
+
 ## [0.2.0] - 2026-05-26
 
 Phase 2 data layer code-complete. Six GEE / S3 / Overpass fetch scripts ready
