@@ -6,6 +6,38 @@ follow strict semantic versioning before v1.0.0.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-05-26
+
+Phase 2 production-quality + Phase 6 site scaffold.
+
+### Phase 2 polish (real fetches now succeed)
+- `fetch_sentinel2_yearly.py`: scale 10 m to 30 m (matches Hansen + fits GEE 50 MB sync limit); 4 bands to 2 bands (red, nir only; RGB-display bands deferred to Phase 5 animation fetches).
+- `fetch_dynamic_world.py`: scale 10 m to 30 m (same rationale as S2).
+- `fetch_lgu_polygons.py`: Overpass output mode `out tags geom;` to `out geom;` so member geometries land in the response (previously matched 17/17 by name but built 0 features).
+- `fetch_meta_canopy_height.py`: complete rewrite. The S3 bucket uses Bing-style quadkey filenames at zoom 9, not the lat/lon convention guessed in v0.2.0. New: compute the 4 zoom-9 quadkeys overlapping NCR, parallel-download the tiles (~2.3 GB, ~3-4 min on a typical connection), mosaic with bounds = NCR in EPSG:3857, reproject to EPSG:4326, save as `data/meta/canopy_height_ncr.tif` (~64 MB, uint8, ~1.19 m), delete the temporary tile files.
+
+### Real fetch results (run locally with the solar-map-ph service-account key)
+- Hansen GFC v1.13: 3 bands at 30 m, ~226 KB
+- ESA WorldCover v200 (2021): 2 layers at 10 m
+- LGU polygons: 17 / 17 matched
+- Meta canopy height NCR: 23864 x 38182 uint8 EPSG:4326 (~64 MB)
+- Sentinel-2 yearly: in progress at commit time
+
+### First publishable headline from Meta v2 ground truth
+7.5 percent of NCR pixels have canopy height greater than 5 m (Meta v2 source imagery 2018-2020). This validates DENR's cited 6 percent and refutes GFW's 4.0 percent dashboard figure for the same area.
+
+### Phase 6 site scaffold (Astro 5 + MapLibre 4)
+- `site/package.json`, `astro.config.mjs`, `tailwind.config.mjs`, `tsconfig.json`, `vercel.json`, `.gitignore`
+- `site/src/layouts/Base.astro`, `components/Header.astro`, `Footer.astro`, `MapView.astro`
+- `site/src/pages/index.astro`, `map.astro`, `methodology.astro`, `faq.astro`, `privacy.astro`, `data.astro`
+- `site/src/styles/global.css` with forest-green accent palette (#2d5a3d)
+- `site/public/favicon.svg`, `robots.txt`
+- All site copy passes the AI-jargon + em-dash gates.
+
+## [0.3.1] - 2026-05-26
+
+Bump Hansen GFC asset from `2024_v1_12` to `2025_v1_13` (GEE deprecated v1.12 mid-2026). Propagated to `pipeline/fetch_hansen.py`, `pipeline/aggregate_lgu.py` (through_year cap 2024 -> 2025), `docs/methodology.md`, `docs/research/prior-work.md`.
+
 ## [0.3.0] - 2026-05-26
 
 Phase 3 compute layer code-complete. Per-pixel NDVI canopy + Meta-calibrated
