@@ -1,17 +1,87 @@
-"""Leaves.PH pipeline: fetch_dynamic_world. Phase 2/3 stub.
+"""Fetch Dynamic World v1 annual median 'trees' probability per year 2016..2026.
 
-Real implementation lands in the corresponding phase. This stub raises so the
-Makefile does not silently report success when an upstream phase is incomplete.
+For each year, compute median of the `trees` band (class 1) across all
+Sentinel-2-derived classifications. The output is a single-band float raster
+at 10 m where pixel = median P(trees) over the year.
+
+Idempotent.
 """
 
 from __future__ import annotations
 
+import argparse
+import json
+import sys
+from pathlib import Path
 
-def main() -> None:
-    raise NotImplementedError(
-        "fetch_dynamic_world is provided in Phase 2 or Phase 3. See pipeline/README.md."
+from _gee_init import NCR_BBOX, NCR_YEARS, init, ncr_geometry
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+OUT_DIR = REPO_ROOT / "data" / "composites"
+MANIFEST = OUT_DIR / "_fetch_manifest_dw.json"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Fetch Dynamic World v1 annual median tree probability for NCR"
     )
+    parser.add_argument("--years", nargs="+", type=int, default=list(NCR_YEARS))
+    parser.add_argument("--force", action="store_true")
+    args = parser.parse_args()
+
+    init()
+    import ee  # noqa: PLC0415
+    import geemap  # noqa: PLC0415
+
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    geom = ncr_geometry()
+
+    manifest: dict[str, dict] = {}
+    if MANIFEST.exists():
+        manifest = json.loads(MANIFEST.read_text())
+
+    for year in args.years:
+        out_path = OUT_DIR / f"dw_trees_{year}.tif"
+        if out_path.exists() and not args.force:
+            print(f"[fetch_dw] {year}: {out_path.name} already exists; skip")
+            continue
+
+        start = f"{year}-01-01"
+        end = f"{year + 1}-01-01"
+        dw = (
+            ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1")
+            .filterBounds(geom)
+            .filterDate(start, end)
+            .select("trees")
+        )
+        n = dw.size().getInfo()
+        if n == 0:
+            print(f"[fetch_dw] {year}: NO IMAGES in date window; skip")
+            continue
+
+        composite = dw.median().clip(geom).rename("tree_prob")
+        print(f"[fetch_dw] {year}: {n} images, exporting -> {out_path.name}")
+        geemap.ee_export_image(
+            composite,
+            filename=str(out_path),
+            scale=10,
+            region=geom,
+            file_per_band=False,
+        )
+
+        manifest[str(year)] = {
+            "n_source_images": n,
+            "bbox": list(NCR_BBOX),
+            "start": start,
+            "end": end,
+            "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
+            "band": "trees",
+        }
+
+    MANIFEST.write_text(json.dumps(manifest, indent=2, sort_keys=True))
+    print(f"[fetch_dw] DONE. Manifest at {MANIFEST.relative_to(REPO_ROOT)}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
