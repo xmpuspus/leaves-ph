@@ -1,0 +1,28 @@
+# Pinned dependencies for Leaves.PH. All versions == not >= so docker build
+# -> docker run produces deterministic outputs from the same cached composites.
+
+# ----- core scientific stack -----
+numpy==1.26.4
+scikit-learn==1.7.2
+joblib==1.5.2
+
+# ----- geospatial IO -----
+rasterio==1.4.3
+geopandas==1.0.1
+shapely==2.0.6
+pyproj==3.7.0
+
+# ----- image / IO -----
+pillow==11.3.0
+requests==2.32.5
+
+# ----- Google Earth Engine (Phase 2 data pull) -----
+earthengine-api==1.5.5
+geemap==0.35.1
+
+# ----- plotting / animation (Phase 5 GIFs) -----
+matplotlib==3.9.4
+imageio==2.36.1
+
+# ----- optional Phase 4 head -----
+# torch==2.9.1     # uncomment if Phase 4 trains the AlphaEarth-backed head

@@ -1,0 +1,90 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "leaves-ph"
+dynamic = ["version"]
+description = "Open-source tree-cover validation for Metro Manila using Sentinel-2, Hansen GFC, ESA WorldCover, Dynamic World, and Meta canopy height."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Xavier Puspus" }]
+keywords = ["tree-cover", "canopy", "sentinel-2", "remote-sensing", "metro-manila", "civic-tech"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+  "numpy==1.26.4",
+  "scikit-learn==1.7.2",
+  "joblib==1.5.2",
+  "pillow==11.3.0",
+  "requests==2.32.5",
+  "rasterio==1.4.3",
+  "geopandas==1.0.1",
+  "shapely==2.0.6",
+  "pyproj==3.7.0",
+]
+
+[project.optional-dependencies]
+gee = [
+  "earthengine-api==1.5.5",
+  "geemap==0.35.1",
+]
+ml = [
+  "torch==2.9.1",
+]
+plots = [
+  "matplotlib>=3.8",
+  "imageio>=2.34",
+]
+test = [
+  "pytest>=8",
+  "pytest-cov>=5",
+]
+all = [
+  "leaves-ph[gee,ml,plots,test]",
+]
+
+[project.urls]
+Homepage = "https://github.com/xmpuspus/leaves-ph"
+Documentation = "https://github.com/xmpuspus/leaves-ph/blob/main/MODEL_CARD.md"
+Issues = "https://github.com/xmpuspus/leaves-ph/issues"
+Repository = "https://github.com/xmpuspus/leaves-ph"
+Changelog = "https://github.com/xmpuspus/leaves-ph/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "leaves_ph/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["leaves_ph"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"leaves_ph/py.typed" = "leaves_ph/py.typed"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+extend-select = ["I", "B", "UP", "PERF", "RUF"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"pipeline/**" = ["B007", "B023", "B905", "E402", "F841", "PERF401", "PERF102", "RUF001", "RUF005", "RUF015", "RUF017", "RUF046", "RUF059"]
+"detection/**" = ["B007", "B023", "B905", "E402", "F841", "PERF401", "PERF102", "RUF001", "RUF005", "RUF015", "RUF017", "RUF046", "RUF059"]
+"animation/**" = ["B007", "B905", "E402", "PERF401", "RUF005"]
+"scripts/**" = ["B905", "PERF401", "RUF059"]
+"site/scripts/**" = ["B905", "PERF401", "RUF059"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

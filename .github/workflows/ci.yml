@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff pytest
+      - name: Ruff check
+        run: ruff check .
+      - name: Ruff format check
+        run: ruff format --check .
+      - name: Pytest
+        run: pytest tests/ -q
+      - name: AI-jargon sweep
+        run: |
+          if grep -nE '(delve|tapestry|in the realm of|paradigm shift|game-changer|cutting-edge|state-of-the-art|forefront)' \
+              README.md MODEL_CARD.md BENCHMARKS.md CHANGELOG.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md \
+              docs/research/prior-work.md 2>/dev/null; then
+            echo "AI-jargon hits detected. Rewrite the flagged lines."
+            exit 1
+          fi
+          echo "AI-jargon sweep: PASS"
+      - name: Em-dash sweep
+        run: |
+          if grep -n "\xe2\x80\x94" README.md MODEL_CARD.md BENCHMARKS.md CHANGELOG.md CONTRIBUTING.md docs/research/prior-work.md 2>/dev/null; then
+            echo "Em-dashes detected. Replace with hyphen-space, comma, period, or parens."
+            exit 1
+          fi
+          echo "Em-dash sweep: PASS"

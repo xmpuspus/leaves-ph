@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.astro/
+.cache/
+.vercel/
+.turbo/
+.pnpm-store/
+pnpm-debug.log*
+npm-debug.log*
+
+# Environments and secrets
+.env
+.env.local
+.env.*
+
+# GCP service account keys (catch-all)
+*-key.json
+ee-key.json
+service-account*.json
+*-service-account*.json
+*-credentials*.json
+.ee-key.json
+ee-key
+gcp-key*.json
+*.iam.gserviceaccount.com.json
+google-credentials.json
+gcp-credentials.json
+
+# Anything in credentials/ or secrets/
+**/credentials/
+**/secrets/
+
+# AWS, Azure, generic
+.aws/
+credentials
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ephemeral working dirs
+tmp/
+
+# IDE
+.vscode/
+.idea/
+
+# Heavy raster caches (regeneratable from pipeline/fetch_*.py via GEE)
+data/composites/*.tif
+data/composites/*.tiff
+data/hansen/*.tif
+data/esa/*.tif
+data/meta/*.tif
+data/alphaearth/*.tif
+data/alphaearth/*.zarr/
+*.tif
+*.tiff
+*.zip
+
+# Animation working files (keep final GIFs under docs/demo/, scratch elsewhere)
+animation/_scratch/
+animation/*.mp4
+
+# Pipeline scratch
+pipeline/.cache/
+pipeline/scratch/
+pipeline/*.log
+
+# Detection scratch (Phase 4 only; classifier joblibs ARE committed when small)
+detection/train/_baselines/*.npz
+detection/train/*.log
+
+# Site build
+site/dist/
+site/.astro/
+
+# Tests
+.coverage
+htmlcov/
