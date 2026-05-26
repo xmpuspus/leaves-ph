@@ -22,7 +22,7 @@ import rasterio
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMP_DIR = REPO_ROOT / "data" / "composites"
 MANIFEST = COMP_DIR / "_canopy_manifest.json"
-DEFAULT_THRESHOLD = 0.50  # tuned at Phase 3 calibration step; this is the fallback
+DEFAULT_THRESHOLD = 0.50  # fallback if calibration_report.json is absent
 
 
 def compute_ndvi(red: np.ndarray, nir: np.ndarray) -> np.ndarray:

@@ -1,4 +1,4 @@
-"""Fetch Hansen Global Forest Change v1.12 layers cropped to the NCR bbox.
+"""Fetch Hansen Global Forest Change layers cropped to the NCR bbox.
 
 Exports three bands as separate GeoTIFFs:
     data/hansen/treecover2000.tif   year-2000 percent canopy
@@ -8,7 +8,7 @@ Exports three bands as separate GeoTIFFs:
 Idempotent.
 
 Default GEE asset: UMD/hansen/global_forest_change_2025_v1_13 (the latest
-release; v1.12 is deprecated as of mid-2026).
+release).
 """
 
 from __future__ import annotations

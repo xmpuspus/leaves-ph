@@ -1127,7 +1127,8 @@
         "canopy_2026_pct": 0.89,
         "hansen_loss_ha_cumulative_2024": 1.56,
         "esa_tree_pct_2021": 2.42,
-        "total_ha": 10487.21
+        "total_ha": 10487.21,
+        "canopy_delta_2019_2026_pct": 0.21
       }
     },
     {
@@ -4452,7 +4453,8 @@
         "canopy_2026_pct": 18.93,
         "hansen_loss_ha_cumulative_2024": 20.07,
         "esa_tree_pct_2021": 28.77,
-        "total_ha": 15987.4
+        "total_ha": 15987.4,
+        "canopy_delta_2019_2026_pct": -0.38
       }
     },
     {
@@ -9437,7 +9439,8 @@
         "canopy_2026_pct": 8.8,
         "hansen_loss_ha_cumulative_2024": 16.78,
         "esa_tree_pct_2021": 23.62,
-        "total_ha": 5288.33
+        "total_ha": 5288.33,
+        "canopy_delta_2019_2026_pct": -0.96
       }
     },
     {
@@ -14318,7 +14321,8 @@
         "canopy_2026_pct": 5.2,
         "hansen_loss_ha_cumulative_2024": 12.72,
         "esa_tree_pct_2021": 11.92,
-        "total_ha": 3612.01
+        "total_ha": 3612.01,
+        "canopy_delta_2019_2026_pct": -1.47
       }
     },
     {
@@ -16925,7 +16929,8 @@
         "canopy_2026_pct": 8.92,
         "hansen_loss_ha_cumulative_2024": 0.61,
         "esa_tree_pct_2021": 16.01,
-        "total_ha": 1804.27
+        "total_ha": 1804.27,
+        "canopy_delta_2019_2026_pct": 1.69
       }
     },
     {
@@ -18778,7 +18783,8 @@
         "canopy_2026_pct": 3.68,
         "hansen_loss_ha_cumulative_2024": 0.26,
         "esa_tree_pct_2021": 7.24,
-        "total_ha": 1636.27
+        "total_ha": 1636.27,
+        "canopy_delta_2019_2026_pct": -1.54
       }
     },
     {
@@ -19915,7 +19921,8 @@
         "canopy_2026_pct": 11.19,
         "hansen_loss_ha_cumulative_2024": 0.0,
         "esa_tree_pct_2021": 14.4,
-        "total_ha": 1130.96
+        "total_ha": 1130.96,
+        "canopy_delta_2019_2026_pct": -0.28
       }
     },
     {
@@ -22400,7 +22407,8 @@
         "canopy_2026_pct": 6.87,
         "hansen_loss_ha_cumulative_2024": 2.6,
         "esa_tree_pct_2021": 17.1,
-        "total_ha": 2264.34
+        "total_ha": 2264.34,
+        "canopy_delta_2019_2026_pct": -0.01
       }
     },
     {
@@ -24781,7 +24789,8 @@
         "canopy_2026_pct": 3.77,
         "hansen_loss_ha_cumulative_2024": 2.94,
         "esa_tree_pct_2021": 7.55,
-        "total_ha": 6614.89
+        "total_ha": 6614.89,
+        "canopy_delta_2019_2026_pct": -0.74
       }
     },
     {
@@ -25518,7 +25527,8 @@
         "canopy_2026_pct": 0.47,
         "hansen_loss_ha_cumulative_2024": 0.26,
         "esa_tree_pct_2021": 0.92,
-        "total_ha": 3655.87
+        "total_ha": 3655.87,
+        "canopy_delta_2019_2026_pct": -0.4
       }
     },
     {
@@ -28927,7 +28937,8 @@
         "canopy_2026_pct": 4.35,
         "hansen_loss_ha_cumulative_2024": 2.6,
         "esa_tree_pct_2021": 9.55,
-        "total_ha": 5960.69
+        "total_ha": 5960.69,
+        "canopy_delta_2019_2026_pct": 0.57
       }
     },
     {
@@ -31052,7 +31063,8 @@
         "canopy_2026_pct": 2.08,
         "hansen_loss_ha_cumulative_2024": 1.12,
         "esa_tree_pct_2021": 5.07,
-        "total_ha": 3390.36
+        "total_ha": 3390.36,
+        "canopy_delta_2019_2026_pct": -0.93
       }
     },
     {
@@ -33385,7 +33397,8 @@
         "canopy_2026_pct": 5.23,
         "hansen_loss_ha_cumulative_2024": 5.54,
         "esa_tree_pct_2021": 12.01,
-        "total_ha": 3067.59
+        "total_ha": 3067.59,
+        "canopy_delta_2019_2026_pct": -0.17
       }
     },
     {
@@ -34662,7 +34675,8 @@
         "canopy_2026_pct": 2.41,
         "hansen_loss_ha_cumulative_2024": 0.0,
         "esa_tree_pct_2021": 7.09,
-        "total_ha": 577.55
+        "total_ha": 577.55,
+        "canopy_delta_2019_2026_pct": 0.76
       }
     },
     {
@@ -37663,7 +37677,8 @@
         "canopy_2026_pct": 6.47,
         "hansen_loss_ha_cumulative_2024": 64.88,
         "esa_tree_pct_2021": 7.58,
-        "total_ha": 7933.66
+        "total_ha": 7933.66,
+        "canopy_delta_2019_2026_pct": -2.76
       }
     },
     {
@@ -40916,7 +40931,8 @@
         "canopy_2026_pct": 5.81,
         "hansen_loss_ha_cumulative_2024": 14.88,
         "esa_tree_pct_2021": 14.56,
-        "total_ha": 4677.99
+        "total_ha": 4677.99,
+        "canopy_delta_2019_2026_pct": -1.39
       }
     },
     {
@@ -41769,7 +41785,8 @@
         "canopy_2026_pct": 4.96,
         "hansen_loss_ha_cumulative_2024": 0.0,
         "esa_tree_pct_2021": 9.96,
-        "total_ha": 184.7
+        "total_ha": 184.7,
+        "canopy_delta_2019_2026_pct": 1.26
       }
     }
   ]

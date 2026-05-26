@@ -1,19 +1,19 @@
 # Leaves.PH Model Card
 
-Status: placeholder. Full content fills in at v0.9 freeze.
+Status: numbers fill in once the pipeline runs against your local data.
 
 ## Intended use
 
 Leaves.PH publishes a per-LGU canopy curve for Metro Manila (16 cities plus the municipality of Pateros, 17 LGUs total), 2019 to 2026, computed from a stack of canonical public canopy datasets. It is **not** a per-household measurement, not a parcel-level land-use tool, and not a per-tree census.
 
-## Pipeline overview (filled in Phase 3+)
+## Pipeline overview
 
 1. **Inputs:** Sentinel-2 L2A median composites (annual, cloud-masked via s2cloudless), Hansen GFC v1.13 loss-year band, ESA WorldCover v200 class-10 tree mask, Dynamic World v1 `trees` probability median per year, Meta Canopy Height v2 tile crop.
 2. **NDVI threshold:** tuned per-year against Meta canopy height v2 (target: greater than 90 percent pixel-level agreement with Meta height greater than 5 m).
 3. **Per-LGU aggregation:** PSA / OSM administrative polygons for the 17 NCR LGUs (16 cities + Pateros); pixel-level canopy mask summed per polygon.
-4. **(Optional, Phase 4)** AlphaEarth Foundations Satellite Embedding V1 + sklearn logistic head, 5-fold per-LGU-group CV, Platt sigmoid calibration. Shipped only if its per-LGU MAE is materially lower than the pure NDVI threshold (decision locked 2026-05-26).
+4. **(Optional)** AlphaEarth Foundations Satellite Embedding V1 + sklearn logistic head, 5-fold per-LGU-group CV, Platt sigmoid calibration. Shipped only if its per-LGU MAE is materially lower than the pure NDVI threshold .
 
-## Known biases (filled in v0.9)
+## Known biases
 
 - Meta Canopy Height v2 source imagery is 80 percent 2018-2020. Our calibration layer is a ~2019 truth.
 - Sentinel-2 cloud masking removes many wet-season images in tropical monsoon zones, potentially under-representing canopy during June to September.
@@ -23,7 +23,7 @@ Leaves.PH publishes a per-LGU canopy curve for Metro Manila (16 cities plus the 
 
 ## Reported metrics
 
-Filled at v0.9. Skeleton:
+Skeleton:
 
 | Metric | Per-LGU MAE | All-NCR error vs GFW dashboard | All-NCR error vs DENR 6 percent claim |
 |---|---|---|---|

@@ -78,9 +78,9 @@ def main() -> int:
             feature["properties"]["hansen_loss_ha_cumulative_2024"] = sample["hansen_loss_ha_cumulative"]
             feature["properties"]["esa_tree_pct_2021"] = sample["esa_tree_pct_2021"]
             feature["properties"]["total_ha"] = sample["total_ha"]
-        # Delta 2016-2026 (only if both endpoints exist).
-        if 2016 in years and 2026 in years:
-            v0 = years[2016]["canopy_pct"]
+        # Delta 2019-2026 (only if both endpoints exist).
+        if 2019 in years and 2026 in years:
+            v0 = years[2019]["canopy_pct"]
             v1 = years[2026]["canopy_pct"]
             if v0 is not None and v1 is not None:
                 feature["properties"]["canopy_delta_2019_2026_pct"] = round(v1 - v0, 2)

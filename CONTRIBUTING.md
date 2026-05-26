@@ -3,8 +3,8 @@
 Thanks for considering a contribution. This repo welcomes:
 
 1. **Verified per-LGU corrections** to `data/per_lgu/per_lgu_canopy_2019_2026.csv`. Open an issue with the LGU name, year, your alternative value, and the source.
-2. **Per-barangay extensions** for v1.1 (push from 17 LGU polygons to 142 NCR barangays). See `docs/research/prior-work.md` section 5.5 for the verified barangay anchors.
-3. **Region extensions** (Cebu, Davao, CDO, Iloilo) for v1.1. See `docs/methodology.md` for the LGU polygon and NDVI-threshold recipe.
+2. **Per-barangay extensions** (push from 17 LGU polygons to 142 NCR barangays). See `docs/research/prior-work.md` section 5.5 for the verified barangay anchors.
+3. **Region extensions** (Cebu, Davao, CDO, Iloilo). See `docs/methodology.md` for the LGU polygon and NDVI-threshold recipe.
 4. **Methodology improvements** to the NDVI calibration against Meta canopy height. Open an issue first with the proposed change and a one-paragraph rationale.
 5. **Code review and bug fixes** on anything in `pipeline/` or `leaves_ph/`.
 
@@ -41,7 +41,6 @@ pnpm build          # production build, must succeed
 
 - Branch naming: `fix/<short-slug>`, `feat/<short-slug>`, `docs/<short-slug>`.
 - One logical change per PR.
-- Update `CHANGELOG.md` under the `Unreleased` heading with one line describing the change.
 - If the change affects the per-LGU CSV, re-run `make hash-verify` and update `EXPECTED_HASH` in the Makefile if the hash legitimately moves.
 - If the change affects animation frames, re-run `make animate` and frame-extract the GIFs for visual inspection.
 

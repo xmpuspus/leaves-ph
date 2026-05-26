@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Leaves.PH release-readiness gate. Stub for v0.1.0; full gate lands at Phase 7.
+"""Leaves.PH release-readiness gate. Release-readiness gate.
 
 Mirrors `solar-map-ph/scripts/verify_v11_release.py`. Must return
 N PASS / 0 FAIL before any tag, push, or deploy.
 
-Checks (full set at Phase 7):
+Checks:
 - per_lgu_canopy_2019_2026.csv parses and matches schema
 - 17 LGUs present in the CSV; no extra or missing
-- classifier hash matches canonical (only if Phase 4 ran)
+- classifier hash matches canonical (only if the calibrated head ran)
 - requirements.txt fully pinned (no >=, ^, ~)
 - site/src/data/per_lgu_canopy.json mirrors data/per_lgu/per_lgu_canopy_2019_2026.csv
 - README hero counter matches actual aggregated canopy_ha
-- Zero em-dashes in README, MODEL_CARD, BENCHMARKS, CHANGELOG, docs/research/, site/src/
+- Zero em-dashes in README, MODEL_CARD, BENCHMARKS, docs/research/, site/src/
 - Zero AI-jargon hits from the no-ai-jargon ban list
 
-v0.1.0 checks only what exists.
+
 """
 
 from __future__ import annotations
@@ -35,7 +35,6 @@ MD_FILES = [
     "README.md",
     "MODEL_CARD.md",
     "BENCHMARKS.md",
-    "CHANGELOG.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
     "CODE_OF_CONDUCT.md",
@@ -140,18 +139,18 @@ def gate_package_version() -> tuple[str, bool, str]:
 
 
 def gate_per_lgu_csv_optional() -> tuple[str, bool, str]:
-    """Phase 3+ artifact. v0.1.0 SKIP."""
+    """Per-LGU CSV artifact. SKIP if absent."""
     p = ROOT / "data" / "per_lgu" / "per_lgu_canopy_2019_2026.csv"
     if not p.exists():
-        return ("per-LGU CSV (Phase 3+)", True, "not yet built (pre-Phase 3); SKIP")
+        return ("per-LGU CSV per-LGU CSV gate", True, "not yet built; SKIP")
     import csv
 
     with p.open() as f:
         rows = list(csv.DictReader(f))
     lgu_set = {r["lgu_name"] for r in rows}
     if len(lgu_set) != 17:
-        return ("per-LGU CSV (Phase 3+)", False, f"expected 17 LGUs, got {len(lgu_set)}: {sorted(lgu_set)}")
-    return ("per-LGU CSV (Phase 3+)", True, f"17 LGUs, {len(rows)} rows")
+        return ("per-LGU CSV per-LGU CSV gate", False, f"expected 17 LGUs, got {len(lgu_set)}: {sorted(lgu_set)}")
+    return ("per-LGU CSV per-LGU CSV gate", True, f"17 LGUs, {len(rows)} rows")
 
 
 def main() -> int:

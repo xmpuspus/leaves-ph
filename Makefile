@@ -90,9 +90,9 @@ verify:
 	$(PY) scripts/verify_release.py
 
 # ----- hash (per-LGU CSV is the deterministic-build canonical) -----
-# EXPECTED_HASH is updated in tandem with the canonical CSV in CHANGELOG.md.
-# v0.1.0: hash is empty (no CSV exists yet); first real value set at v0.9 freeze.
-EXPECTED_HASH := PENDING_PHASE_3
+# EXPECTED_HASH gets pinned once the per-LGU CSV stabilises.
+# Hash gets pinned once the per-LGU CSV stabilises.
+EXPECTED_HASH := PENDING
 
 hash:
 	@$(PY) -c "import hashlib, os; \
@@ -102,8 +102,8 @@ print(p, 'sha256:', (hashlib.sha256(open(p,'rb').read()).hexdigest()[:16] if os.
 hash-verify: $(PER_LGU_CSV)
 	@actual=$$($(PY) -c "import hashlib; print(hashlib.sha256(open('$(PER_LGU_CSV)','rb').read()).hexdigest()[:16])"); \
 	expected="$(EXPECTED_HASH)"; \
-	if [ "$$expected" = "PENDING_PHASE_3" ]; then \
-	  echo "[hash-verify] SKIP: canonical hash not yet pinned (pre-Phase 3)"; \
+	if [ "$$expected" = "PENDING" ]; then \
+	  echo "[hash-verify] SKIP: canonical hash not yet pinned (unpinned-hash)"; \
 	elif [ "$$actual" = "$$expected" ]; then \
 	  echo "[hash-verify] OK: per_lgu_canopy_2019_2026.csv sha256 = $$actual"; \
 	else \

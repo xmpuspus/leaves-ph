@@ -1,6 +1,6 @@
-# Prior Work and Tool Survey for Leaves.PH v1.0
+# Prior Work and Tool Survey for Leaves.PH
 
-Written 2026-05-26 as Phase 0 of Leaves.PH. Synthesizes findings from four parallel research dispatches:
+Prior-work survey written 2026-05-26. Synthesizes findings from four parallel research dispatches:
 
 - canonical baselines (Hansen GFC, ESA WorldCover, Dynamic World)
 - frozen-encoder embedding stacks (AlphaEarth Foundations, TESSERA)
@@ -11,15 +11,15 @@ Raw per-agent reports are in `/tmp/leaves-prior-work-{canonical,embeddings,canop
 
 ## 1. Headline finding
 
-The canonical global tree-cover stack for 2019 to 2026 already exists at 10 m. Hansen GFC v1.13 carries the loss history back to 2001, ESA WorldCover v200 freezes a 2021 cross-check, Dynamic World v1 gives a near-real-time annual probability for 2015 to today, and Meta v2 plus GEDI L2A give a 1 m to 25 m height truth layer for NDVI calibration. None of these are PH-specific, none publish a per-LGU breakdown for Metro Manila, and the four public 2024+ NCR figures in circulation (DENR FMB "6 percent / 3,565 ha", GFW "2.3 kha at 4.0 percent of land area", EJN "open forest 2,790 ha to 2,071 ha 2020", ScienceKonek 2024) disagree with each other.
+The canonical global tree-cover stack for 2019 to 2026 already exists at 10 m. Hansen GFC v1.13 carries the loss-year band back to 2001, ESA WorldCover v200 freezes a 2021 cross-check, Dynamic World v1 gives a near-real-time annual probability for 2015 to today, and Meta v2 plus GEDI L2A give a 1 m to 25 m height truth layer for NDVI calibration. None of these are PH-specific, none publish a per-LGU breakdown for Metro Manila, and the four public 2024+ NCR figures in circulation (DENR FMB "6 percent / 3,565 ha", GFW "2.3 kha at 4.0 percent of land area", EJN "open forest 2,790 ha to 2,071 ha 2020", ScienceKonek 2024) disagree with each other.
 
-Leaves.PH v1.0 is the **2026 update layer + per-LGU breakdown + reconciliation between those four figures**, using all four canonical sources stacked, validated against Meta canopy height, and held out by entire LGU. Not a new global model.
+Leaves.PH is the **2026 update layer + per-LGU breakdown + reconciliation between those four figures**, using all four canonical sources stacked, validated against Meta canopy height, and held out by entire LGU. Not a new global model.
 
 ## 2. Dataset matrix
 
 | Source | Resolution | Cadence | License | GEE asset | Best as |
 |---|---|---|---|---|---|
-| Hansen GFC v1.13 | 30 m | annual loss 2001-2024 | Public domain | `UMD/hansen/global_forest_change_2025_v1_13` | long-term loss history |
+| Hansen GFC v1.13 | 30 m | annual loss 2001-2025 | Public domain | `UMD/hansen/global_forest_change_2025_v1_13` | long-term loss-year context |
 | ESA WorldCover v200 | 10 m | 2021 single epoch | CC-BY-4.0 | `ESA/WorldCover/v200` | 2021 cross-check |
 | Dynamic World v1 | 10 m | ~5 day (Sentinel-2) | CC-BY-4.0 | `GOOGLE/DYNAMICWORLD/V1` | annual per-LGU curve 2016-2026 |
 | Sentinel-2 L2A | 10 m | ~5 day | Copernicus (open) | `COPERNICUS/S2_SR_HARMONIZED` | RGB + NDVI for animations |
@@ -29,9 +29,9 @@ Leaves.PH v1.0 is the **2026 update layer + per-LGU breakdown + reconciliation b
 | GEDI L2A monthly | 25 m | 2019-present, sparse | NASA public domain | `LARSE/GEDI/GEDI02_A_002_MONTHLY` | spot-truth (200-400 points) |
 | ICESat-2 ATL08 | 20 m segments | sparse, cloud-penetrant | NASA public domain | NSIDC + GEE | defer; redundant for dense urban NCR |
 
-## 3. Pinned stack for v1.0
+## 3. Pinned stack
 
-Decision: use Hansen GFC + ESA WorldCover + Dynamic World as the **input baseline triad**, Meta v2 + GEDI L2A as the **calibration layer**, and Sentinel-2 L2A for the **RGB animation frames**. AlphaEarth is **conditional** for an optional Phase 4 head.
+Decision: use Hansen GFC + ESA WorldCover + Dynamic World as the **input baseline triad**, Meta v2 + GEDI L2A as the **calibration layer**, and Sentinel-2 L2A for the **RGB animation frames**. AlphaEarth is **conditional** for an optional calibrated head.
 
 ### 3.1 Baseline triad (mandatory)
 
@@ -50,9 +50,9 @@ This triad covers loss, presence, and probability across three sensors. Three-wa
 
 6. **Sentinel-2 L2A median composites** per year 2016-2026, s2cloudless-masked, true-color RGB for hero GIF and per-hotspot GIFs (SALEX corridor, Quirino Avenue, La Mesa watershed, per-LGU choropleth).
 
-### 3.4 Optional Phase 4 head (conditional)
+### 3.4 Optional calibrated head (conditional)
 
-7. **AlphaEarth Foundations V1** as the frozen encoder if Phase 3's NDVI threshold + Hansen + Dynamic World is not sharp enough to validate a per-LGU breakdown at LGU granularity. AlphaEarth picked over TESSERA for v1.0 because **2017-2025 historical coverage is mandatory for a 10-year trend** and TESSERA's pre-2024 backfill is still rolling out. TESSERA is on the v1.1 candidate list (higher canopy-task accuracy: 8.88 m RMSE Borneo vs AlphaEarth ~16 m per the TESSERA paper; revisit once full PH historical TESSERA tiles ship).
+7. **AlphaEarth Foundations V1** as the frozen encoder if the NDVI threshold + Hansen + Dynamic World is not sharp enough to validate a per-LGU breakdown at LGU granularity. AlphaEarth picked over TESSERA because **2017-2025 historical coverage is mandatory for a 10-year trend** and TESSERA's pre-2024 backfill is still rolling out. TESSERA is on the future-comparison candidate list (higher canopy-task accuracy: 8.88 m RMSE Borneo vs AlphaEarth ~16 m per the TESSERA paper; revisit once full PH historical TESSERA tiles ship).
 
 **Why AlphaEarth and not TESSERA right now:**
 - AlphaEarth ships every year 2017-2025 from day one. TESSERA ships 2024 and rolls the rest.
@@ -60,11 +60,11 @@ This triad covers loss, presence, and probability across three sensors. Three-wa
 - AlphaEarth tile is ~307 MB/year compressed COG vs TESSERA's ~1.62 GB/year quantized int8. Ten-year NCR cache: ~3 GB AlphaEarth vs ~16 GB TESSERA.
 - AlphaEarth's lower canopy-task accuracy is acceptable when Hansen + Dynamic World + Meta height are doing the heavy validation lifting. The embedding head is a tiebreaker, not the spine.
 
-If Phase 3 is sufficient on its own (NDVI threshold + Hansen + DW gives a clean per-LGU curve that agrees with Meta calibration within 5 percent), **Phase 4 is skipped** for v1.0. AlphaEarth gets added in v1.1.
+If the NDVI baseline is sufficient on its own (NDVI threshold + Hansen + DW gives a clean per-LGU curve that agrees with Meta calibration within 5 percent), **the calibrated head stays skipped.** AlphaEarth is on the future-comparison list.
 
 ## 4. Technical-novelty position
 
-Leaves.PH v1.0 is not a competing global forest model. It is a **single-region, multi-source, fresh-2026, per-LGU reconciliation** layer on top of canonical sources. The novelty is:
+Leaves.PH is not a competing global forest model. It is a **single-region, multi-source, fresh-2026, per-LGU reconciliation** layer on top of canonical sources. The novelty is:
 
 - **Recency:** 2026 measurements, not 2020-2022 figures recycled by news outlets.
 - **Granularity:** per-LGU and (where possible) per-barangay for all 17 NCR cities, including the canonical underrepresented LGUs (Manila, Caloocan, Navotas) and overrepresented LGUs (QC, Marikina, La Mesa watershed).
@@ -105,7 +105,7 @@ Agent 4 (PH-specific) was the most consequential dispatch. Headline result: the 
 
 ### 5.5 Verified per-LGU and per-barangay anchors
 
-These three numbers are the strongest anchor points for v1.0 validation. All three appear in EJN's October 2024 piece citing UP Diliman / DENR / Google Environmental Insights Explorer:
+These three numbers are the strongest anchor points for validation. All three appear in EJN's October 2024 piece citing UP Diliman / DENR / Google Environmental Insights Explorer:
 
 - **Muntinlupa**: 14.4 sq m / capita (highest in MM).
 - **Quezon City**: 12.5 sq m / capita; 33 percent tree canopy per Google EIE.
@@ -147,26 +147,26 @@ Leaves.PH must show this NE-quadrant recovery alongside the MM-wide decline. A m
 7. **Tribune, 2026-05-22.** "Stop SMC's mass slaughter of trees." https://tribune.net.ph/2026/05/22/stop-smcs-mass-slaughter-of-trees
 8. **Philippine News Agency.** "DENR: Quirino Avenue tree cutting underwent review." https://www.pna.gov.ph/articles/1275435
 
-## 8. Open gaps and Phase 1+ blockers
+## 8. Open gaps and current blockers
 
-These are the items we cannot resolve from public web sources alone. Phase 1 starts without them but the launch artifacts (Phase 9) need them resolved or honestly documented as gaps.
+These are the items we cannot resolve from public web sources alone. These items cannot be resolved from public web sources alone; the launch copy either resolves them or documents them honestly as gaps.
 
 | Gap | Status | Resolution path | Blocking? |
 |---|---|---|---|
 | ScienceKonek 2024 map artifact | not located | scrape FB page, treat as commentary if not reproducible | No (treat as commentary) |
 | DENR FMB 3,565 ha / 6 percent source document | not in public 2024+ reports | request from DENR-NCR; check Heritage Book 2023 PDF | No (publish our own number, cite DENR figure as "DENR FMB cited in EJN 2024") |
-| DENR FMB -89 ha 2001-2022 source | not in GFW dashboard at MM granularity | query GFW Pro API for MM ADM1 polygon | No (compute our own from Hansen v1.12 directly) |
+| DENR FMB -89 ha 2001-2022 source | not in GFW dashboard at MM granularity | query GFW Pro API for MM ADM1 polygon | No (compute our own from Hansen directly) |
 | SALEX ECC + species inventory | not public | request from DENR-NCR / DPWH | No (cite news sources, cross-reference satellite) |
-| Per-barangay tree cover baseline (all 142 MM barangays) | none exists publicly | compute from Dynamic World + OSM barangay polygons | **Yes (this IS the v1.0 deliverable)** |
+| Per-barangay tree cover baseline (all 142 MM barangays) | none exists publicly | compute from Dynamic World + OSM barangay polygons | **Yes (this is the current deliverable)** |
 | Google EIE QC 33 percent canopy methodology | not documented | EIE API or scrape; treat as commentary | No |
-| TESSERA pre-2024 PH historical coverage | rolling out | wait for backfill; v1.1 candidate | No (use AlphaEarth) |
+| TESSERA pre-2024 PH historical coverage | rolling out | wait for backfill; future-comparison candidate | No (use AlphaEarth) |
 
 ## 9. References and sources
 
 Full URLs are inline above. Raw per-agent reports (not committed) at `/tmp/leaves-prior-work-{canonical,embeddings,canopy-height,ph}.md`.
 
 GEE asset paths confirmed live as of 2026-05-26:
-- `UMD/hansen/global_forest_change_2025_v1_13` (latest available 2024; v1.13 expected late 2026)
+- `UMD/hansen/global_forest_change_2025_v1_13` (latest available)
 - `ESA/WorldCover/v200`
 - `GOOGLE/DYNAMICWORLD/V1`
 - `COPERNICUS/S2_SR_HARMONIZED`
@@ -175,4 +175,4 @@ GEE asset paths confirmed live as of 2026-05-26:
 
 Meta v2 download path: `s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/` (anonymous S3, no AWS account required).
 
-End of Phase 0 prior-work review.
+End of prior-work review.

@@ -1,6 +1,6 @@
 """Leaves.PH: validate Metro Manila tree cover against public canopy datasets.
 
-Public API surface (stable from v1.0):
+Public API surface (stable):
 
     from leaves_ph import __version__
     from leaves_ph import compute_ndvi              # S2 SR band math -> NDVI
@@ -12,7 +12,7 @@ Everything else is internal and may change between versions.
 
 from __future__ import annotations
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 from .api import (
     aggregate_lgu,

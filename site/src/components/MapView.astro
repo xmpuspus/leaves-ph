@@ -65,7 +65,7 @@
         <span class="text-right">25%+</span>
       </div>
       <div class="border-t border-ink-300/30 mt-2 pt-2 text-[10px] text-ink-500 font-mono">
-        Leaves.PH v1.0 &middot; Sentinel-2 NDVI &gt;= 0.5
+        Leaves.PH &middot; Sentinel-2 NDVI &gt;= 0.62
       </div>
     </div>
     <div class="absolute bottom-1 right-2 bg-white/85 px-1.5 py-0.5 text-[9px] text-ink-500 rounded-sm border border-ink-300/30 leading-tight max-w-[18rem] text-right">
@@ -145,7 +145,7 @@
   const DATA_BASE = "/data";
   const YEARS = Array.from({ length: 9 }, (_, i) => 2018 + i);
   const MAX_PCT_FOR_COLOR = 25; // pct above this saturates at the darkest green
-  // DENR / GFW reference numbers (the v1.0 reconciliation anchors). Update when
+  // DENR / GFW reference numbers (the reconciliation anchors). Update when
   // primary sources are confirmed; see /methodology for sources.
   const REF_PCT = { denr_cited: 6.0, gfw_dashboard: 4.0 };
 
@@ -209,7 +209,7 @@
       const el = document.getElementById("map");
       if (el) {
         el.innerHTML =
-          '<div class="p-6 text-sm text-ink-500">Per-LGU canopy data not yet published. Run `make compute` locally or check back after the v1.0 release.</div>';
+          '<div class="p-6 text-sm text-ink-500">Per-LGU canopy data not yet published. Run `make compute` locally or check back after the data pipeline runs.</div>';
       }
       console.warn("per_lgu_canopy.geojson missing; rendering empty state.", e);
       return;
@@ -270,12 +270,12 @@
       }
     }
 
-    // 2018 -> 2026 NCR delta is year-independent of the slider; compute once.
+    // 2019 -> 2026 NCR delta is year-independent of the slider; compute once.
     function ncrDelta() {
-      const a18 = ncrAggregate(lgus.features, 2018).pct;
+      const a19 = ncrAggregate(lgus.features, 2019).pct;
       const a26 = ncrAggregate(lgus.features, 2026).pct;
-      if (a18 == null || a26 == null) return null;
-      return a26 - a18;
+      if (a19 == null || a26 == null) return null;
+      return a26 - a19;
     }
 
     slider.addEventListener("input", (e) => applyYearStyle(Number((e.target as HTMLInputElement).value)));

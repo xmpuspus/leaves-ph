@@ -5,11 +5,11 @@ as a 4-band GeoTIFF (red, nir, green, blue) at **30 m** resolution (matching Han
 shares the same pixel size across both sources). NDVI is computed downstream
 by pipeline/compute_canopy.py.
 
-Scale = 30 m is the v1.0 default to fit inside GEE's 50 MB synchronous URL
+Scale = 30 m is the current default to fit inside GEE's 50 MB synchronous URL
 limit (NCR at 10 m needs ~190 MB / 4 bands / float32; at 30 m it is ~11 MB).
 Per-LGU canopy aggregation is unaffected at this scale: B4/B8 are reported
 at 10 m natively, but the canopy threshold is computed on NDVI averages
-within polygons that are tens to hundreds of km^2. v1.1 can move to 10 m
+within polygons that are tens to hundreds of km^2. Future builds may move to 10 m
 chunked exports if needed.
 
 Idempotent: existing s2_<year>.tif files are skipped unless --force is passed.
@@ -87,7 +87,7 @@ def main() -> int:
 
         masked = ee.ImageCollection(joined).map(_mask)
         # Only red (B4) + nir (B8) for NDVI math. RGB-display bands (B3, B2)
-        # are out of scope here; Phase 5 animation fetches them separately
+        # are out of scope here; animation fetches them separately
         # against the same composites if needed.
         composite = masked.median().select(["B4", "B8"]).rename(["red", "nir"])
         composite = composite.clip(geom)

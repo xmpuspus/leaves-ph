@@ -4,7 +4,7 @@ Open-source tree-cover validation for Metro Manila. Validates the four 2024+ NCR
 
 [![License: MIT (code) / CC-BY-4.0 (data)](https://img.shields.io/badge/license-MIT%20%2F%20CC--BY--4.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![Status](https://img.shields.io/badge/status-alpha%20%28v0.5.x%29-orange.svg)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/status-alpha-orange.svg)](README.md)
 
 ![NCR canopy 2019 to 2026](docs/demo/hero.gif)
 
@@ -29,18 +29,16 @@ Full curve, reconciliation table, per-LGU rankings, Hansen cumulative loss per L
 - A reproducible pipeline that pulls Sentinel-2 L2A, Hansen GFC v1.13, ESA WorldCover v200, Dynamic World v1, and Meta Canopy Height v2 for the NCR bounding box and computes a per-LGU annual canopy curve from 2019 to 2026.
 - An honest reconciliation of the four official 2024+ NCR canopy figures that disagree with each other (see "First finding" below).
 - A SALEX corridor before-and-after timelapse covering the 225 trees felled along Quirino Avenue in May 2026.
-- An interactive Astro + MapLibre site at https://leaves.ph (Phase 6).
+- An interactive Astro + MapLibre site at https://leaves.ph.
 
 ## What this is not
 
 - Not a competing global forest model. We use Hansen, ESA WorldCover, Dynamic World, and Meta verbatim and stack them.
-- Not a per-household measurement. v1.0 publishes per-LGU only (17 polygons: 16 NCR cities + Pateros). Per-barangay (142 polygons) is on the v1.1 roadmap.
+- Not a per-household measurement. Publishes per-LGU only (17 polygons: 16 NCR cities + Pateros). Per-barangay (142 polygons) is on the roadmap.
 - Not 2026 ground truth. Meta Canopy Height v2 is mostly sourced from 2018 to 2020 imagery, so our calibration layer is a ~2019 truth, not a 2026 truth. The methodology footnote documents this.
 - Not an investigative tool. Vegetation loss flagged here may have a permit, an ECC, or a legitimate reason. We compute the canopy delta; we do not allege wrongdoing.
 
-## First finding (Phase 0, publishable as-is)
-
-The four public 2024+ NCR canopy figures disagree:
+## The four public 2024+ NCR canopy figures disagree
 
 | Source | Headline | Date | Reproducibility |
 |---|---|---|---|
@@ -49,7 +47,7 @@ The four public 2024+ NCR canopy figures disagree:
 | Earth Journalism Network 2024 (DENR-sourced) | "Open forest" 2,790 ha to 2,071 ha 2020 | Oct 2024 | https://earthjournalism.net/stories/blazing-heat-of-2024-ignites-filipinos-need-for-trees-and-green-spaces |
 | ScienceKonek 2024 map | (referenced by RadarPH, May 2026) | 2024 | map artifact not publicly findable; possibly Facebook-only |
 
-DENR and GFW disagree by roughly 50 percent for the same area. Leaves.PH v1.0 publishes a fifth, fully reproducible 2026 number from canonical Sentinel-2 + Hansen + Dynamic World, and explains where each prior figure agrees and disagrees with the new measurement.
+DENR and GFW disagree by roughly 50 percent for the same area. Leaves.PH publishes a fifth, fully reproducible 2026 number from canonical Sentinel-2 + Hansen + Dynamic World, and explains where each prior figure agrees and disagrees with the new measurement.
 
 ## Quickstart
 
@@ -98,27 +96,14 @@ docker run leaves-ph:latest make hash
 
 `make hash` prints the sha256 prefix of `data/per_lgu/per_lgu_canopy_2019_2026.csv`. The canonical hash is pinned in the Makefile (`EXPECTED_HASH`) and asserted in CI. If your build produces a different hash, your pinned dependencies have drifted; reinstall from `requirements.txt`.
 
-Until Phase 3 lands, `EXPECTED_HASH=PENDING_PHASE_3` and `make hash-verify` is a SKIP, not a FAIL.
+Until the canonical hash is pinned, `EXPECTED_HASH=PENDING` and `make hash-verify` is a SKIP, not a FAIL.
 
-## Status
+## Roadmap
 
-v0.5.x: real per-LGU canopy curves live for 2019 to 2026, 5 animations rendered, Astro site builds clean.
-
-| Phase | Status |
-|---|---|
-| 0. Prior work + tool survey | DONE -> `docs/research/prior-work.md` |
-| 1. Scaffold from SolarMap template | DONE |
-| 2. Data layer (GEE pull) | DONE; `make fetch` populated `data/*` from canonical sources |
-| 3. Compute layer (per-LGU 2019-2026) | DONE; 17 LGUs x 8 years CSV + GeoJSON shipped |
-| 4. Optional calibrated head (AlphaEarth + sklearn) | SKIPPED; NDVI baseline validates within 0.04pp of Meta v2 |
-| 5. Wow-factor animations (5 GIFs) | DONE; hero, choropleth, La Mesa, SALEX, Quirino |
-| 6. Astro + MapLibre site | DONE; `pnpm build` green, MapView wired |
-| 7. Verification gates | partial (6/6 pass); full Phase 7 sweep planned |
-| 8. Release pipeline (GH + Zenodo + HF + Vercel) | pending |
-| 9. Launch artifacts (LinkedIn + FB + press) | pending |
-
-v1.0.0 target: NCR baseline complete, leaves.ph live, Zenodo DOI minted, LinkedIn announcement ready.
-v1.1 candidates: per-barangay extension (142 NCR barangays), Cebu / Davao / CDO regional rollout, TESSERA backfill comparison.
+- Per-barangay extension (142 NCR barangays).
+- Cebu / Davao / CDO regional rollout (same pipeline, different LGU polygon set).
+- TESSERA backfill comparison once full PH historical tiles are available.
+- AlphaEarth Foundations + sklearn calibrated head as a comparison artifact.
 
 ## License and attribution
 
@@ -141,7 +126,7 @@ Upstream sources cited in `LICENSE`. The mandatory attribution line on the site 
 }
 ```
 
-See `CITATION.cff` for the machine-readable form. Zenodo DOI added at v1.0.0 release.
+See `CITATION.cff` for the machine-readable form. Zenodo DOI added at first tagged release.
 
 ## Public-record disclaimer
 

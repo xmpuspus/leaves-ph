@@ -1,6 +1,6 @@
 # Benchmarks
 
-**v1.0 measurement: Leaves.PH puts NCR canopy at 7.46 percent in 2026**, with an 8-year curve that peaks at 10.24 percent in 2023 before stepping back. Per-LGU breakdowns range from Quezon City at 18.93 percent (the NE green zone) to Manila at 0.89 percent and Navotas at 0.47 percent (densely built reclamation areas).
+**Leaves.PH puts NCR canopy at 7.46 percent in 2026**, with an 8-year curve that peaks at 10.24 percent in 2023 before stepping back. Per-LGU breakdowns range from Quezon City at 18.93 percent (the NE green zone) to Manila at 0.89 percent and Navotas at 0.47 percent (densely built reclamation areas).
 
 Pipeline: Sentinel-2 L2A median composites (cloud-masked at s2cloudless probability less than 40, 30 m), NDVI thresholded at 0.62 (F1-maximised against Meta Canopy Height v2 with recall floor 0.85), per-LGU aggregated against OSM admin-level=6 polygons for the 17 NCR LGUs.
 
@@ -24,7 +24,7 @@ Pipeline: Sentinel-2 L2A median composites (cloud-masked at s2cloudless probabil
 | Source | Headline | Our 2026 measurement | Delta | Status |
 |---|---|---|---|---|
 | DENR FMB (cited in EJN / news) | 6 percent / 3,565 ha | 7.46 percent / 5,840 ha | +1.46pp | Plausible, slightly above the cited figure. DENR source document not in public 2024+ reports. |
-| Global Forest Watch dashboard PHL/47 | 4.0 percent / 2.3 kha (2020 baseline) | 7.46 percent (2026) | +3.46pp | GFW materially understates 2026 NCR canopy. Difference of methodology (Hansen 30 m loss-history vs our NDVI canopy mask). |
+| Global Forest Watch dashboard PHL/47 | 4.0 percent / 2.3 kha (2020 baseline) | 7.46 percent (2026) | +3.46pp | GFW materially understates 2026 NCR canopy. Difference of methodology (Hansen 30 m loss-year vs our NDVI canopy mask). |
 | Earth Journalism Network 2024 ("open forest", DENR-sourced) | 2,071 ha in 2020 | n/a | n/a | "Open forest" is a DENR sub-class, not the same definition as canopy mask. Not directly comparable. |
 | ScienceKonek 2024 map (referenced by RadarPH May 2026) | unknown | n/a | n/a | Map raster + methodology not publicly findable. |
 
@@ -93,14 +93,14 @@ Hansen v1.13 records modest loss inside NCR over 25 years (cumulative across the
 | Others | 0.0 |
 | Total NCR | ~188 |
 
-These are conservative because Hansen 30 m misses sub-pixel events: the 225 SALEX trees felled along Quirino Avenue in May 2026 will only appear in the 2027 Hansen v1.14 release at earliest, if at all (depends on whether the loss exceeds the canopy-closure threshold inside any 30 m pixel).
+These are conservative because Hansen 30 m misses sub-pixel events: the 225 SALEX trees felled along Quirino Avenue in May 2026 will only appear in a future Hansen release at earliest, if at all (depends on whether the loss exceeds the canopy-closure threshold inside any 30 m pixel).
 
 ## What we have not measured (yet)
 
-- Per-barangay breakdown for all 142 NCR barangays. v1.1 target.
+- Per-barangay breakdown for all 142 NCR barangays: planned next granularity.
 - AlphaEarth Foundations head trained on per-LGU group-CV; only train if it beats the pure NDVI baseline (decision locked 2026-05-26).
-- 10 m calibration. v1.0 ships at 30 m to fit GEE's 50 MB sync limit.
-- 2027+ updates. v1.0 stops at 2026.
+- 10 m calibration. the current build ships at 30 m to fit GEE's 50 MB sync limit.
+- 2027+ updates. Coverage ends at 2026.
 
 ## Reproducing these numbers
 

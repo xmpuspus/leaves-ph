@@ -1,4 +1,4 @@
-"""Per-LGU canopy aggregation: produce the v1.0 canonical CSV.
+"""Per-LGU canopy aggregation: produce the canonical per-LGU CSV.
 
 For each LGU (17 polygons from data/lgu/ncr_lgu.geojson) and each year
 2019..2026, mask the binary canopy raster with the LGU polygon, sum the

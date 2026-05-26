@@ -27,7 +27,7 @@ Do not open a public issue. Acknowledged within 5 working days.
 
 ## joblib / pickle deserialization
 
-If Phase 4 ships an AlphaEarth-backed classifier, `pipeline/recalibrate.py` accepts a `--clf` argument that is passed directly to `joblib.load`. `joblib.load` is built on Python's pickle module, which executes arbitrary code during deserialization.
+If a calibrated-head classifier is shipped, `pipeline/recalibrate.py` accepts a `--clf` argument that is passed directly to `joblib.load`. `joblib.load` is built on Python's pickle module, which executes arbitrary code during deserialization.
 
 **Only run `joblib.load` against classifier files you trust.** Any shipped `clf_leaves_v*.joblib` is verifiable via `make hash-verify`. If you fork the repo and someone sends you a classifier file, verify its sha256 against a known-good source before invoking any `make` target that loads it.
 

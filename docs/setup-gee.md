@@ -11,7 +11,7 @@ earthengine authenticate
 
 This opens a browser flow. Follow the prompts and paste the resulting token. The token lands at `~/.config/earthengine/credentials` and persists.
 
-## Service-account auth (Phase 2 batch runs)
+## Service-account auth (for batch runs)
 
 1. Create a Google Cloud project: https://console.cloud.google.com/projectcreate
 2. Enable the Earth Engine API for that project: https://console.cloud.google.com/apis/library/earthengine.googleapis.com

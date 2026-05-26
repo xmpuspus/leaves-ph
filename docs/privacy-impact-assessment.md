@@ -11,7 +11,7 @@ This PIA is short by design. Compare to SolarMap.PH which processes rooftop imag
 | Source | Type | Personal data? |
 |---|---|---|
 | Sentinel-2 L2A imagery | satellite optical | No. 10 m resolution; cannot identify individuals. |
-| Hansen GFC v1.12 | derived raster, 30 m | No. Aggregate forest-loss classification. |
+| Hansen GFC v1.13 | derived raster, 30 m | No. Aggregate forest-loss classification. |
 | ESA WorldCover v200 | derived raster, 10 m | No. Aggregate land-cover classification. |
 | Dynamic World v1 | derived raster, 10 m | No. Aggregate per-pixel probability. |
 | Meta Canopy Height v2 | derived raster, 1 m | No. Tree height only; no identifying features. |
@@ -49,4 +49,4 @@ Privacy concerns: open a GitHub Security Advisory at https://github.com/xmpuspus
 
 ## RA 10173 self-designated DPO
 
-For v1.0, the project author (Xavier Puspus) is the self-designated Data Protection Officer. Given the project does not process personal data, formal National Privacy Commission registration is deferred.
+The project author (Xavier Puspus) is the self-designated Data Protection Officer. Given the project does not process personal data, formal National Privacy Commission registration is deferred.

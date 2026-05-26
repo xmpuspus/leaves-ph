@@ -1,6 +1,6 @@
 """Smoke tests: package imports cleanly, version string is sane, API stubs raise.
 
-These tests must pass at every commit, including the v0.1.0 scaffold.
+These tests must pass at every commit, including the scaffold.
 """
 
 import re
@@ -34,8 +34,8 @@ def test_public_api_imports():
 
 
 def test_api_stubs_raise_until_phase_3():
-    """Phase 3 fills these in. Until then, calling them must raise so a missing
-    Phase 3 cannot silently pass CI as a no-op."""
+    """The compute step fills these in. Until then, calling them must raise so a missing
+    a missing compute step cannot silently pass CI as a no-op."""
     from leaves_ph import aggregate_lgu, canopy_threshold, compute_ndvi
 
     with pytest.raises(NotImplementedError):

@@ -1,6 +1,6 @@
 # Methodology
 
-Status: skeleton for v0.1.0. Full sections fill in alongside Phases 2, 3, and 4.
+
 
 ## 1. Region of interest
 
@@ -49,9 +49,9 @@ lgu_name, year, canopy_ha, canopy_pct, ndvi_mean, hansen_loss_cumulative_ha, esa
 
 Output: `data/per_lgu/per_lgu_canopy_2019_2026.csv`. Sha256 prefix is pinned in `Makefile` as `EXPECTED_HASH`.
 
-## 6. Optional Phase 4 head (AlphaEarth + sklearn)
+## 6. Optional optional calibrated head (AlphaEarth + sklearn)
 
-Trained only if Phase 3 fails to validate per-LGU against Meta calibration within 5 percent agreement. Architecture:
+Trained only if the NDVI baseline fails to validate per-LGU against Meta calibration within 5 percent agreement. Architecture:
 
 - Encoder: AlphaEarth Foundations Satellite Embedding V1 (`GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL`), 64-dim per 10 m pixel.
 - Head: scikit-learn LogisticRegression.
@@ -61,7 +61,7 @@ Trained only if Phase 3 fails to validate per-LGU against Meta calibration withi
 
 Published only if its per-LGU MAE is materially lower than the pure NDVI baseline. Decision locked 2026-05-26.
 
-## 7. Animation frames (Phase 5)
+## 7. Animation frames
 
 Five GIFs:
 1. `docs/demo/hero.gif`: NCR-wide 2019 to 2026 yearly Sentinel-2 RGB + NDVI overlay, with year label and running canopy-percent counter.

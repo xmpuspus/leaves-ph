@@ -192,7 +192,7 @@ def main() -> int:
         )
     )
     if len(features) != len(NCR_LGUS):
-        print("[fetch_lgu] WARNING: matched count != canonical count; investigate before Phase 3")
+        print("[fetch_lgu] WARNING: matched count != canonical count; investigate before running the compute step")
         return 1
     return 0
 

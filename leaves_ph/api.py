@@ -1,4 +1,4 @@
-"""Public API stubs. Real implementations land in Phase 3 (per-LGU compute)."""
+"""Public API stubs. Real implementations land in the compute step."""
 
 from __future__ import annotations
 
@@ -15,10 +15,10 @@ def compute_ndvi(red: Any, nir: Any) -> Any:
     Returns:
         NDVI array in [-1, 1], NaN where the denominator is 0.
 
-    Note: Phase 3 fills in the real implementation. This stub raises so that
+    Note: The real implementation fills this in. Stub raises so that
     a missing-phase regression is caught by the smoke test.
     """
-    raise NotImplementedError("compute_ndvi is provided in Phase 3.")
+    raise NotImplementedError("compute_ndvi lands once the compute layer is wired.")
 
 
 def canopy_threshold(ndvi: Any, threshold: float = 0.5) -> Any:
@@ -27,14 +27,14 @@ def canopy_threshold(ndvi: Any, threshold: float = 0.5) -> Any:
     Args:
         ndvi: NDVI raster as a numpy array.
         threshold: NDVI value above which a pixel is treated as canopy.
-                   v1.0 default 0.5; calibrated against Meta canopy height v2.
+                   current default 0.5; calibrated against Meta canopy height v2.
 
     Returns:
         Boolean array of the same shape, True for canopy pixels.
 
-    Phase 3 implementation tunes the threshold per the calibration report.
+    The implementation tunes the threshold against the calibration report.
     """
-    raise NotImplementedError("canopy_threshold is provided in Phase 3.")
+    raise NotImplementedError("canopy_threshold lands once the compute layer is wired.")
 
 
 def aggregate_lgu(canopy_mask: Any, lgu_polygons: Any) -> dict[str, dict[str, float]]:
@@ -47,4 +47,4 @@ def aggregate_lgu(canopy_mask: Any, lgu_polygons: Any) -> dict[str, dict[str, fl
     Returns:
         Mapping LGU name -> {canopy_ha, canopy_pct, total_ha}.
     """
-    raise NotImplementedError("aggregate_lgu is provided in Phase 3.")
+    raise NotImplementedError("aggregate_lgu lands once the compute layer is wired.")

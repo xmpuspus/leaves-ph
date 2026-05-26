@@ -1,14 +1,14 @@
 # pipeline/
 
-GEE data pull (Phase 2), per-LGU compute (Phase 3), NDVI calibration, and optional Phase 4 head.
+GEE data pull, per-LGU compute, NDVI calibration, and the optional calibrated head.
 
 Each script in this directory is a single-file standalone runnable script
 that writes to `data/` under the repo root. Scripts are idempotent: re-running
 overwrites the same output deterministically when the cached inputs are unchanged.
 
-| Phase | Script | Output |
+| Step | Script | Output |
 |---|---|---|
-| 2 | `fetch_sentinel2_yearly.py` | `data/composites/s2_ndvi_<year>.tif` for year in 2019..2026 |
+| fetch | `fetch_sentinel2_yearly.py` | `data/composites/s2_ndvi_<year>.tif` for year in 2019..2026 |
 | 2 | `fetch_hansen.py` | `data/hansen/{treecover2000,lossyear,gain}.tif` |
 | 2 | `fetch_esa_worldcover.py` | `data/esa/worldcover_2021.tif` |
 | 2 | `fetch_dynamic_world.py` | `data/composites/dw_trees_<year>.tif` for year in 2019..2026 |
@@ -21,5 +21,5 @@ overwrites the same output deterministically when the cached inputs are unchange
 | 4 (optional) | `train_alphaearth_head.py` | `detection/train/clf_leaves_v1.joblib` |
 | 4 (optional) | `apply_head.py` | scored per-LGU CSV |
 
-Stubs for Phase 2 scripts land in 0.1.0 as `# TODO Phase 2` placeholders so the
+Stubs land at scaffold-time as `# TODO` placeholders so the
 Makefile targets are not broken when running `make help`.
