@@ -2,12 +2,14 @@
 import Base from "../layouts/Base.astro";
 ---
 <Base title="Leaves.PH · privacy and responsible use" pathname="/privacy">
-  <article class="max-w-prose mx-auto px-6 pt-12 pb-16 text-ink-700 leading-relaxed">
-    <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-3 font-mono">privacy &amp; responsible use</p>
-    <h1 class="text-3xl text-ink-900 mb-2 font-semibold tracking-tight">Vegetation is not personal data.</h1>
-    <p class="text-sm text-ink-500 mb-8">RA 10173 (Data Privacy Act of 2012), Section 3(g): "personal information" means any information from which the identity of an individual is apparent or can be reasonably and directly ascertained. Tree canopy aggregates per LGU do not meet that test.</p>
+  <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
+    <p class="kicker mb-4">SECTION 3 &middot; PRIVACY &amp; RESPONSIBLE USE</p>
+    <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">Vegetation is not personal data.</h1>
+    <p class="text-sm text-ink-500 mb-10 max-w-narrow">RA 10173 (Data Privacy Act of 2012), Section 3(g): "personal information" means any information from which the identity of an individual is apparent or can be reasonably and directly ascertained. Tree canopy aggregates per LGU do not meet that test.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">What we publish</h2>
+    <hr class="rule" />
+
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">What we publish</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li><strong>Per-LGU aggregates only.</strong> 17 polygons. No per-building data, no per-household inference, no individual identification.</li>
       <li><strong>Source rasters cropped to NCR.</strong> Sentinel-2 RGB at 30 m, Hansen GFC v1.13, ESA WorldCover v200, Dynamic World v1, Meta canopy height v2 (reprojected to EPSG:4326). All public-record.</li>

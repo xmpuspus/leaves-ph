@@ -2,12 +2,14 @@
 import Base from "../layouts/Base.astro";
 ---
 <Base title="Leaves.PH · methodology" pathname="/methodology">
-  <article class="max-w-prose mx-auto px-6 pt-12 pb-16 text-ink-700 leading-relaxed">
-    <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-3 font-mono">methodology</p>
-    <h1 class="text-3xl text-ink-900 mb-2 font-semibold tracking-tight">How Leaves.PH measures Metro Manila tree cover.</h1>
-    <p class="text-sm text-ink-500 mb-8">Current scope: the 17 NCR LGUs (16 cities + Pateros). Per-barangay (142 polygons) is the next granularity push, pending OSM name reconciliation.</p>
+  <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
+    <p class="kicker mb-4">SECTION 1 &middot; METHOD</p>
+    <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">How Leaves.PH measures Metro Manila tree cover.</h1>
+    <p class="text-sm text-ink-500 mb-10 max-w-narrow">Current scope: the 17 NCR LGUs (16 cities + Pateros). Per-barangay (142 polygons) is the next granularity push, pending OSM name reconciliation.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Inputs</h2>
+    <hr class="rule" />
+
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Inputs</h2>
     <p class="mb-3">Five canonical canopy / land-cover datasets, all pulled via Google Earth Engine or AWS Open Data, all bit-exact reproducible from the committed manifests:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites 2019 to 2026, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>

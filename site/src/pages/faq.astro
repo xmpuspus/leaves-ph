@@ -2,11 +2,13 @@
 import Base from "../layouts/Base.astro";
 ---
 <Base title="Leaves.PH · FAQ" pathname="/faq">
-  <article class="max-w-prose mx-auto px-6 pt-12 pb-16 text-ink-700 leading-relaxed">
-    <p class="text-xs uppercase tracking-[0.2em] text-ink-500 mb-3 font-mono">FAQ</p>
-    <h1 class="text-3xl text-ink-900 mb-8 font-semibold tracking-tight">Frequently asked questions.</h1>
+  <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
+    <p class="kicker mb-4">SECTION 2 &middot; FREQUENTLY ASKED</p>
+    <h1 class="font-display font-medium tracking-tight text-ink-900 mb-10" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">Eight questions you might ask.</h1>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">Why do the four 2024+ figures disagree?</h2>
+    <hr class="rule" />
+
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Why do the four 2024+ figures disagree?</h2>
     <p class="mb-4 text-sm">Different definitions, different sensors, different vintages. DENR FMB's "open forest" sub-category is not the same thing as Hansen's "tree cover" pixel classification, which is not the same thing as ESA WorldCover's class-10 trees. Leaves.PH stacks all four and publishes the per-LGU number our own pipeline computes from the canonical inputs. The four prior figures still get their own row in the BENCHMARKS table so the disagreement is visible, not hidden.</p>
 
     <h2 class="text-lg text-ink-900 mt-8 mb-2">Is the 6 percent DENR figure wrong?</h2>

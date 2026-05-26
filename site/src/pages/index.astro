@@ -25,8 +25,8 @@ const today = new Date().toISOString().slice(0, 10);
     </div>
   </section>
 
-  <!-- TIME-ANIMATED HERO -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-12">
+  <!-- TIME-ANIMATED HERO: side-by-side editorial / satellite variants -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-12 grid md:grid-cols-2 gap-6">
     <figure class="border border-ink-900 bg-paper">
       <img
         src="/demo/remaining-canopy-timeline.gif"
@@ -35,10 +35,25 @@ const today = new Date().toISOString().slice(0, 10);
         loading="eager"
       />
       <figcaption class="fig-caption px-4 py-3 border-t border-ink-900 bg-paper-tint flex flex-wrap justify-between gap-2">
-        <span>FIG&nbsp;1 &middot; REMAINING TREE COVER &middot; NCR &middot; 2019 to 2026 (8 frames)</span>
-        <span>Pixel: 30 m &middot; Source: Sentinel-2 NDVI &ge; 0.62 against Meta v2</span>
+        <span>FIG&nbsp;1A &middot; EDITORIAL BASEMAP</span>
+        <span>Hansen + NDVI density</span>
       </figcaption>
     </figure>
+    <figure class="border border-ink-900 bg-paper">
+      <img
+        src="/demo/remaining-canopy-satellite.gif"
+        alt="Sentinel-2 RGB satellite basemap of Metro Manila with remaining tree cover density overlay, animated 2019 to 2026. Real satellite imagery as the basemap, density gradient overlay shows where canopy disappears year over year."
+        class="block w-full h-auto"
+        loading="eager"
+      />
+      <figcaption class="fig-caption px-4 py-3 border-t border-ink-900 bg-paper-tint flex flex-wrap justify-between gap-2">
+        <span>FIG&nbsp;1B &middot; SATELLITE BASEMAP</span>
+        <span>S-2 RGB + density overlay</span>
+      </figcaption>
+    </figure>
+  </section>
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-8">
+    <p class="fig-caption">REMAINING TREE COVER &middot; NCR &middot; 2019 to 2026 (8 frames each) &middot; 30 m pixel &middot; Source: Sentinel-2 NDVI &ge; 0.62 calibrated against Meta canopy height v2, with Hansen GFC v1.13 loss-year subtraction.</p>
   </section>
 
   <!-- LEDE -->
