@@ -2,47 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,700;0,800;1,400;1,700&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
 @layer base {
-  html {
-    color-scheme: light;
-  }
+  html { color-scheme: light; }
   body {
-    @apply bg-paper text-ink-900 antialiased;
+    @apply bg-paper text-ink-900 antialiased font-sans;
+    background-image: linear-gradient(180deg, #f7f3e9 0%, #efe9d8 80%);
+    background-attachment: fixed;
   }
   a {
-    @apply underline decoration-ink-300 underline-offset-2 hover:decoration-ink-700;
+    @apply underline decoration-ink-300 underline-offset-[3px] hover:text-forest-700 transition-colors;
+    text-decoration-thickness: 1px;
   }
+  a:hover { text-decoration-color: #1f3d2b; }
   h1, h2, h3, h4 {
-    @apply font-semibold tracking-tight;
+    @apply font-display font-medium tracking-tight text-ink-900;
   }
-  code, pre {
-    @apply font-mono text-[0.92em];
-  }
+  code, pre { @apply font-mono text-[0.92em]; }
+  hr { @apply border-0 border-t border-ink-900; height: 0; }
 }
 
 @layer components {
-  .card {
-    @apply bg-white border border-ink-300/40 rounded-md p-5 shadow-sm;
+  .kicker { @apply font-mono uppercase text-ink-700; font-size: 0.7rem; line-height: 1.1; letter-spacing: 0.18em; }
+  .tag-verified { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-verified border border-signal-verified px-1.5 py-0.5; }
+  .tag-disputed { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-disputed border border-signal-disputed px-1.5 py-0.5; }
+  .tag-unverified { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-unverified border border-signal-unverified px-1.5 py-0.5; }
+  .dropcap::first-letter {
+    @apply font-display float-left mr-3 mt-1;
+    font-size: 4.5rem; line-height: 0.85; font-weight: 700; color: #1f3d2b;
   }
-  .badge {
-    @apply inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-ink-700/10 text-ink-700;
+  .pullquote {
+    @apply font-display leading-snug text-forest-700 my-12 max-w-narrow border-l-4 border-forest-700 pl-6 italic;
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
   }
-  .btn {
-    @apply inline-flex items-center px-3 py-1.5 rounded-md bg-ink-900 text-white text-sm hover:bg-ink-700;
+  .fig-caption { @apply font-mono text-xs uppercase tracking-[0.12em] text-ink-700 mt-3 leading-relaxed; }
+  .rule { @apply border-0 border-t border-ink-900 my-12 w-full; }
+  .stat-hero {
+    @apply font-display font-medium leading-none tracking-tight text-forest-700 tabular-nums;
+    font-size: clamp(3.5rem, 9vw, 7rem);
   }
-  .signal-bar {
-    @apply h-2 rounded bg-ink-300/30 overflow-hidden;
-  }
-  .signal-bar > span {
-    @apply block h-full;
+  .stat-medium {
+    @apply font-display font-medium leading-none tracking-tight text-forest-700 tabular-nums;
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
   }
 }
 
 @layer utilities {
-  p a.no-underline,
-  li a.no-underline,
-  dd a.no-underline,
-  td a.no-underline {
-    border-bottom: 1px dotted currentColor;
+  .editorial-slider {
+    appearance: none;
+    height: 4px;
+    background: #1a1a1a;
+    outline: none;
   }
+  .editorial-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px; height: 18px;
+    background: #b65724;
+    border: 2px solid #1a1a1a;
+    cursor: pointer;
+  }
+  .editorial-slider::-moz-range-thumb {
+    width: 18px; height: 18px;
+    background: #b65724;
+    border: 2px solid #1a1a1a;
+    cursor: pointer;
+  }
+}
+
+.maplibregl-ctrl-attrib {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  background: rgba(247, 243, 233, 0.92) !important;
+}
+.maplibregl-popup-content {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: 1px solid #1a1a1a !important;
+  background: #f7f3e9 !important;
 }

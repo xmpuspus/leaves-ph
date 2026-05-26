@@ -8,6 +8,7 @@ interface Props {
   description?: string;
   pathname?: string;
   image?: string;
+  fullBleed?: boolean;
 }
 
 const SITE_URL = "https://leaves.ph";
@@ -15,9 +16,10 @@ const DEFAULT_IMAGE = "/og-preview.png";
 
 const {
   title,
-  description = "Fresh 2026 Metro Manila tree-cover validation against Sentinel-2, Hansen Global Forest Change, ESA WorldCover, Dynamic World, and Meta Canopy Height. Per-LGU canopy curves 2019 to 2026 for the 17 NCR LGUs.",
+  description = "A fifth, fully reproducible 2026 measurement of Metro Manila tree cover. DENR says 6 percent. Global Forest Watch says 4 percent. We measure 7.46 percent and reconcile the four. Per-LGU, per-year, hash-verified.",
   pathname = Astro.url.pathname,
   image = DEFAULT_IMAGE,
+  fullBleed = false,
 } = Astro.props;
 
 const canonical = `${SITE_URL}${pathname}`;
@@ -32,7 +34,7 @@ const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#2d5a3d" />
+    <meta name="theme-color" content="#1f3d2b" />
 
     <meta property="og:site_name" content="Leaves.PH" />
     <meta property="og:title" content={title} />
@@ -42,18 +44,18 @@ const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2019 to 2026" />
+    <meta property="og:image:alt" content="Leaves.PH 2026 canopy reconciliation for Metro Manila" />
     <meta property="og:locale" content="en_PH" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2019 to 2026" />
+    <meta name="twitter:image:alt" content="Leaves.PH 2026 canopy reconciliation for Metro Manila" />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header pathname={pathname} />
-    <main class="flex-1">
+    <main class={fullBleed ? "flex-1" : "flex-1"}>
       <slot />
     </main>
     <Footer />

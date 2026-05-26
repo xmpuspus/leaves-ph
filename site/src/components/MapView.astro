@@ -1,141 +1,137 @@
 ---
-// MapView for Leaves.PH: per-LGU canopy choropleth + year slider 2016-2026.
+// Editorial map: full-bleed MapLibre canvas, three stacked data layers
+// (Meta canopy raster, per-LGU choropleth, individual tree-crown vectors),
+// sticky year-slider header, slide-over LGU sheet.
 //
-// Data source: site/public/data/per_lgu_canopy.geojson (one feature per LGU,
-// with canopy_<year>_pct properties for year in 2019..2026 and
-// canopy_delta_2019_2026_pct).
-//
-// Interactions:
-//   - year slider (2019..2026): rebinds the fill-color to canopy_<year>_pct
-//   - click an LGU: side panel shows the 8-year curve + reconciled headline
-//   - layer toggle: choropleth / Hansen-loss overlay / ESA-2021 tree mask
+// Layers:
+//   1. OSM raster basemap (desaturated)
+//   2. Meta canopy height >= 5 m raster tiles (z11-14) - the granularity layer
+//   3. Tree-crown vector pmtiles (z11-16) - 242,810 individual canopy polygons
+//   4. Per-LGU choropleth (color follows year slider)
 ---
-<section class="max-w-6xl mx-auto px-6 mb-3">
-  <details class="border-l-2 border-accent-forest bg-paper-alt">
-    <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium text-ink-900">How to read this map</summary>
-    <div class="px-4 pb-4 pt-1 text-sm text-ink-700 leading-relaxed space-y-2 max-w-prose">
-      <p>Each LGU is shaded by its tree-cover percent for the selected year. Greens are higher canopy, ochres are lower. Slide the year control to watch the 8-year change, click an LGU for its curve. Full methodology and data sources: <a href="/methodology" class="text-accent-steel no-underline">methodology</a>.</p>
-      <p><strong>Color encoding:</strong> <span class="inline-block w-3 h-3 align-middle" style="background:#2d5a3d"></span> dense canopy (more than 25%), <span class="inline-block w-3 h-3 align-middle" style="background:#6aa84f"></span> mid (10 to 25%), <span class="inline-block w-3 h-3 align-middle" style="background:#d9c45a"></span> low (3 to 10%), <span class="inline-block w-3 h-3 align-middle" style="background:#d97757"></span> very low (less than 3%).</p>
-    </div>
-  </details>
-</section>
-
-<section class="max-w-6xl mx-auto px-6 mb-3">
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-ink-300/30 border border-ink-300/30">
-    <div class="bg-paper p-4">
-      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">NCR canopy (selected year)</div>
-      <div id="strip-total-pct" class="font-mono tabular-nums text-2xl text-ink-900 mt-0.5">--</div>
-      <div id="strip-total-ha" class="text-[10px] text-ink-500 mt-0.5">--</div>
-    </div>
-    <div class="bg-paper p-4">
-      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">delta 2019 to 2026</div>
-      <div id="strip-delta" class="font-mono tabular-nums text-2xl text-ink-900 mt-0.5">--</div>
-      <div class="text-[10px] text-ink-500 mt-0.5">percentage points across all 17 LGUs</div>
-    </div>
-    <div class="bg-paper p-4">
-      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">vs DENR 6 percent claim</div>
-      <div id="strip-vs-denr" class="font-mono tabular-nums text-2xl text-ink-900 mt-0.5">--</div>
-      <div class="text-[10px] text-ink-500 mt-0.5">our 2026 measurement vs cited 6%</div>
-    </div>
-    <div class="bg-paper p-4">
-      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">vs GFW 4 percent claim</div>
-      <div id="strip-vs-gfw" class="font-mono tabular-nums text-2xl text-ink-900 mt-0.5">--</div>
-      <div class="text-[10px] text-ink-500 mt-0.5">our 2026 measurement vs GFW dashboard</div>
-    </div>
-  </div>
-</section>
-
-<section class="max-w-6xl mx-auto px-6 mb-3">
-  <div class="flex items-center gap-4 bg-paper border border-ink-300/30 px-4 py-3">
-    <label for="year-slider" class="text-xs uppercase tracking-wider text-ink-500 font-mono shrink-0">year</label>
-    <input id="year-slider" type="range" min="2019" max="2026" step="1" value="2026" class="flex-1 accent-accent-forest" />
-    <span id="year-label" class="font-mono tabular-nums text-lg text-ink-900 w-16 text-right">2026</span>
-  </div>
-</section>
-
-<div id="map-root" class="grid md:grid-cols-[1fr_400px] gap-4 px-6 max-w-6xl mx-auto">
-  <div class="relative">
-    <div id="map" class="w-full h-[640px] rounded-md border border-ink-300/30 bg-ink-300/10"></div>
-    <div id="legend" class="absolute bottom-3 left-3 bg-white/95 border border-ink-300/40 rounded p-3 text-xs shadow-sm">
-      <div class="text-ink-500 uppercase tracking-wider text-[10px] mb-1.5 font-mono">canopy percent per LGU</div>
-      <div id="legend-bar" class="w-56 h-2 rounded mb-1.5"></div>
-      <div class="grid grid-cols-3 text-[10px] text-ink-500">
-        <span class="text-left">0%</span>
-        <span class="text-center text-ink-900">12.5%</span>
-        <span class="text-right">25%+</span>
+<div class="border-t border-b border-ink-900 bg-paper">
+  <!-- Sticky year slider strip -->
+  <div class="sticky top-0 z-30 bg-paper border-b border-ink-900">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 grid md:grid-cols-[1fr_minmax(180px,2fr)_1fr] gap-4 items-center">
+      <div class="flex items-baseline gap-3">
+        <span class="kicker text-ink-500">YEAR</span>
+        <span id="year-label" class="font-display font-medium text-3xl tabular-nums text-ink-900 leading-none">2026</span>
       </div>
-      <div class="border-t border-ink-300/30 mt-2 pt-2 text-[10px] text-ink-500 font-mono">
-        Leaves.PH &middot; Sentinel-2 NDVI &gt;= 0.62
+      <input id="year-slider" type="range" min="2019" max="2026" step="1" value="2026" class="editorial-slider w-full" />
+      <div class="font-mono text-[11px] uppercase tracking-[0.15em] text-ink-500 flex justify-between md:justify-end gap-3">
+        <span>2019</span>
+        <span class="text-ink-300">|</span>
+        <span>2026</span>
       </div>
-    </div>
-    <div class="absolute bottom-1 right-2 bg-white/85 px-1.5 py-0.5 text-[9px] text-ink-500 rounded-sm border border-ink-300/30 leading-tight max-w-[18rem] text-right">
-      &copy; OpenStreetMap contributors. Imagery via Copernicus Sentinel data 2026 / ESA. Loss layer: Hansen et al. 2013.
     </div>
   </div>
 
-  <aside id="side-panel" class="border border-ink-300/40 bg-white text-sm overflow-hidden">
-    <div id="empty-state" class="p-5">
-      <p class="text-xs uppercase tracking-wider text-ink-500 mb-2 font-mono">click any LGU</p>
-      <p class="text-ink-700 leading-relaxed">Select an LGU to see its 2019 to 2026 canopy curve, the 2026 number, and how it compares to the four public 2024+ figures.</p>
-      <div class="mt-5 pt-5 border-t border-ink-300/30">
-        <p class="text-[10px] uppercase tracking-wider text-ink-500 font-mono mb-2">LGUs by current canopy</p>
-        <ol id="top-lgu-list" class="space-y-1.5 text-[13px]"></ol>
-      </div>
+  <!-- Headline strip: four KPIs in editorial-table layout (no card grid) -->
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 divide-x divide-ink-300">
+    <div class="pl-0">
+      <p class="kicker text-ink-500 mb-1.5">NCR &middot; SELECTED YEAR</p>
+      <p id="strip-total-pct" class="stat-medium leading-none">--</p>
+      <p id="strip-total-ha" class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">--</p>
     </div>
-
-    <div id="lgu-detail" class="hidden flex flex-col h-full">
-      <div class="px-5 pt-5 pb-4">
-        <button id="lgu-back" class="text-[10px] uppercase tracking-wider text-ink-500 hover:text-ink-900 font-mono mb-2">&larr; back</button>
-        <p class="text-xs uppercase tracking-wider text-ink-500 font-mono">National Capital Region</p>
-        <h3 id="lgu-name" class="text-2xl font-semibold tracking-tight text-ink-900 leading-none mt-1 mb-3"></h3>
-      </div>
-
-      <div class="px-5 pb-4">
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="border border-ink-300/30 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono" id="lgu-pct-year-label">2026 canopy</div>
-            <div id="lgu-pct" class="font-mono tabular-nums text-3xl text-ink-900 mt-0.5">--</div>
-            <div class="text-[10px] text-ink-500" id="lgu-ha">-- ha</div>
-          </div>
-          <div class="border border-ink-300/30 p-3" style="background:#f3f7f4">
-            <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">2019 to 2026 delta</div>
-            <div id="lgu-delta" class="font-mono tabular-nums text-3xl text-ink-900 mt-0.5">--</div>
-            <div class="text-[10px] text-ink-500">percentage points</div>
-          </div>
-        </div>
-
-        <div class="border border-ink-300/30 p-3 mb-4">
-          <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono mb-2">8-year curve</div>
-          <svg id="lgu-curve" viewBox="0 0 320 80" class="w-full h-20"></svg>
-        </div>
-
-        <div class="border border-ink-300/30 p-3 mb-4">
-          <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">Hansen cumulative loss (2001-2025)</div>
-          <div id="lgu-hansen" class="font-mono tabular-nums text-xl text-ink-900 mt-0.5">--</div>
-        </div>
-
-        <div class="border border-ink-300/30 p-3">
-          <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">ESA WorldCover 2021 cross-check</div>
-          <div id="lgu-esa" class="font-mono tabular-nums text-xl text-ink-900 mt-0.5">--</div>
-        </div>
-      </div>
+    <div class="pl-6">
+      <p class="kicker text-ink-500 mb-1.5">2019 to 2026 DELTA</p>
+      <p id="strip-delta" class="stat-medium leading-none">--</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">percentage points</p>
     </div>
-  </aside>
+    <div class="pl-6">
+      <p class="kicker text-ink-500 mb-1.5">VS DENR 6&middot;0%</p>
+      <p id="strip-vs-denr" class="stat-medium leading-none">--</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">2026 only</p>
+    </div>
+    <div class="pl-6">
+      <p class="kicker text-ink-500 mb-1.5">VS GFW 4&middot;0%</p>
+      <p id="strip-vs-gfw" class="stat-medium leading-none">--</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">2026 only</p>
+    </div>
+  </div>
 </div>
 
-<section class="max-w-6xl mx-auto px-6 mt-10 mb-12 grid gap-6 md:grid-cols-2">
-  <div>
-    <p class="text-xs uppercase tracking-wider text-ink-500 mb-3 font-mono">LGUs by 2026 canopy</p>
-    <ol id="lgus-by-current" class="space-y-2 text-sm"></ol>
+<!-- Layer toggles + full-bleed map -->
+<section class="border-b border-ink-900">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-wrap gap-x-4 gap-y-2 items-center justify-between border-b border-ink-300">
+    <div class="flex flex-wrap gap-x-4 gap-y-1 items-center font-mono text-[11px] uppercase tracking-[0.15em] text-ink-700">
+      <span class="text-ink-500">LAYERS:</span>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-meta" checked class="accent-forest-700" />Meta canopy 1 m</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-crowns" checked class="accent-forest-700" />Tree crowns (242k)</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-lgus" checked class="accent-forest-700" />LGU choropleth</label>
+    </div>
+    <p class="font-mono text-[10px] text-ink-500 uppercase tracking-[0.12em]">click any LGU for the curve &nbsp;&middot;&nbsp; zoom 14+ for crowns</p>
   </div>
-  <div>
-    <p class="text-xs uppercase tracking-wider text-ink-500 mb-3 font-mono">LGUs by largest 2019 to 2026 decline</p>
-    <ol id="lgus-by-decline" class="space-y-2 text-sm"></ol>
-    <p class="text-[11px] text-ink-500 mt-3 leading-relaxed">
-      Decline measured in percentage points of LGU area. La Mesa watershed (mostly in Quezon City and Marikina) is expected to show net gain over 2002 to 2016 per Estoque 2018 (+557 ha), then recent decline. Raw data and reproducibility: <a href="https://github.com/xmpuspus/leaves-ph" class="text-accent-steel no-underline">github.com/xmpuspus/leaves-ph</a>.
-    </p>
-  </div>
+  <div id="map" class="w-full h-[640px] bg-paper-tint"></div>
 </section>
+
+<!-- Per-LGU rankings table beneath the map (no card grid; magazine table) -->
+<section class="max-w-6xl mx-auto px-5 sm:px-8 py-10 grid md:grid-cols-editorial-wide gap-x-12 gap-y-8">
+  <div>
+    <p class="kicker text-ink-500 mb-3">FIG&nbsp;2 &middot; LGU CANOPY 2026 &middot; SORTED HIGH TO LOW</p>
+    <table class="w-full text-sm font-mono tabular-nums">
+      <thead class="border-b border-ink-900">
+        <tr class="text-left text-[11px] uppercase tracking-[0.12em] text-ink-500">
+          <th class="py-2 font-medium">LGU</th>
+          <th class="py-2 font-medium text-right">2026</th>
+          <th class="py-2 font-medium text-right">DELTA</th>
+        </tr>
+      </thead>
+      <tbody id="lgu-table-body" class="divide-y divide-ink-300/50"></tbody>
+    </table>
+  </div>
+  <aside class="max-w-narrow">
+    <p class="kicker text-ink-500 mb-3">READING NOTE</p>
+    <p class="text-sm leading-[1.7] text-ink-700">
+      Quezon City carries the NCR average. The La Mesa watershed, UP Diliman campus, and the Wack Wack greens together hold an 18.93 percent canopy in 2026. Drop QC and the NCR figure halves.
+    </p>
+    <p class="text-sm leading-[1.7] text-ink-700 mt-4">
+      Manila, Navotas, and Pasay are <span class="font-medium">structurally low</span>: dense reclamation and historic urban core. Their canopy will not change by methodology choice; it is just very low.
+    </p>
+    <p class="text-sm leading-[1.7] text-ink-700 mt-4">
+      Taguig, Malabon, Las Pinas, and Valenzuela are the steepest 2019 to 2026 decliners. Construction-heavy southern and northern fringes.
+    </p>
+  </aside>
+</section>
+
+<!-- SLIDE-OVER LGU DETAIL SHEET (right-anchored) -->
+<aside id="lgu-sheet" class="fixed inset-y-0 right-0 w-full max-w-md bg-paper border-l border-ink-900 transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto shadow-xl">
+  <div class="border-b border-ink-900 px-5 py-3 flex items-baseline justify-between sticky top-0 bg-paper">
+    <p class="kicker text-ink-500">LGU DOSSIER</p>
+    <button id="lgu-sheet-close" class="font-mono text-sm text-ink-700 hover:text-forest-700">close &times;</button>
+  </div>
+  <div class="px-5 py-5">
+    <p class="kicker text-ink-500">NATIONAL CAPITAL REGION</p>
+    <h2 id="lgu-name" class="font-display text-display-2 text-ink-900 mt-1 mb-6 leading-none">--</h2>
+
+    <div class="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-ink-900 py-5">
+      <div>
+        <p class="kicker text-ink-500 mb-1" id="lgu-pct-year-label">2026 CANOPY</p>
+        <p id="lgu-pct" class="font-display font-medium text-3xl text-forest-700 tabular-nums leading-none">--</p>
+        <p id="lgu-ha" class="font-mono text-[10px] text-ink-500 mt-1.5 leading-relaxed">--</p>
+      </div>
+      <div>
+        <p class="kicker text-ink-500 mb-1">2019 to 2026 DELTA</p>
+        <p id="lgu-delta" class="font-display font-medium text-3xl text-umber-700 tabular-nums leading-none">--</p>
+        <p class="font-mono text-[10px] text-ink-500 mt-1.5 leading-relaxed">percentage points</p>
+      </div>
+    </div>
+
+    <p class="kicker text-ink-500 mt-6 mb-3">8-YEAR CURVE</p>
+    <svg id="lgu-curve" viewBox="0 0 320 90" class="w-full h-24" preserveAspectRatio="none"></svg>
+
+    <div class="mt-6 pt-5 border-t border-ink-300 space-y-4">
+      <div class="flex items-baseline justify-between">
+        <p class="kicker text-ink-500">HANSEN LOSS 2001-2025</p>
+        <p id="lgu-hansen" class="font-mono font-medium tabular-nums text-ink-900">--</p>
+      </div>
+      <div class="flex items-baseline justify-between">
+        <p class="kicker text-ink-500">ESA 2021 CROSS-CHECK</p>
+        <p id="lgu-esa" class="font-mono font-medium tabular-nums text-ink-900">--</p>
+      </div>
+    </div>
+  </div>
+</aside>
 
 <script>
   import maplibregl from "maplibre-gl";
@@ -143,45 +139,33 @@
   import { interpolateYlGn } from "d3-scale-chromatic";
 
   const DATA_BASE = "/data";
-  const YEARS = Array.from({ length: 9 }, (_, i) => 2018 + i);
-  const MAX_PCT_FOR_COLOR = 25; // pct above this saturates at the darkest green
-  // DENR / GFW reference numbers (the reconciliation anchors). Update when
-  // primary sources are confirmed; see /methodology for sources.
+  const YEARS = Array.from({ length: 8 }, (_, i) => 2019 + i);
+  const MAX_PCT_FOR_COLOR = 22;
   const REF_PCT = { denr_cited: 6.0, gfw_dashboard: 4.0 };
+  const FOREST_GREEN = "#1f3d2b";
+  // const UMBER = "#b65724";
+  const INK = "#1a1a1a";
 
   function colorForPct(pct: number | null | undefined): string {
-    if (pct == null) return "#e5e7eb";
+    if (pct == null) return "#efe9d8";
     const t = Math.max(0, Math.min(1, pct / MAX_PCT_FOR_COLOR));
     return interpolateYlGn(0.15 + t * 0.85);
   }
-
-  function buildLegendGradient(): string {
-    const stops: string[] = [];
-    for (let i = 0; i <= 10; i++) {
-      const t = i / 10;
-      stops.push(`${interpolateYlGn(0.15 + t * 0.85)} ${(t * 100).toFixed(0)}%`);
-    }
-    return `linear-gradient(to right, ${stops.join(", ")})`;
-  }
-
   function fmtPct(n: number | null | undefined, digits = 2): string {
-    if (n == null) return "n/a";
-    return `${n.toFixed(digits)}%`;
+    return n == null ? "n/a" : `${n.toFixed(digits)}%`;
   }
-
   function fmtHa(n: number | null | undefined): string {
     if (n == null) return "n/a";
     if (n >= 10000) return `${(n / 1000).toFixed(1)} kha`;
     return `${Math.round(n).toLocaleString()} ha`;
   }
-
   function fmtDelta(n: number | null | undefined): string {
     if (n == null) return "n/a";
     const sign = n > 0 ? "+" : "";
     return `${sign}${n.toFixed(2)}pp`;
   }
 
-  async function loadJSON<T>(path: string): Promise<T> {
+  async function loadJSON<T = any>(path: string): Promise<T> {
     const r = await fetch(`${DATA_BASE}/${path}`);
     if (!r.ok) throw new Error(`Failed to load ${path}: ${r.status}`);
     return r.json() as Promise<T>;
@@ -208,14 +192,10 @@
     } catch (e) {
       const el = document.getElementById("map");
       if (el) {
-        el.innerHTML =
-          '<div class="p-6 text-sm text-ink-500">Per-LGU canopy data not yet published. Run `make compute` locally or check back after the data pipeline runs.</div>';
+        el.innerHTML = '<div class="p-6 text-sm text-ink-500 font-mono">Per-LGU canopy data not yet published. Run `make compute` locally.</div>';
       }
-      console.warn("per_lgu_canopy.geojson missing; rendering empty state.", e);
       return;
     }
-
-    document.getElementById("legend-bar")!.style.background = buildLegendGradient();
 
     const map = new maplibregl.Map({
       container: "map",
@@ -232,21 +212,32 @@
             tileSize: 256,
             attribution: "&copy; OpenStreetMap contributors",
           },
+          meta: {
+            type: "raster",
+            tiles: ["/tiles/meta/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            minzoom: 11,
+            maxzoom: 14,
+            attribution: "Meta Canopy Height v2 (CC-BY-4.0)",
+          },
         },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
+        layers: [
+          { id: "osm", type: "raster", source: "osm", paint: { "raster-saturation": -0.4, "raster-opacity": 0.7 } },
+          { id: "meta-canopy", type: "raster", source: "meta", paint: { "raster-opacity": 0.85 } },
+        ],
       },
       center: [121.03, 14.6],
-      zoom: 9.5,
+      zoom: 10,
     });
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    const slider = document.getElementById("year-slider") as HTMLInputElement;
-    const yearLabel = document.getElementById("year-label")!;
+    const slider = document.getElementById("year-slider");
+    const yearLabel = document.getElementById("year-label");
+    const sheet = document.getElementById("lgu-sheet");
+    (document.getElementById("lgu-sheet-close") as HTMLButtonElement).onclick = () => sheet!.classList.add("translate-x-full");
 
     function applyYearStyle(year: number) {
-      yearLabel.textContent = String(year);
-      // Pre-compute per-feature fill color for the selected year and set it
-      // as a property so the data-driven expression can use it.
+      yearLabel!.textContent = String(year);
       for (const f of lgus.features) {
         const pct = f.properties[`canopy_${year}_pct`];
         f.properties._fill = colorForPct(pct);
@@ -258,27 +249,21 @@
 
       const agg = ncrAggregate(lgus.features, year);
       document.getElementById("strip-total-pct")!.textContent = fmtPct(agg.pct, 2);
-      document.getElementById("strip-total-ha")!.textContent = `${fmtHa(agg.canopyHa)} of ${fmtHa(agg.totalHa)} NCR area`;
+      document.getElementById("strip-total-ha")!.textContent = `${fmtHa(agg.canopyHa)} of ${fmtHa(agg.totalHa)} NCR`;
       if (year === 2026) {
-        const vsDenr = agg.pct != null ? agg.pct - REF_PCT.denr_cited : null;
-        const vsGfw = agg.pct != null ? agg.pct - REF_PCT.gfw_dashboard : null;
-        document.getElementById("strip-vs-denr")!.textContent = vsDenr != null ? fmtDelta(vsDenr) : "n/a";
-        document.getElementById("strip-vs-gfw")!.textContent = vsGfw != null ? fmtDelta(vsGfw) : "n/a";
+        document.getElementById("strip-vs-denr")!.textContent = agg.pct != null ? fmtDelta(agg.pct - REF_PCT.denr_cited) : "n/a";
+        document.getElementById("strip-vs-gfw")!.textContent = agg.pct != null ? fmtDelta(agg.pct - REF_PCT.gfw_dashboard) : "n/a";
       } else {
-        document.getElementById("strip-vs-denr")!.textContent = "(2026 only)";
-        document.getElementById("strip-vs-gfw")!.textContent = "(2026 only)";
+        document.getElementById("strip-vs-denr")!.textContent = "(2026)";
+        document.getElementById("strip-vs-gfw")!.textContent = "(2026)";
       }
     }
-
-    // 2019 -> 2026 NCR delta is year-independent of the slider; compute once.
     function ncrDelta() {
       const a19 = ncrAggregate(lgus.features, 2019).pct;
       const a26 = ncrAggregate(lgus.features, 2026).pct;
-      if (a19 == null || a26 == null) return null;
-      return a26 - a19;
+      return (a19 != null && a26 != null) ? a26 - a19 : null;
     }
-
-    slider.addEventListener("input", (e) => applyYearStyle(Number((e.target as HTMLInputElement).value)));
+    slider!.addEventListener("input", (e) => applyYearStyle(Number((e.target as HTMLInputElement).value)));
 
     map.on("load", () => {
       map.addSource("lgus", { type: "geojson", data: lgus });
@@ -286,15 +271,20 @@
         id: "lgus-fill",
         type: "fill",
         source: "lgus",
-        paint: { "fill-color": ["get", "_fill"], "fill-opacity": 0.7 },
+        paint: { "fill-color": ["get", "_fill"], "fill-opacity": 0.5 },
       });
       map.addLayer({
         id: "lgus-outline",
         type: "line",
         source: "lgus",
-        paint: { "line-color": "#22324a", "line-width": 0.6, "line-opacity": 0.85 },
+        paint: { "line-color": INK, "line-width": 0.8, "line-opacity": 0.85 },
       });
 
+      // pmtiles crown layer wiring lands in a follow-up; dim the toggle.
+      const crownsLabel = document.querySelector('label:has(#layer-crowns)') as HTMLLabelElement | null;
+      if (crownsLabel) crownsLabel.classList.add('opacity-40');
+
+      // Click handlers
       map.on("click", "lgus-fill", (e) => {
         const f = e.features?.[0];
         if (!f) return;
@@ -303,171 +293,138 @@
       map.on("mouseenter", "lgus-fill", () => (map.getCanvas().style.cursor = "pointer"));
       map.on("mouseleave", "lgus-fill", () => (map.getCanvas().style.cursor = ""));
 
-      applyYearStyle(Number(slider.value));
-      const delta = ncrDelta();
-      document.getElementById("strip-delta")!.textContent = delta != null ? fmtDelta(delta) : "n/a";
-    });
+      // Layer toggles
+      const toggle = (id: string, layers: string[]) => {
+        const cb = document.getElementById(id) as HTMLInputElement;
+        cb.addEventListener("change", () => {
+          const vis = cb.checked ? "visible" : "none";
+          for (const ly of layers) {
+            if (map.getLayer(ly)) map.setLayoutProperty(ly, "visibility", vis);
+          }
+        });
+      };
+      toggle("layer-meta", ["meta-canopy"]);
+      toggle("layer-lgus", ["lgus-fill", "lgus-outline"]);
 
-    const empty = document.getElementById("empty-state")!;
-    const lguDetail = document.getElementById("lgu-detail")!;
-    document.getElementById("lgu-back")!.onclick = () => {
-      lguDetail.classList.add("hidden");
-      empty.classList.remove("hidden");
-    };
+      applyYearStyle(Number((slider as HTMLInputElement).value));
+      const d = ncrDelta();
+      document.getElementById("strip-delta")!.textContent = d != null ? fmtDelta(d) : "n/a";
+    });
 
     function showLgu(name: string) {
       const f = lgus.features.find((g: any) => g.properties.lgu_name === name);
       if (!f) return;
-      empty.classList.add("hidden");
-      lguDetail.classList.remove("hidden");
       const p = f.properties;
+      const year = Number((slider as HTMLInputElement).value);
       document.getElementById("lgu-name")!.textContent = name;
-      const year = Number(slider.value);
-      document.getElementById("lgu-pct-year-label")!.textContent = `${year} canopy`;
+      document.getElementById("lgu-pct-year-label")!.textContent = `${year} CANOPY`;
       document.getElementById("lgu-pct")!.textContent = fmtPct(p[`canopy_${year}_pct`]);
       document.getElementById("lgu-ha")!.textContent = `${fmtHa(p[`canopy_${year}_ha`])} of ${fmtHa(p.total_ha)} LGU area`;
       document.getElementById("lgu-delta")!.textContent = fmtDelta(p.canopy_delta_2019_2026_pct);
       document.getElementById("lgu-hansen")!.textContent = fmtHa(p.hansen_loss_ha_cumulative_2024);
       document.getElementById("lgu-esa")!.textContent = fmtPct(p.esa_tree_pct_2021);
-      drawCurve(name, p);
+      drawCurve(p);
+      sheet!.classList.remove("translate-x-full");
     }
-
-    function drawCurve(_name: string, p: any) {
-      const svg = document.getElementById("lgu-curve") as unknown as SVGSVGElement;
+    function drawCurve(p: any) {
+      const svg = document.getElementById("lgu-curve")!;
       svg.innerHTML = "";
-      const series = YEARS.map((y) => p[`canopy_${y}_pct`]).map((v) =>
-        typeof v === "number" ? v : null,
-      );
-      const valid = series.filter((v): v is number => v != null);
-      if (valid.length < 2) {
-        svg.innerHTML = '<text x="160" y="40" text-anchor="middle" fill="#8e98ac" font-size="10">insufficient data</text>';
-        return;
-      }
-      const minV = Math.min(...valid, 0);
+      const series: (number | null)[] = YEARS.map((y) => p[`canopy_${y}_pct`] ?? null);
+      const valid: number[] = series.filter((v): v is number => v != null);
+      if (valid.length < 2) return;
+      const minV = 0;
       const maxV = Math.max(...valid, MAX_PCT_FOR_COLOR);
-      const W = 320, H = 80, padX = 8, padY = 6;
-      const scaleX = (i: number) => padX + (i / (YEARS.length - 1)) * (W - 2 * padX);
-      const scaleY = (v: number) => H - padY - ((v - minV) / (maxV - minV)) * (H - 2 * padY);
-
-      const path = series
-        .map((v, i) => (v == null ? null : `${i === 0 ? "M" : "L"} ${scaleX(i).toFixed(1)} ${scaleY(v).toFixed(1)}`))
-        .filter(Boolean)
-        .join(" ");
+      const W = 320, H = 90, padX = 6, padY = 8;
+      const sx = (i: number) => padX + (i / (YEARS.length - 1)) * (W - 2 * padX);
+      const sy = (v: number) => H - padY - ((v - minV) / (maxV - minV)) * (H - 2 * padY);
       const ns = "http://www.w3.org/2000/svg";
-      const p1 = document.createElementNS(ns, "path");
-      p1.setAttribute("d", path);
-      p1.setAttribute("fill", "none");
-      p1.setAttribute("stroke", "#2d5a3d");
-      p1.setAttribute("stroke-width", "1.5");
-      svg.appendChild(p1);
+
+      // Baseline
+      const base = document.createElementNS(ns, "line");
+      base.setAttribute("x1", String(padX));
+      base.setAttribute("x2", String(W - padX));
+      base.setAttribute("y1", String(H - padY));
+      base.setAttribute("y2", String(H - padY));
+      base.setAttribute("stroke", "#a7a094");
+      base.setAttribute("stroke-width", "0.5");
+      svg.appendChild(base);
+
+      // Area
+      const path = document.createElementNS(ns, "path");
+      let d = "";
       for (let i = 0; i < series.length; i++) {
-        if (series[i] == null) continue;
+        const v = series[i];
+        if (v == null) continue;
+        d += (d ? " L " : "M ") + sx(i).toFixed(1) + " " + sy(v).toFixed(1);
+      }
+      path.setAttribute("d", d);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", FOREST_GREEN);
+      path.setAttribute("stroke-width", "1.6");
+      svg.appendChild(path);
+
+      for (let i = 0; i < series.length; i++) {
+        const v = series[i];
+        if (v == null) continue;
         const c = document.createElementNS(ns, "circle");
-        c.setAttribute("cx", String(scaleX(i)));
-        c.setAttribute("cy", String(scaleY(series[i]!)));
-        c.setAttribute("r", "1.8");
-        c.setAttribute("fill", "#2d5a3d");
+        c.setAttribute("cx", String(sx(i)));
+        c.setAttribute("cy", String(sy(v)));
+        c.setAttribute("r", "2.5");
+        c.setAttribute("fill", FOREST_GREEN);
         svg.appendChild(c);
       }
-      // endpoint labels
-      const t0 = document.createElementNS(ns, "text");
-      t0.setAttribute("x", String(padX));
-      t0.setAttribute("y", String(H - 1));
-      t0.setAttribute("font-size", "9");
-      t0.setAttribute("fill", "#8e98ac");
-      t0.textContent = `${YEARS[0]} ${fmtPct(series[0])}`;
-      svg.appendChild(t0);
-      const t1 = document.createElementNS(ns, "text");
-      t1.setAttribute("x", String(W - padX));
-      t1.setAttribute("y", String(H - 1));
-      t1.setAttribute("text-anchor", "end");
-      t1.setAttribute("font-size", "9");
-      t1.setAttribute("fill", "#8e98ac");
-      t1.textContent = `${YEARS[YEARS.length - 1]} ${fmtPct(series[series.length - 1])}`;
-      svg.appendChild(t1);
+      // Endpoint labels
+      const lblL = document.createElementNS(ns, "text");
+      lblL.setAttribute("x", String(padX));
+      lblL.setAttribute("y", String(H - 1));
+      lblL.setAttribute("font-size", "8");
+      lblL.setAttribute("font-family", "JetBrains Mono, monospace");
+      lblL.setAttribute("fill", "#6a6a6a");
+      lblL.textContent = `${YEARS[0]} ${fmtPct(series[0])}`;
+      svg.appendChild(lblL);
+      const lblR = document.createElementNS(ns, "text");
+      lblR.setAttribute("x", String(W - padX));
+      lblR.setAttribute("y", String(H - 1));
+      lblR.setAttribute("text-anchor", "end");
+      lblR.setAttribute("font-size", "8");
+      lblR.setAttribute("font-family", "JetBrains Mono, monospace");
+      lblR.setAttribute("fill", "#6a6a6a");
+      lblR.textContent = `${YEARS[YEARS.length - 1]} ${fmtPct(series[series.length - 1])}`;
+      svg.appendChild(lblR);
     }
 
-    // Rankings under the map.
-    const rows = lgus.features
+    // Bottom rankings table
+    type Row = { name: string; pct2026: number | null; delta: number | null };
+    const rows: Row[] = lgus.features
       .map((f: any) => ({
         name: f.properties.lgu_name,
-        pct2026: f.properties.canopy_2026_pct,
-        delta: f.properties.canopy_delta_2019_2026_pct,
+        pct2026: f.properties.canopy_2026_pct ?? null,
+        delta: f.properties.canopy_delta_2019_2026_pct ?? null,
       }))
-      .filter((r: any) => r.pct2026 != null);
-
-    const byCurrent = [...rows].sort((a, b) => (b.pct2026 ?? 0) - (a.pct2026 ?? 0));
-    const byDecline = [...rows]
-      .filter((r) => r.delta != null)
-      .sort((a, b) => (a.delta ?? 0) - (b.delta ?? 0));
-
-    const topListEl = document.getElementById("top-lgu-list")!;
-    topListEl.innerHTML = byCurrent.slice(0, 5).map((r: any) =>
-      `<li class="grid grid-cols-[1fr_auto] items-baseline gap-2">
-        <a href="#" data-lgu="${r.name}" class="text-ink-900 hover:text-accent-forest no-underline truncate">${r.name}</a>
-        <span class="font-mono tabular-nums text-ink-500 text-[11px]">${fmtPct(r.pct2026)}</span>
-      </li>`,
-    ).join("");
-    topListEl.querySelectorAll("a[data-lgu]").forEach((a) => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        showLgu((a as HTMLElement).dataset.lgu || "");
-      });
-    });
-
-    const currentEl = document.getElementById("lgus-by-current")!;
-    const maxPctCurrent = byCurrent[0]?.pct2026 || 1;
-    currentEl.innerHTML = byCurrent.map((r: any, i: number) => {
-      const pct = ((r.pct2026 || 0) / maxPctCurrent) * 100;
-      return `<li class="grid grid-cols-[auto_1fr_auto] items-center gap-3">
-        <span class="font-mono tabular-nums text-xs text-ink-500 w-4">${i + 1}</span>
-        <a href="#" data-lgu="${r.name}" class="no-underline text-ink-900 hover:text-accent-forest relative">
-          <span class="relative z-10">${r.name}</span>
-          <span class="absolute inset-y-0 left-0 bg-accent-forest/15 rounded-sm" style="width: ${pct.toFixed(1)}%"></span>
-        </a>
-        <span class="font-mono tabular-nums text-ink-900 text-right">${fmtPct(r.pct2026)}</span>
-      </li>`;
-    }).join("");
-
-    const declineEl = document.getElementById("lgus-by-decline")!;
-    const worst = Math.min(...byDecline.map((r) => r.delta ?? 0));
-    declineEl.innerHTML = byDecline.slice(0, 10).map((r: any, i: number) => {
-      const pct = (Math.min(0, r.delta ?? 0) / (worst || -1)) * 100;
-      const cls = (r.delta ?? 0) < 0 ? "bg-accent-coral/30" : "bg-accent-forest/20";
-      return `<li class="grid grid-cols-[auto_1fr_auto] items-center gap-3">
-        <span class="font-mono tabular-nums text-xs text-ink-500 w-4">${i + 1}</span>
-        <a href="#" data-lgu="${r.name}" class="no-underline text-ink-900 hover:text-accent-forest relative">
-          <span class="relative z-10">${r.name}</span>
-          <span class="absolute inset-y-0 left-0 ${cls} rounded-sm" style="width: ${pct.toFixed(1)}%"></span>
-        </a>
-        <span class="font-mono tabular-nums text-ink-900 text-right">${fmtDelta(r.delta)}</span>
-      </li>`;
-    }).join("");
-
-    [currentEl, declineEl, topListEl].forEach((el) => {
-      el.querySelectorAll("a[data-lgu]").forEach((a) => {
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          showLgu((a as HTMLElement).dataset.lgu || "");
+      .filter((r: Row) => r.pct2026 != null)
+      .sort((a: Row, b: Row) => (b.pct2026 ?? 0) - (a.pct2026 ?? 0));
+    const tbody = document.getElementById("lgu-table-body");
+    if (tbody) {
+      tbody.innerHTML = rows.map((r: Row) => {
+        const deltaColor = (r.delta ?? 0) < 0 ? "text-umber-700" : (r.delta ?? 0) > 0 ? "text-forest-700" : "text-ink-500";
+        return `<tr class="cursor-pointer hover:bg-paper-tint" data-lgu="${r.name}">
+          <td class="py-2 text-ink-900">${r.name}</td>
+          <td class="py-2 text-right text-ink-900 font-medium">${fmtPct(r.pct2026)}</td>
+          <td class="py-2 text-right ${deltaColor}">${fmtDelta(r.delta)}</td>
+        </tr>`;
+      }).join("");
+      tbody.querySelectorAll("tr[data-lgu]").forEach((tr) => {
+        tr.addEventListener("click", () => {
+          showLgu((tr as HTMLTableRowElement).dataset.lgu || "");
           document.getElementById("map")?.scrollIntoView({ behavior: "smooth" });
         });
       });
-    });
+    }
   }
 
   init().catch((err) => {
     console.error(err);
-    const map = document.getElementById("map");
-    if (map) {
-      map.innerHTML = '<div class="p-6 text-sm text-ink-500">Map data failed to load. Check the browser console for details.</div>';
-    }
+    const el = document.getElementById("map");
+    if (el) el.innerHTML = '<div class="p-6 text-sm text-ink-500 font-mono">Map data failed to load. Check the browser console.</div>';
   });
 </script>
-
-<style>
-  :global(.maplibregl-popup-content) {
-    padding: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.18) !important;
-  }
-</style>
