@@ -137,6 +137,12 @@
   import maplibregl from "maplibre-gl";
   import "maplibre-gl/dist/maplibre-gl.css";
   import { interpolateYlGn } from "d3-scale-chromatic";
+  import { Protocol } from "pmtiles";
+
+  // Register the pmtiles:// protocol with MapLibre so vector tile sources can
+  // load straight from a static .pmtiles archive (no tile server needed).
+  const pmtilesProtocol = new Protocol();
+  maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
 
   const DATA_BASE = "/data";
   const YEARS = Array.from({ length: 8 }, (_, i) => 2019 + i);
@@ -227,8 +233,12 @@
         ],
       },
       center: [121.03, 14.6],
-      zoom: 10,
+      zoom: 11,
+      maxZoom: 16,
+      minZoom: 9,
     });
+    // Expose for debugging from devtools / agent-browser:
+    if (typeof window !== "undefined") (window as any).__map = map;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     const slider = document.getElementById("year-slider");
@@ -280,9 +290,51 @@
         paint: { "line-color": INK, "line-width": 0.8, "line-opacity": 0.85 },
       });
 
-      // pmtiles crown layer wiring lands in a follow-up; dim the toggle.
-      const crownsLabel = document.querySelector('label:has(#layer-crowns)') as HTMLLabelElement | null;
-      if (crownsLabel) crownsLabel.classList.add('opacity-40');
+      // 242,810 tree-crown polygons via pmtiles. Loads as a vector source;
+      // styled as semi-transparent forest-green fills + thin outlines.
+      // Renders at zoom >= 11 (matches tippecanoe minimum-zoom in the pyramid).
+      try {
+        map.addSource("crowns", {
+          type: "vector",
+          url: "pmtiles:///data/tree_crowns_ncr.pmtiles",
+          minzoom: 11,
+          maxzoom: 16,
+          attribution: "Meta Canopy Height v2 derived crown polygons (CC-BY-4.0)",
+        });
+        map.addLayer({
+          id: "crowns-fill",
+          type: "fill",
+          source: "crowns",
+          "source-layer": "crowns",
+          minzoom: 12,
+          paint: {
+            "fill-color": "#1f3d2b",
+            "fill-opacity": [
+              "interpolate", ["linear"], ["zoom"],
+              12, 0.35,
+              14, 0.55,
+              16, 0.7,
+            ],
+          },
+        });
+        map.addLayer({
+          id: "crowns-outline",
+          type: "line",
+          source: "crowns",
+          "source-layer": "crowns",
+          minzoom: 14,
+          paint: {
+            "line-color": "#13251c",
+            "line-width": 0.4,
+            "line-opacity": 0.6,
+          },
+        });
+      } catch (e) {
+        // pmtiles unavailable; dim the toggle so users know
+        const crownsLabel = document.querySelector('label:has(#layer-crowns)') as HTMLLabelElement | null;
+        if (crownsLabel) crownsLabel.classList.add('opacity-40');
+        console.warn('pmtiles crown layer failed to load:', e);
+      }
 
       // Click handlers
       map.on("click", "lgus-fill", (e) => {
@@ -304,6 +356,7 @@
         });
       };
       toggle("layer-meta", ["meta-canopy"]);
+      toggle("layer-crowns", ["crowns-fill", "crowns-outline"]);
       toggle("layer-lgus", ["lgus-fill", "lgus-outline"]);
 
       applyYearStyle(Number((slider as HTMLInputElement).value));

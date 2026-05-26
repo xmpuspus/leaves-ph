@@ -1,0 +1,154 @@
+{
+  "2019": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2020-01-01",
+    "n_source_images": 168,
+    "scale_m": 30,
+    "start": "2019-01-01"
+  },
+  "2020": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2021-01-01",
+    "n_source_images": 164,
+    "scale_m": 30,
+    "start": "2020-01-01"
+  },
+  "2021": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2022-01-01",
+    "n_source_images": 136,
+    "scale_m": 30,
+    "start": "2021-01-01"
+  },
+  "2022": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2023-01-01",
+    "n_source_images": 114,
+    "scale_m": 30,
+    "start": "2022-01-01"
+  },
+  "2023": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2024-01-01",
+    "n_source_images": 133,
+    "scale_m": 30,
+    "start": "2023-01-01"
+  },
+  "2024": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2025-01-01",
+    "n_source_images": 129,
+    "scale_m": 30,
+    "start": "2024-01-01"
+  },
+  "2025": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2026-01-01",
+    "n_source_images": 128,
+    "scale_m": 30,
+    "start": "2025-01-01"
+  },
+  "2026": {
+    "bands": [
+      "B4",
+      "B3",
+      "B2"
+    ],
+    "bbox": [
+      120.9,
+      14.4,
+      121.15,
+      14.8
+    ],
+    "cloud_prob_cutoff": 30,
+    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "end": "2027-01-01",
+    "n_source_images": 82,
+    "scale_m": 30,
+    "start": "2026-01-01"
+  }
+}

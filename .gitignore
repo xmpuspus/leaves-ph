@@ -66,6 +66,11 @@ data/alphaearth/*.zarr/
 *.tiff
 *.zip
 
+# Per-crown vector dump regenerable from pipeline/extract_tree_crowns.py
+# (the committed artifact is the .pmtiles file, not the raw 128 MB geojson)
+data/per_crown/*.geojson
+site/public/data/tree_crowns_ncr.geojson
+
 # Animation working files (keep final GIFs under docs/demo/, scratch elsewhere)
 animation/_scratch/
 animation/*.mp4
