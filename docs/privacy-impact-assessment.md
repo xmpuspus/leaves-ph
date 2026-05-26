@@ -23,7 +23,7 @@ This PIA is short by design. Compare to SolarMap.PH which processes rooftop imag
 
 | Output | Granularity | Personal data risk |
 |---|---|---|
-| `data/per_lgu/per_lgu_canopy_2016_2026.csv` | per-LGU (17 polygons) per year | None. Administrative aggregates. |
+| `data/per_lgu/per_lgu_canopy_2019_2026.csv` | per-LGU (17 polygons) per year | None. Administrative aggregates. |
 | `site/public/data/per_lgu_canopy.geojson` | per-LGU choropleth | None. Same aggregates. |
 | `docs/demo/*.gif` | satellite imagery overlays | None. 10 m resolution; no individuals identifiable. |
 | `docs/demo/salex-timeline.gif` | 3.97 km road corridor | None. Trees only, no individuals. Tree-cut zone is already public via DENR-NCR statements and news coverage. |

@@ -6,6 +6,43 @@ follow strict semantic versioning before v1.0.0.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-26
+
+End-to-end pipeline live: real per-LGU canopy data for 2019 to 2026, headline reconciliation against the four public 2024+ figures, full site copy populated.
+
+### Real v1.0 measurement
+- **NCR canopy 2026 = 7.46 percent** (5,840 ha over 78,256 ha of NCR area-of-record).
+- Multi-year curve: 8.08 (2019), 9.88 (2020), 9.79 (2021), 9.99 (2022), 10.24 (2023, peak), 7.76 (2024), 9.88 (2025), 7.46 (2026).
+- Per-LGU 2026: Quezon City 18.93 percent (top), Manila 0.89 percent, Navotas 0.47 percent (bottom). 2019 to 2026 deltas range +1.69pp (Makati) to -2.76pp (Taguig).
+- Reconciliation: GFW dashboard 4.0 percent materially understates 2026 NCR canopy. DENR cited 6 percent is plausible (we measure 7.46 percent). Meta v2 ground truth (height greater than 5 m, 2018-2020) reports 7.5 percent, within 0.04pp of our 2026 number.
+
+### Fetch pipeline executed live (with solar-map-ph .ee-key.json)
+- 9 Sentinel-2 L2A yearly composites at 30 m (2018 partial coverage excluded; 2019-2026 effective range).
+- 9 Dynamic World v1 annual median trees-probability rasters at 30 m.
+- Hansen GFC v1.13 (treecover2000, lossyear, gain) at 30 m.
+- ESA WorldCover v200 2021 full and binary-trees masks at 10 m.
+- Meta Canopy Height v2 mosaicked from 4 zoom-9 quadkey tiles, EPSG:3857 to EPSG:4326, 23864 x 38182 uint8, 64 MB.
+- 17 NCR LGU polygons assembled via osm2geojson (the per-way ring extraction was the v0.4.0 bug; relations need standard MultiPolygon assembly which osm2geojson implements). Polygon-area sanity check vs PSA: Caloocan 5,308 ha (PSA ~5,580 ha, OK), Quezon City 16,053 ha (PSA ~16,565 ha, OK), Pateros 185 ha (PSA ~210 ha, OK).
+
+### Pipeline fixes shipped this version
+- `pipeline/_gee_init.py`: NCR_YEARS bounded to 2019..2026 (8 years). S2 L2A PH coverage starts ~2018; 2018 had only ~24 percent NCR coverage so it's excluded from the published curve.
+- `pipeline/fetch_lgu_polygons.py`: switched from per-way ring extraction to osm2geojson library (handles OSM admin-relation MultiPolygon assembly correctly).
+- `pipeline/aggregate_lgu.py`: ESA tree-percent denominator switched from `valid pixels` to `polygon area` (rasterio defaults nodata=0 for the ESA binary mask, which collapsed non-tree pixels into nodata and made every LGU read 100 percent).
+- `pipeline/calibrate_ndvi_threshold.py` ran live: best threshold 0.62 (F1=0.51, precision=0.37, recall=0.85) against Meta canopy height greater than 5 m on 10,000 random NCR pixels.
+
+### Site copy populated with real numbers
+- `BENCHMARKS.md` rewritten with the 2019-2026 NCR curve, per-LGU table, reconciliation against DENR/GFW/EJN/ScienceKonek, ESA cross-check, Hansen cumulative loss per LGU.
+- Site map page reconciliation strip (headline KPIs) shows: NCR canopy (selected year), delta 2019 to 2026, vs DENR 6 percent claim, vs GFW 4 percent claim.
+
+### Site data wiring
+- `site/public/data/per_lgu_canopy.geojson` (CSV mirror, 17 features, properties: canopy_<year>_ha + canopy_<year>_pct for year in 2019..2026, canopy_delta_2019_2026_pct, hansen_loss_ha_cumulative_2024, esa_tree_pct_2021, total_ha).
+
+### New release gate
+- `scripts/verify_release.py` now scans 21 files (md + Astro pages, components, layouts) for em-dashes and AI-jargon. Adds `site/ root boundary` check (no imports escape `site/`; mirrors the v1.1 SolarMap Vercel-deploy lesson). 6 PASS / 0 FAIL.
+
+### Dependencies
+- Added `osm2geojson==0.3.2` to `requirements.txt` (for proper OSM relation -> MultiPolygon assembly).
+
 ## [0.4.0] - 2026-05-26
 
 Phase 2 production-quality + Phase 6 site scaffold.

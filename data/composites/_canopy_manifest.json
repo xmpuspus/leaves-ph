@@ -1,0 +1,74 @@
+{
+  "2018": {
+    "canopy_pixels": 67168,
+    "input": "s2_2018.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 957257,
+    "non_canopy_pixels": 355140,
+    "output": "canopy_2018.tif"
+  },
+  "2019": {
+    "canopy_pixels": 162870,
+    "input": "s2_2019.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 155,
+    "non_canopy_pixels": 1216540,
+    "output": "canopy_2019.tif"
+  },
+  "2020": {
+    "canopy_pixels": 197079,
+    "input": "s2_2020.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 248,
+    "non_canopy_pixels": 1182238,
+    "output": "canopy_2020.tif"
+  },
+  "2021": {
+    "canopy_pixels": 195472,
+    "input": "s2_2021.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 305,
+    "non_canopy_pixels": 1183788,
+    "output": "canopy_2021.tif"
+  },
+  "2022": {
+    "canopy_pixels": 202629,
+    "input": "s2_2022.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 516,
+    "non_canopy_pixels": 1176420,
+    "output": "canopy_2022.tif"
+  },
+  "2023": {
+    "canopy_pixels": 202390,
+    "input": "s2_2023.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 154,
+    "non_canopy_pixels": 1177021,
+    "output": "canopy_2023.tif"
+  },
+  "2024": {
+    "canopy_pixels": 154396,
+    "input": "s2_2024.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 290,
+    "non_canopy_pixels": 1224879,
+    "output": "canopy_2024.tif"
+  },
+  "2025": {
+    "canopy_pixels": 199289,
+    "input": "s2_2025.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 1173,
+    "non_canopy_pixels": 1179103,
+    "output": "canopy_2025.tif"
+  },
+  "2026": {
+    "canopy_pixels": 140364,
+    "input": "s2_2026.tif",
+    "ndvi_threshold": 0.62,
+    "nodata_pixels": 511,
+    "non_canopy_pixels": 1238690,
+    "output": "canopy_2026.tif"
+  }
+}

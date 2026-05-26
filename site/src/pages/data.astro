@@ -20,10 +20,10 @@ import Base from "../layouts/Base.astro";
         <tr class="border-t border-ink-300/30">
           <td class="px-3 py-2"><a href="/data/per_lgu_canopy.geojson" class="no-underline text-accent-steel">per_lgu_canopy.geojson</a></td>
           <td class="px-3 py-2">GeoJSON</td>
-          <td class="px-3 py-2">17 LGU polygons; canopy_&lt;year&gt;_ha and canopy_&lt;year&gt;_pct for year in 2016..2026; canopy_delta_2016_2026_pct; hansen_loss_ha_cumulative_2024; esa_tree_pct_2021</td>
+          <td class="px-3 py-2">17 LGU polygons; canopy_&lt;year&gt;_ha and canopy_&lt;year&gt;_pct for year in 2019..2026; canopy_delta_2019_2026_pct; hansen_loss_ha_cumulative_2024; esa_tree_pct_2021</td>
         </tr>
         <tr class="border-t border-ink-300/30">
-          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/per_lgu/per_lgu_canopy_2016_2026.csv" class="no-underline text-accent-steel">per_lgu_canopy_2016_2026.csv</a></td>
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/per_lgu/per_lgu_canopy_2019_2026.csv" class="no-underline text-accent-steel">per_lgu_canopy_2019_2026.csv</a></td>
           <td class="px-3 py-2">CSV</td>
           <td class="px-3 py-2">One row per (lgu_name, year). Columns: lgu_name, year, canopy_ha, canopy_pct, total_ha, hansen_loss_ha_cumulative, esa_tree_pct_2021</td>
         </tr>
@@ -48,7 +48,7 @@ import Base from "../layouts/Base.astro";
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Reproducibility</h2>
     <pre class="bg-paper-alt p-4 rounded text-sm overflow-x-auto">git clone https://github.com/xmpuspus/leaves-ph
 cd leaves-ph
-make hash-verify       # asserts data/per_lgu/per_lgu_canopy_2016_2026.csv sha256 matches the canonical</pre>
+make hash-verify       # asserts data/per_lgu/per_lgu_canopy_2019_2026.csv sha256 matches the canonical</pre>
     <p class="text-sm mt-2">If the hash differs, your pinned dependencies have drifted. Reinstall from <code>requirements.txt</code>.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Citation</h2>

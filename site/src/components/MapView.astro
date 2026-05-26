@@ -2,19 +2,19 @@
 // MapView for Leaves.PH: per-LGU canopy choropleth + year slider 2016-2026.
 //
 // Data source: site/public/data/per_lgu_canopy.geojson (one feature per LGU,
-// with canopy_<year>_pct properties for year in 2016..2026 and
-// canopy_delta_2016_2026_pct).
+// with canopy_<year>_pct properties for year in 2019..2026 and
+// canopy_delta_2019_2026_pct).
 //
 // Interactions:
-//   - year slider (2016..2026): rebinds the fill-color to canopy_<year>_pct
-//   - click an LGU: side panel shows the 11-year curve + reconciled headline
+//   - year slider (2019..2026): rebinds the fill-color to canopy_<year>_pct
+//   - click an LGU: side panel shows the 8-year curve + reconciled headline
 //   - layer toggle: choropleth / Hansen-loss overlay / ESA-2021 tree mask
 ---
 <section class="max-w-6xl mx-auto px-6 mb-3">
   <details class="border-l-2 border-accent-forest bg-paper-alt">
     <summary class="cursor-pointer px-4 py-2.5 text-sm font-medium text-ink-900">How to read this map</summary>
     <div class="px-4 pb-4 pt-1 text-sm text-ink-700 leading-relaxed space-y-2 max-w-prose">
-      <p>Each LGU is shaded by its tree-cover percent for the selected year. Greens are higher canopy, ochres are lower. Slide the year control to watch the 11-year change, click an LGU for its curve. Full methodology and data sources: <a href="/methodology" class="text-accent-steel no-underline">methodology</a>.</p>
+      <p>Each LGU is shaded by its tree-cover percent for the selected year. Greens are higher canopy, ochres are lower. Slide the year control to watch the 8-year change, click an LGU for its curve. Full methodology and data sources: <a href="/methodology" class="text-accent-steel no-underline">methodology</a>.</p>
       <p><strong>Color encoding:</strong> <span class="inline-block w-3 h-3 align-middle" style="background:#2d5a3d"></span> dense canopy (more than 25%), <span class="inline-block w-3 h-3 align-middle" style="background:#6aa84f"></span> mid (10 to 25%), <span class="inline-block w-3 h-3 align-middle" style="background:#d9c45a"></span> low (3 to 10%), <span class="inline-block w-3 h-3 align-middle" style="background:#d97757"></span> very low (less than 3%).</p>
     </div>
   </details>
@@ -28,7 +28,7 @@
       <div id="strip-total-ha" class="text-[10px] text-ink-500 mt-0.5">--</div>
     </div>
     <div class="bg-paper p-4">
-      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">delta 2016 to 2026</div>
+      <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">delta 2019 to 2026</div>
       <div id="strip-delta" class="font-mono tabular-nums text-2xl text-ink-900 mt-0.5">--</div>
       <div class="text-[10px] text-ink-500 mt-0.5">percentage points across all 17 LGUs</div>
     </div>
@@ -48,7 +48,7 @@
 <section class="max-w-6xl mx-auto px-6 mb-3">
   <div class="flex items-center gap-4 bg-paper border border-ink-300/30 px-4 py-3">
     <label for="year-slider" class="text-xs uppercase tracking-wider text-ink-500 font-mono shrink-0">year</label>
-    <input id="year-slider" type="range" min="2016" max="2026" step="1" value="2026" class="flex-1 accent-accent-forest" />
+    <input id="year-slider" type="range" min="2019" max="2026" step="1" value="2026" class="flex-1 accent-accent-forest" />
     <span id="year-label" class="font-mono tabular-nums text-lg text-ink-900 w-16 text-right">2026</span>
   </div>
 </section>
@@ -76,7 +76,7 @@
   <aside id="side-panel" class="border border-ink-300/40 bg-white text-sm overflow-hidden">
     <div id="empty-state" class="p-5">
       <p class="text-xs uppercase tracking-wider text-ink-500 mb-2 font-mono">click any LGU</p>
-      <p class="text-ink-700 leading-relaxed">Select an LGU to see its 2016 to 2026 canopy curve, the 2026 number, and how it compares to the four public 2024+ figures.</p>
+      <p class="text-ink-700 leading-relaxed">Select an LGU to see its 2019 to 2026 canopy curve, the 2026 number, and how it compares to the four public 2024+ figures.</p>
       <div class="mt-5 pt-5 border-t border-ink-300/30">
         <p class="text-[10px] uppercase tracking-wider text-ink-500 font-mono mb-2">LGUs by current canopy</p>
         <ol id="top-lgu-list" class="space-y-1.5 text-[13px]"></ol>
@@ -98,14 +98,14 @@
             <div class="text-[10px] text-ink-500" id="lgu-ha">-- ha</div>
           </div>
           <div class="border border-ink-300/30 p-3" style="background:#f3f7f4">
-            <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">2016 to 2026 delta</div>
+            <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono">2019 to 2026 delta</div>
             <div id="lgu-delta" class="font-mono tabular-nums text-3xl text-ink-900 mt-0.5">--</div>
             <div class="text-[10px] text-ink-500">percentage points</div>
           </div>
         </div>
 
         <div class="border border-ink-300/30 p-3 mb-4">
-          <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono mb-2">11-year curve</div>
+          <div class="text-[10px] uppercase tracking-wider text-ink-500 font-mono mb-2">8-year curve</div>
           <svg id="lgu-curve" viewBox="0 0 320 80" class="w-full h-20"></svg>
         </div>
 
@@ -129,7 +129,7 @@
     <ol id="lgus-by-current" class="space-y-2 text-sm"></ol>
   </div>
   <div>
-    <p class="text-xs uppercase tracking-wider text-ink-500 mb-3 font-mono">LGUs by largest 2016 to 2026 decline</p>
+    <p class="text-xs uppercase tracking-wider text-ink-500 mb-3 font-mono">LGUs by largest 2019 to 2026 decline</p>
     <ol id="lgus-by-decline" class="space-y-2 text-sm"></ol>
     <p class="text-[11px] text-ink-500 mt-3 leading-relaxed">
       Decline measured in percentage points of LGU area. La Mesa watershed (mostly in Quezon City and Marikina) is expected to show net gain over 2002 to 2016 per Estoque 2018 (+557 ha), then recent decline. Raw data and reproducibility: <a href="https://github.com/xmpuspus/leaves-ph" class="text-accent-steel no-underline">github.com/xmpuspus/leaves-ph</a>.
@@ -143,7 +143,7 @@
   import { interpolateYlGn } from "d3-scale-chromatic";
 
   const DATA_BASE = "/data";
-  const YEARS = Array.from({ length: 11 }, (_, i) => 2016 + i);
+  const YEARS = Array.from({ length: 9 }, (_, i) => 2018 + i);
   const MAX_PCT_FOR_COLOR = 25; // pct above this saturates at the darkest green
   // DENR / GFW reference numbers (the v1.0 reconciliation anchors). Update when
   // primary sources are confirmed; see /methodology for sources.
@@ -270,12 +270,12 @@
       }
     }
 
-    // 2016 -> 2026 NCR delta is year-independent of the slider; compute once.
+    // 2018 -> 2026 NCR delta is year-independent of the slider; compute once.
     function ncrDelta() {
-      const a16 = ncrAggregate(lgus.features, 2016).pct;
+      const a18 = ncrAggregate(lgus.features, 2018).pct;
       const a26 = ncrAggregate(lgus.features, 2026).pct;
-      if (a16 == null || a26 == null) return null;
-      return a26 - a16;
+      if (a18 == null || a26 == null) return null;
+      return a26 - a18;
     }
 
     slider.addEventListener("input", (e) => applyYearStyle(Number((e.target as HTMLInputElement).value)));
@@ -326,7 +326,7 @@
       document.getElementById("lgu-pct-year-label")!.textContent = `${year} canopy`;
       document.getElementById("lgu-pct")!.textContent = fmtPct(p[`canopy_${year}_pct`]);
       document.getElementById("lgu-ha")!.textContent = `${fmtHa(p[`canopy_${year}_ha`])} of ${fmtHa(p.total_ha)} LGU area`;
-      document.getElementById("lgu-delta")!.textContent = fmtDelta(p.canopy_delta_2016_2026_pct);
+      document.getElementById("lgu-delta")!.textContent = fmtDelta(p.canopy_delta_2019_2026_pct);
       document.getElementById("lgu-hansen")!.textContent = fmtHa(p.hansen_loss_ha_cumulative_2024);
       document.getElementById("lgu-esa")!.textContent = fmtPct(p.esa_tree_pct_2021);
       drawCurve(name, p);
@@ -392,7 +392,7 @@
       .map((f: any) => ({
         name: f.properties.lgu_name,
         pct2026: f.properties.canopy_2026_pct,
-        delta: f.properties.canopy_delta_2016_2026_pct,
+        delta: f.properties.canopy_delta_2019_2026_pct,
       }))
       .filter((r: any) => r.pct2026 != null);
 

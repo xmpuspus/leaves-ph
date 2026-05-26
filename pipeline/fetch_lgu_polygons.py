@@ -84,49 +84,50 @@ def fetch_overpass(query: str = OVERPASS_QUERY) -> dict:
         return json.loads(resp.read().decode("utf-8"))
 
 
-def osm_relation_to_geojson(rel: dict, lgu_name: str) -> dict | None:
-    outer: list[list[tuple[float, float]]] = []
-    inner: list[list[tuple[float, float]]] = []
-    for member in rel.get("members", []):
-        if member.get("type") != "way":
-            continue
-        role = member.get("role", "outer")
-        geom = member.get("geometry") or []
-        ring = [(node["lon"], node["lat"]) for node in geom]
-        if not ring:
-            continue
-        if role == "outer":
-            outer.append(ring)
-        elif role == "inner":
-            inner.append(ring)
-    if not outer:
-        return None
+def osm_relation_to_geojson(rel: dict, lgu_name: str, full_response: dict) -> dict | None:
+    """Assemble an OSM admin relation into a proper (Multi)Polygon GeoJSON
+    Feature.
 
-    def _close(r):
-        return r if r and r[0] == r[-1] else r + [r[0]]
+    OSM admin boundaries are stored as relations whose member ways form the
+    outer (and sometimes inner) ring of the polygon when chained end-to-end.
+    Each individual way is just a segment of the boundary, NOT a complete ring,
+    so naive per-way conversion produces useless fragments (rasterio rejects
+    them as 3-point line strings).
 
-    outer = [_close(r) for r in outer]
-    inner = [_close(r) for r in inner]
-    if len(outer) == 1 and not inner:
-        coords = [[list(pt) for pt in outer[0]]]
-        gtype = "Polygon"
-    else:
-        polys = [[[list(pt) for pt in r]] for r in outer]
-        if inner and polys:
-            polys[0].extend([[list(pt) for pt in r] for r in inner])
-        coords = polys
-        gtype = "MultiPolygon"
+    We delegate the standard MultiPolygon assembly algorithm to the
+    `osm2geojson` library, which implements the OSM-standard ring chaining.
+    """
+    try:
+        import osm2geojson  # noqa: PLC0415
+    except ImportError as e:
+        raise RuntimeError(
+            "osm2geojson is required (pip install osm2geojson). "
+            "It handles OSM relation -> MultiPolygon assembly correctly."
+        ) from e
 
-    return {
-        "type": "Feature",
-        "geometry": {"type": gtype, "coordinates": coords},
-        "properties": {
-            "lgu_name": lgu_name,
-            "osm_id": rel.get("id"),
-            "osm_admin_level": rel.get("tags", {}).get("admin_level"),
-            "osm_name": rel.get("tags", {}).get("name"),
-        },
-    }
+    # osm2geojson works on a full Overpass JSON response. We feed it the full
+    # response and pull out the one relation we care about by OSM id.
+    target_id = rel["id"]
+    fc = osm2geojson.json2geojson(full_response)
+    for feature in fc.get("features", []):
+        props = feature.get("properties") or {}
+        # osm2geojson nests OSM tags under properties.tags and the id under
+        # properties.id (with type prefix). Match by OSM id either way.
+        if props.get("id") == target_id or props.get("id") == f"relation/{target_id}":
+            geom = feature.get("geometry")
+            if geom is None:
+                continue
+            return {
+                "type": "Feature",
+                "geometry": geom,
+                "properties": {
+                    "lgu_name": lgu_name,
+                    "osm_id": target_id,
+                    "osm_admin_level": rel.get("tags", {}).get("admin_level"),
+                    "osm_name": rel.get("tags", {}).get("name"),
+                },
+            }
+    return None
 
 
 def main() -> int:
@@ -169,7 +170,7 @@ def main() -> int:
         rel = by_canonical.get(lgu)
         if rel is None:
             continue
-        feature = osm_relation_to_geojson(rel, lgu)
+        feature = osm_relation_to_geojson(rel, lgu, resp)
         if feature is not None:
             features.append(feature)
 

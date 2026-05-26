@@ -10,7 +10,7 @@ DATA := data
 SITE_DATA := site/public/data
 
 # Per-LGU output (canonical hash gate target)
-PER_LGU_CSV := $(DATA)/per_lgu/per_lgu_canopy_2016_2026.csv
+PER_LGU_CSV := $(DATA)/per_lgu/per_lgu_canopy_2019_2026.csv
 PER_LGU_GEOJSON := $(SITE_DATA)/per_lgu_canopy.geojson
 
 # Animation outputs
@@ -105,9 +105,9 @@ hash-verify: $(PER_LGU_CSV)
 	if [ "$$expected" = "PENDING_PHASE_3" ]; then \
 	  echo "[hash-verify] SKIP: canonical hash not yet pinned (pre-Phase 3)"; \
 	elif [ "$$actual" = "$$expected" ]; then \
-	  echo "[hash-verify] OK: per_lgu_canopy_2016_2026.csv sha256 = $$actual"; \
+	  echo "[hash-verify] OK: per_lgu_canopy_2019_2026.csv sha256 = $$actual"; \
 	else \
-	  echo "[hash-verify] FAIL: per_lgu_canopy_2016_2026.csv sha256 = $$actual (expected $$expected)"; \
+	  echo "[hash-verify] FAIL: per_lgu_canopy_2019_2026.csv sha256 = $$actual (expected $$expected)"; \
 	  echo "[hash-verify] Likely cause: dependency version drift. Check requirements.txt pins."; \
 	  exit 1; \
 	fi

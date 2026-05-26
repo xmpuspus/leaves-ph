@@ -15,7 +15,7 @@ const DEFAULT_IMAGE = "/og-preview.png";
 
 const {
   title,
-  description = "Fresh 2026 Metro Manila tree-cover validation against Sentinel-2, Hansen Global Forest Change, ESA WorldCover, Dynamic World, and Meta Canopy Height. Per-LGU canopy curves 2016 to 2026 for the 17 NCR LGUs.",
+  description = "Fresh 2026 Metro Manila tree-cover validation against Sentinel-2, Hansen Global Forest Change, ESA WorldCover, Dynamic World, and Meta Canopy Height. Per-LGU canopy curves 2019 to 2026 for the 17 NCR LGUs.",
   pathname = Astro.url.pathname,
   image = DEFAULT_IMAGE,
 } = Astro.props;
@@ -42,14 +42,14 @@ const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2016 to 2026" />
+    <meta property="og:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2019 to 2026" />
     <meta property="og:locale" content="en_PH" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2016 to 2026" />
+    <meta name="twitter:image:alt" content="Leaves.PH per-LGU canopy choropleth of Metro Manila, 2019 to 2026" />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header pathname={pathname} />

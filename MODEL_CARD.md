@@ -4,11 +4,11 @@ Status: placeholder. Full content fills in at v0.9 freeze.
 
 ## Intended use
 
-Leaves.PH publishes a per-LGU canopy curve for Metro Manila (16 cities plus the municipality of Pateros, 17 LGUs total), 2016 to 2026, computed from a stack of canonical public canopy datasets. It is **not** a per-household measurement, not a parcel-level land-use tool, and not a per-tree census.
+Leaves.PH publishes a per-LGU canopy curve for Metro Manila (16 cities plus the municipality of Pateros, 17 LGUs total), 2019 to 2026, computed from a stack of canonical public canopy datasets. It is **not** a per-household measurement, not a parcel-level land-use tool, and not a per-tree census.
 
 ## Pipeline overview (filled in Phase 3+)
 
-1. **Inputs:** Sentinel-2 L2A median composites (annual, cloud-masked via s2cloudless), Hansen GFC v1.12 loss-year band, ESA WorldCover v200 class-10 tree mask, Dynamic World v1 `trees` probability median per year, Meta Canopy Height v2 tile crop.
+1. **Inputs:** Sentinel-2 L2A median composites (annual, cloud-masked via s2cloudless), Hansen GFC v1.13 loss-year band, ESA WorldCover v200 class-10 tree mask, Dynamic World v1 `trees` probability median per year, Meta Canopy Height v2 tile crop.
 2. **NDVI threshold:** tuned per-year against Meta canopy height v2 (target: greater than 90 percent pixel-level agreement with Meta height greater than 5 m).
 3. **Per-LGU aggregation:** PSA / OSM administrative polygons for the 17 NCR LGUs (16 cities + Pateros); pixel-level canopy mask summed per polygon.
 4. **(Optional, Phase 4)** AlphaEarth Foundations Satellite Embedding V1 + sklearn logistic head, 5-fold per-LGU-group CV, Platt sigmoid calibration. Shipped only if its per-LGU MAE is materially lower than the pure NDVI threshold (decision locked 2026-05-26).
@@ -18,7 +18,7 @@ Leaves.PH publishes a per-LGU canopy curve for Metro Manila (16 cities plus the 
 - Meta Canopy Height v2 source imagery is 80 percent 2018-2020. Our calibration layer is a ~2019 truth.
 - Sentinel-2 cloud masking removes many wet-season images in tropical monsoon zones, potentially under-representing canopy during June to September.
 - Dynamic World probability values reflect model confidence, not ground truth.
-- Hansen GFC v1.12 cannot distinguish plantation harvest from natural forest loss.
+- Hansen GFC v1.13 cannot distinguish plantation harvest from natural forest loss.
 - 30 m Hansen resolution misses small-scale urban tree-cutting events.
 
 ## Reported metrics
@@ -40,7 +40,7 @@ Filled at v0.9. Skeleton:
 
 ## Versioning and provenance
 
-Every artifact ships with a sha256 prefix. `data/per_lgu/per_lgu_canopy_2016_2026.csv` is the deterministic-build canonical. The Makefile asserts the hash. Dependency drift breaks the hash and CI fails.
+Every artifact ships with a sha256 prefix. `data/per_lgu/per_lgu_canopy_2019_2026.csv` is the deterministic-build canonical. The Makefile asserts the hash. Dependency drift breaks the hash and CI fails.
 
 ## Author and license
 

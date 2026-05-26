@@ -2,15 +2,15 @@
 
 Reads:
     data/lgu/ncr_lgu.geojson                            (17 polygons)
-    data/per_lgu/per_lgu_canopy_2016_2026.csv           (one row per LGU, year)
+    data/per_lgu/per_lgu_canopy_2019_2026.csv           (one row per LGU, year)
 
 Writes:
     site/public/data/per_lgu_canopy.geojson
         Each feature has properties:
             lgu_name: str
-            canopy_<year>_ha:  float for year in 2016..2026
-            canopy_<year>_pct: float for year in 2016..2026
-            canopy_delta_2016_2026_pct: float
+            canopy_<year>_ha:  float for year in 2019..2026
+            canopy_<year>_pct: float for year in 2019..2026
+            canopy_delta_2019_2026_pct: float
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LGU_GEOJSON = REPO_ROOT / "data" / "lgu" / "ncr_lgu.geojson"
-PER_LGU_CSV = REPO_ROOT / "data" / "per_lgu" / "per_lgu_canopy_2016_2026.csv"
+PER_LGU_CSV = REPO_ROOT / "data" / "per_lgu" / "per_lgu_canopy_2019_2026.csv"
 OUT_GEOJSON = REPO_ROOT / "site" / "public" / "data" / "per_lgu_canopy.geojson"
 
 
@@ -83,7 +83,7 @@ def main() -> int:
             v0 = years[2016]["canopy_pct"]
             v1 = years[2026]["canopy_pct"]
             if v0 is not None and v1 is not None:
-                feature["properties"]["canopy_delta_2016_2026_pct"] = round(v1 - v0, 2)
+                feature["properties"]["canopy_delta_2019_2026_pct"] = round(v1 - v0, 2)
 
     OUT_GEOJSON.write_text(json.dumps(lgu_fc, indent=2))
     print(

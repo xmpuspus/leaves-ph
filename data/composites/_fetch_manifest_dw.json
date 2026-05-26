@@ -1,155 +1,155 @@
 {
   "2016": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2017-01-01",
-    "n_source_images": 0,
+    "n_source_images": 100,
     "scale_m": 30,
     "start": "2016-01-01"
   },
   "2017": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2018-01-01",
-    "n_source_images": 0,
+    "n_source_images": 56,
     "scale_m": 30,
     "start": "2017-01-01"
   },
   "2018": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2019-01-01",
-    "n_source_images": 11,
+    "n_source_images": 99,
     "scale_m": 30,
     "start": "2018-01-01"
   },
   "2019": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2020-01-01",
-    "n_source_images": 206,
+    "n_source_images": 133,
     "scale_m": 30,
     "start": "2019-01-01"
   },
   "2020": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2021-01-01",
-    "n_source_images": 192,
+    "n_source_images": 125,
     "scale_m": 30,
     "start": "2020-01-01"
   },
   "2021": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2022-01-01",
-    "n_source_images": 179,
+    "n_source_images": 82,
     "scale_m": 30,
     "start": "2021-01-01"
   },
   "2022": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2023-01-01",
-    "n_source_images": 162,
+    "n_source_images": 71,
     "scale_m": 30,
     "start": "2022-01-01"
   },
   "2023": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2024-01-01",
-    "n_source_images": 182,
+    "n_source_images": 94,
     "scale_m": 30,
     "start": "2023-01-01"
   },
   "2024": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2025-01-01",
-    "n_source_images": 178,
+    "n_source_images": 83,
     "scale_m": 30,
     "start": "2024-01-01"
   },
   "2025": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2026-01-01",
-    "n_source_images": 194,
+    "n_source_images": 79,
     "scale_m": 30,
     "start": "2025-01-01"
   },
   "2026": {
+    "band": "trees",
     "bbox": [
       120.9,
       14.4,
       121.15,
       14.8
     ],
-    "cloud_prob_cutoff": 40,
-    "ee_collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "ee_collection": "GOOGLE/DYNAMICWORLD/V1",
     "end": "2027-01-01",
-    "n_source_images": 104,
+    "n_source_images": 67,
     "scale_m": 30,
     "start": "2026-01-01"
   }

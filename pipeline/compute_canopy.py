@@ -51,7 +51,7 @@ def canopy_mask_for_year(in_path: Path, threshold: float) -> tuple[np.ndarray, d
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compute per-year canopy mask from S2 composites")
-    parser.add_argument("--years", nargs="+", type=int, default=list(range(2016, 2027)))
+    parser.add_argument("--years", nargs="+", type=int, default=list(range(2019, 2027)))
     parser.add_argument("--threshold", type=float, default=None,
                         help="NDVI threshold; default reads from data/calibration_report.json or falls back to 0.50")
     parser.add_argument("--force", action="store_true")

@@ -2,7 +2,7 @@
 
 Thanks for considering a contribution. This repo welcomes:
 
-1. **Verified per-LGU corrections** to `data/per_lgu/per_lgu_canopy_2016_2026.csv`. Open an issue with the LGU name, year, your alternative value, and the source.
+1. **Verified per-LGU corrections** to `data/per_lgu/per_lgu_canopy_2019_2026.csv`. Open an issue with the LGU name, year, your alternative value, and the source.
 2. **Per-barangay extensions** for v1.1 (push from 17 LGU polygons to 142 NCR barangays). See `docs/research/prior-work.md` section 5.5 for the verified barangay anchors.
 3. **Region extensions** (Cebu, Davao, CDO, Iloilo) for v1.1. See `docs/methodology.md` for the LGU polygon and NDVI-threshold recipe.
 4. **Methodology improvements** to the NDVI calibration against Meta canopy height. Open an issue first with the proposed change and a one-paragraph rationale.

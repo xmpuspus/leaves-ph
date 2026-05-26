@@ -15,7 +15,7 @@ National Capital Region (NCR), Philippines. Bounding box:
 | Layer | Source | Resolution | Cadence | Role |
 |---|---|---|---|---|
 | Sentinel-2 L2A median composite | `COPERNICUS/S2_SR_HARMONIZED` via GEE | 10 m | annual 2016-2026 | NDVI + animation RGB |
-| Hansen GFC v1.12 | `UMD/hansen/global_forest_change_2025_v1_13` | 30 m | annual loss 2001-2024 | loss history baseline |
+| Hansen GFC v1.13 | `UMD/hansen/global_forest_change_2025_v1_13` | 30 m | annual loss 2001-2024 | loss history baseline |
 | ESA WorldCover v200 | `ESA/WorldCover/v200` | 10 m | single 2021 epoch | 2021 cross-check |
 | Dynamic World v1 `trees` | `GOOGLE/DYNAMICWORLD/V1` | 10 m | ~5 day | annual trend, fuzzy classification |
 | Meta Canopy Height v2 | AWS `s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/` | 1 m | one epoch (80 percent 2018-2020) | NDVI calibration truth |
@@ -47,7 +47,7 @@ Expected result per the prior-work review: threshold between 0.5 and 0.65 with g
 lgu_name, year, canopy_ha, canopy_pct, ndvi_mean, hansen_loss_cumulative_ha, esa_tree_pct
 ```
 
-Output: `data/per_lgu/per_lgu_canopy_2016_2026.csv`. Sha256 prefix is pinned in `Makefile` as `EXPECTED_HASH`.
+Output: `data/per_lgu/per_lgu_canopy_2019_2026.csv`. Sha256 prefix is pinned in `Makefile` as `EXPECTED_HASH`.
 
 ## 6. Optional Phase 4 head (AlphaEarth + sklearn)
 
@@ -64,7 +64,7 @@ Published only if its per-LGU MAE is materially lower than the pure NDVI baselin
 ## 7. Animation frames (Phase 5)
 
 Five GIFs:
-1. `docs/demo/hero.gif`: NCR-wide 2016 to 2026 yearly Sentinel-2 RGB + NDVI overlay, with year label and running canopy-percent counter.
+1. `docs/demo/hero.gif`: NCR-wide 2019 to 2026 yearly Sentinel-2 RGB + NDVI overlay, with year label and running canopy-percent counter.
 2. `docs/demo/salex-timeline.gif`: SALEX corridor (3.97 km along Quirino Avenue), 2016 vs 2026 side-by-side, 225-tree fell zone highlighted.
 3. `docs/demo/quirino-avenue.gif`: Quirino Avenue canopy strip 2016 vs 2026 close-up.
 4. `docs/demo/la-mesa-watershed.gif`: La Mesa watershed regrowth story, holding canopy in NE NCR.

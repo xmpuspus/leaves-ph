@@ -19,7 +19,10 @@ import ee
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 NCR_BBOX = (120.9, 14.4, 121.15, 14.8)  # (min_lon, min_lat, max_lon, max_lat)
-NCR_YEARS = tuple(range(2016, 2027))  # 2016..2026 inclusive, 11 years
+NCR_YEARS = tuple(range(2019, 2027))  # 2019..2026 inclusive, 8 years
+# Sentinel-2 L2A `COPERNICUS/S2_SR_HARMONIZED` over PH only starts ~2018; 2016
+# and 2017 return 0 cloud-masked images for this AOI. Dynamic World v1 goes
+# back further but we constrain the window for the cross-source stack.
 
 _initialised = False
 

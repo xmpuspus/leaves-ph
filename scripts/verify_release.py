@@ -5,11 +5,11 @@ Mirrors `solar-map-ph/scripts/verify_v11_release.py`. Must return
 N PASS / 0 FAIL before any tag, push, or deploy.
 
 Checks (full set at Phase 7):
-- per_lgu_canopy_2016_2026.csv parses and matches schema
+- per_lgu_canopy_2019_2026.csv parses and matches schema
 - 17 LGUs present in the CSV; no extra or missing
 - classifier hash matches canonical (only if Phase 4 ran)
 - requirements.txt fully pinned (no >=, ^, ~)
-- site/src/data/per_lgu_canopy.json mirrors data/per_lgu/per_lgu_canopy_2016_2026.csv
+- site/src/data/per_lgu_canopy.json mirrors data/per_lgu/per_lgu_canopy_2019_2026.csv
 - README hero counter matches actual aggregated canopy_ha
 - Zero em-dashes in README, MODEL_CARD, BENCHMARKS, CHANGELOG, docs/research/, site/src/
 - Zero AI-jargon hits from the no-ai-jargon ban list
@@ -39,38 +39,77 @@ MD_FILES = [
     "CONTRIBUTING.md",
     "SECURITY.md",
     "CODE_OF_CONDUCT.md",
+    "docs/methodology.md",
+    "docs/setup-gee.md",
+    "docs/privacy-impact-assessment.md",
     "docs/research/prior-work.md",
 ]
+
+# Astro source files that ship visible copy to the public site. The em-dash
+# and AI-jargon sweeps must cover these or the site can ship copy that the
+# README would have caught.
+SITE_GLOBS = ("site/src/pages/**/*.astro", "site/src/components/**/*.astro", "site/src/layouts/**/*.astro")
+
+
+def _all_text_files() -> list[Path]:
+    """All files the em-dash + AI-jargon sweeps should cover."""
+    files: list[Path] = []
+    for rel in MD_FILES:
+        p = ROOT / rel
+        if p.exists():
+            files.append(p)
+    for pattern in SITE_GLOBS:
+        files.extend(ROOT.glob(pattern))
+    return files
 
 
 def gate_em_dash() -> tuple[str, bool, str]:
     hits: list[str] = []
-    for rel in MD_FILES:
-        p = ROOT / rel
-        if not p.exists():
-            continue
+    for p in _all_text_files():
         text = p.read_text(encoding="utf-8")
         for lineno, line in enumerate(text.splitlines(), start=1):
             if EM_DASH in line:
+                rel = p.relative_to(ROOT)
                 hits.append(f"{rel}:{lineno}: {line.strip()}")
     if hits:
         return ("em-dash sweep", False, f"{len(hits)} em-dash hit(s):\n  " + "\n  ".join(hits[:10]))
-    return ("em-dash sweep", True, "no em-dashes")
+    return ("em-dash sweep", True, f"no em-dashes ({len(_all_text_files())} files scanned)")
 
 
 def gate_ai_jargon() -> tuple[str, bool, str]:
     hits: list[str] = []
-    for rel in MD_FILES:
-        p = ROOT / rel
-        if not p.exists():
-            continue
+    for p in _all_text_files():
         text = p.read_text(encoding="utf-8")
         for lineno, line in enumerate(text.splitlines(), start=1):
             if BANNED_AI_WORDS.search(line):
+                rel = p.relative_to(ROOT)
                 hits.append(f"{rel}:{lineno}: {line.strip()}")
     if hits:
         return ("AI-jargon sweep", False, f"{len(hits)} AI-jargon hit(s):\n  " + "\n  ".join(hits[:10]))
-    return ("AI-jargon sweep", True, "no AI-jargon hits")
+    return ("AI-jargon sweep", True, f"no AI-jargon hits ({len(_all_text_files())} files scanned)")
+
+
+def gate_site_root_boundary() -> tuple[str, bool, str]:
+    """site/ files must never import from outside site/ (Vercel root boundary).
+
+    Symptom of breaking this: local + CI pass; Vercel deploy fails silently
+    with 'Cannot find module' (see feedback_vercel-site-root-boundary.md).
+    """
+    pat = re.compile(r"""(?:from|import)\s+['"](\.\./){3,}|(?:from|import)\s+['"]/Users/""")
+    hits: list[str] = []
+    for site_file in ROOT.glob("site/src/**/*.astro"):
+        text = site_file.read_text(encoding="utf-8")
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            if pat.search(line):
+                rel = site_file.relative_to(ROOT)
+                hits.append(f"{rel}:{lineno}: {line.strip()}")
+    if hits:
+        return (
+            "site/ root boundary",
+            False,
+            f"{len(hits)} import(s) escape site/ root:\n  " + "\n  ".join(hits[:10]),
+        )
+    return ("site/ root boundary", True, "no imports escape site/")
 
 
 def gate_requirements_pinned() -> tuple[str, bool, str]:
@@ -102,7 +141,7 @@ def gate_package_version() -> tuple[str, bool, str]:
 
 def gate_per_lgu_csv_optional() -> tuple[str, bool, str]:
     """Phase 3+ artifact. v0.1.0 SKIP."""
-    p = ROOT / "data" / "per_lgu" / "per_lgu_canopy_2016_2026.csv"
+    p = ROOT / "data" / "per_lgu" / "per_lgu_canopy_2019_2026.csv"
     if not p.exists():
         return ("per-LGU CSV (Phase 3+)", True, "not yet built (pre-Phase 3); SKIP")
     import csv
@@ -121,6 +160,7 @@ def main() -> int:
         gate_ai_jargon,
         gate_requirements_pinned,
         gate_package_version,
+        gate_site_root_boundary,
         gate_per_lgu_csv_optional,
     ]
     n_pass = 0

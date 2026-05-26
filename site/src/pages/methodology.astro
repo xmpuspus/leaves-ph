@@ -10,10 +10,10 @@ import Base from "../layouts/Base.astro";
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Inputs</h2>
     <p class="mb-3">Five canonical canopy / land-cover datasets, all pulled via Google Earth Engine or AWS Open Data, all bit-exact reproducible from the committed manifests:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
-      <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites 2016 to 2026, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>
+      <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites 2019 to 2026, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>
       <li><strong>Hansen Global Forest Change v1.13</strong> via <code>UMD/hansen/global_forest_change_2025_v1_13</code>. Year-2000 baseline (treecover2000), 2001-2025 annual loss (lossyear), 2000-2012 binary gain. 30 m native.</li>
       <li><strong>ESA WorldCover v200</strong> via <code>ESA/WorldCover/v200</code>. 2021 single-epoch, 10 m class-10 = trees. Independent cross-check.</li>
-      <li><strong>Dynamic World v1</strong> via <code>GOOGLE/DYNAMICWORLD/V1</code>. Annual median <code>trees</code> probability 2016 to 2026, downsampled to 30 m for the shared GEE 50 MB sync-URL limit.</li>
+      <li><strong>Dynamic World v1</strong> via <code>GOOGLE/DYNAMICWORLD/V1</code>. Annual median <code>trees</code> probability 2019 to 2026, downsampled to 30 m for the shared GEE 50 MB sync-URL limit.</li>
       <li><strong>Meta Canopy Height v2</strong> from <code>s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/chm/</code>. 1 m height truth (source imagery 2018-2020), Bing-style quadkey tiles, downloaded for the 4 zoom-9 tiles overlapping NCR, mosaicked, reprojected EPSG:3857 to EPSG:4326.</li>
     </ul>
 
@@ -23,7 +23,7 @@ import Base from "../layouts/Base.astro";
     <p class="mb-3"><strong>Honesty caveat:</strong> Meta v2's source imagery is 80 percent from 2018-2020, so the calibration layer is a ~2019 truth, not a 2026 truth. We treat NDVI-vs-Meta agreement as a constant offset and apply the same threshold to every year. v1.1 will revisit with a per-year calibration once GEDI L2A monthly RH98 spot-truth is integrated.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Per-LGU aggregation</h2>
-    <p class="mb-3">LGU polygons come from OpenStreetMap admin-level=6 relations for the 17 NCR LGUs (16 cities + Pateros). Each year's canopy mask is masked by each LGU polygon; canopy hectares are computed by multiplying pixel count by the latitude-corrected pixel area (cos(14.6 deg)) and dividing by 100 (km^2 -&gt; ha). The result is the per-LGU CSV <code>data/per_lgu/per_lgu_canopy_2016_2026.csv</code>, the hash-verified canonical artifact of v1.0.</p>
+    <p class="mb-3">LGU polygons come from OpenStreetMap admin-level=6 relations for the 17 NCR LGUs (16 cities + Pateros). Each year's canopy mask is masked by each LGU polygon; canopy hectares are computed by multiplying pixel count by the latitude-corrected pixel area (cos(14.6 deg)) and dividing by 100 (km^2 -&gt; ha). The result is the per-LGU CSV <code>data/per_lgu/per_lgu_canopy_2019_2026.csv</code>, the hash-verified canonical artifact of v1.0.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Reconciliation against the four public 2024+ figures</h2>
     <p class="mb-3">The four 2024+ NCR canopy figures in public circulation disagree by roughly 50 percent for the same area:</p>
@@ -38,7 +38,7 @@ import Base from "../layouts/Base.astro";
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Known limitations</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li>30 m output resolution for v1.0 (matched to Hansen; trades off some urban-tree detail).</li>
-      <li>Calibration epoch is ~2019 (Meta source imagery); the same threshold is applied to every year 2016 to 2026.</li>
+      <li>Calibration epoch is ~2019 (Meta source imagery); the same threshold is applied to every year 2019 to 2026.</li>
       <li>Hansen 30 m misses small-scale urban tree-cutting events (e.g. the 225 SALEX trees in May 2026 will not appear in the global Hansen product until at least the 2027 v1.14 release).</li>
       <li>Dynamic World probability values reflect model confidence, not ground truth.</li>
       <li>Per-LGU only; per-barangay is the v1.1 push.</li>

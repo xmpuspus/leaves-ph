@@ -11,7 +11,7 @@ Raw per-agent reports are in `/tmp/leaves-prior-work-{canonical,embeddings,canop
 
 ## 1. Headline finding
 
-The canonical global tree-cover stack for 2016 to 2026 already exists at 10 m. Hansen GFC v1.12 carries the loss history back to 2001, ESA WorldCover v200 freezes a 2021 cross-check, Dynamic World v1 gives a near-real-time annual probability for 2015 to today, and Meta v2 plus GEDI L2A give a 1 m to 25 m height truth layer for NDVI calibration. None of these are PH-specific, none publish a per-LGU breakdown for Metro Manila, and the four public 2024+ NCR figures in circulation (DENR FMB "6 percent / 3,565 ha", GFW "2.3 kha at 4.0 percent of land area", EJN "open forest 2,790 ha to 2,071 ha 2020", ScienceKonek 2024) disagree with each other.
+The canonical global tree-cover stack for 2019 to 2026 already exists at 10 m. Hansen GFC v1.13 carries the loss history back to 2001, ESA WorldCover v200 freezes a 2021 cross-check, Dynamic World v1 gives a near-real-time annual probability for 2015 to today, and Meta v2 plus GEDI L2A give a 1 m to 25 m height truth layer for NDVI calibration. None of these are PH-specific, none publish a per-LGU breakdown for Metro Manila, and the four public 2024+ NCR figures in circulation (DENR FMB "6 percent / 3,565 ha", GFW "2.3 kha at 4.0 percent of land area", EJN "open forest 2,790 ha to 2,071 ha 2020", ScienceKonek 2024) disagree with each other.
 
 Leaves.PH v1.0 is the **2026 update layer + per-LGU breakdown + reconciliation between those four figures**, using all four canonical sources stacked, validated against Meta canopy height, and held out by entire LGU. Not a new global model.
 
@@ -19,7 +19,7 @@ Leaves.PH v1.0 is the **2026 update layer + per-LGU breakdown + reconciliation b
 
 | Source | Resolution | Cadence | License | GEE asset | Best as |
 |---|---|---|---|---|---|
-| Hansen GFC v1.12 | 30 m | annual loss 2001-2024 | Public domain | `UMD/hansen/global_forest_change_2025_v1_13` | long-term loss history |
+| Hansen GFC v1.13 | 30 m | annual loss 2001-2024 | Public domain | `UMD/hansen/global_forest_change_2025_v1_13` | long-term loss history |
 | ESA WorldCover v200 | 10 m | 2021 single epoch | CC-BY-4.0 | `ESA/WorldCover/v200` | 2021 cross-check |
 | Dynamic World v1 | 10 m | ~5 day (Sentinel-2) | CC-BY-4.0 | `GOOGLE/DYNAMICWORLD/V1` | annual per-LGU curve 2016-2026 |
 | Sentinel-2 L2A | 10 m | ~5 day | Copernicus (open) | `COPERNICUS/S2_SR_HARMONIZED` | RGB + NDVI for animations |
@@ -35,8 +35,8 @@ Decision: use Hansen GFC + ESA WorldCover + Dynamic World as the **input baselin
 
 ### 3.1 Baseline triad (mandatory)
 
-1. **Hansen GFC v1.12** for 2001-2024 loss history and `treecover2000` year-2000 baseline. Crops to NCR bbox in one GEE call; ~30 m loss tiles per year.
-2. **Dynamic World v1** for the annual canopy curve 2016 to 2026. Median of the `trees` probability band per year per LGU is the headline series. Avoids Hansen's plantation-harvest false positive and captures regrowth that Hansen ignores.
+1. **Hansen GFC v1.13** for 2001-2024 loss history and `treecover2000` year-2000 baseline. Crops to NCR bbox in one GEE call; ~30 m loss tiles per year.
+2. **Dynamic World v1** for the annual canopy curve 2019 to 2026. Median of the `trees` probability band per year per LGU is the headline series. Avoids Hansen's plantation-harvest false positive and captures regrowth that Hansen ignores.
 3. **ESA WorldCover v200** for an independent 2021 binary tree mask. Used as the calibration cross-check, not as a trend layer.
 
 This triad covers loss, presence, and probability across three sensors. Three-way consensus on a pixel = high confidence. One-way disagreement = flag for the methodology footnote.

@@ -1,13 +1,13 @@
 """Per-LGU canopy aggregation: produce the v1.0 canonical CSV.
 
 For each LGU (17 polygons from data/lgu/ncr_lgu.geojson) and each year
-2016..2026, mask the binary canopy raster with the LGU polygon, sum the
+2019..2026, mask the binary canopy raster with the LGU polygon, sum the
 canopy pixels, and compute hectares + percent of LGU area. Also pull
 Hansen cumulative loss and ESA WorldCover 2021 tree percent for the same
 polygons.
 
 Output:
-    data/per_lgu/per_lgu_canopy_2016_2026.csv
+    data/per_lgu/per_lgu_canopy_2019_2026.csv
         columns: lgu_name, year, canopy_ha, canopy_pct, total_ha,
                  hansen_loss_ha_cumulative, esa_tree_pct_2021
 """
@@ -31,9 +31,9 @@ HANSEN_DIR = REPO_ROOT / "data" / "hansen"
 ESA_DIR = REPO_ROOT / "data" / "esa"
 LGU_GEOJSON = REPO_ROOT / "data" / "lgu" / "ncr_lgu.geojson"
 OUT_DIR = REPO_ROOT / "data" / "per_lgu"
-OUT_CSV = OUT_DIR / "per_lgu_canopy_2016_2026.csv"
+OUT_CSV = OUT_DIR / "per_lgu_canopy_2019_2026.csv"
 
-YEARS = list(range(2016, 2027))
+YEARS = list(range(2019, 2027))
 
 
 def pixel_area_ha(transform) -> float:
@@ -103,6 +103,11 @@ def hansen_loss_cumulative(lgus: gpd.GeoDataFrame, through_year: int) -> dict[st
 
 
 def esa_tree_pct_2021(lgus: gpd.GeoDataFrame) -> dict[str, float]:
+    """ESA WorldCover binary tree mask: every polygon pixel counts toward the
+    denominator (0 = not-tree is valid, NOT nodata). We deliberately ignore
+    src.nodata here because rasterio defaults it to 0 for binary masks, which
+    collapses the non-tree class into nodata and makes every LGU read 100%.
+    """
     esa_path = ESA_DIR / "worldcover_trees_2021.tif"
     if not esa_path.exists():
         return {row["lgu_name"]: float("nan") for _, row in lgus.iterrows()}
@@ -111,16 +116,14 @@ def esa_tree_pct_2021(lgus: gpd.GeoDataFrame) -> dict[str, float]:
         trees = src.read(1)
         transform = src.transform
         h, w = trees.shape
-        nodata = src.nodata if src.nodata is not None else 255
     for _, row in lgus.iterrows():
         geom = row.geometry
         if geom is None or geom.is_empty:
             continue
         mask = geometry_mask([geom.__geo_interface__], out_shape=(h, w), transform=transform, invert=True)
         in_poly = trees[mask]
-        valid = in_poly != nodata
-        n_tree = int(np.sum((in_poly == 1) & valid))
-        n_total = int(np.sum(valid))
+        n_tree = int(np.sum(in_poly == 1))
+        n_total = int(in_poly.size)
         out[row["lgu_name"]] = round(100.0 * n_tree / n_total, 2) if n_total > 0 else float("nan")
     return out
 

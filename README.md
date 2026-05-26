@@ -6,12 +6,12 @@ Open-source tree-cover validation for Metro Manila. Validates the four 2024+ NCR
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Status](https://img.shields.io/badge/status-alpha%20%28v0.1.0%29-orange.svg)](CHANGELOG.md)
 
-> Hero animation lands in Phase 5: a 2016 to 2026 yearly Sentinel-2 timelapse over NCR with a running per-LGU canopy counter.
+> Hero animation lands in Phase 5: a 2019 to 2026 yearly Sentinel-2 timelapse over NCR with a running per-LGU canopy counter.
 > `docs/demo/hero.gif` is the artifact.
 
 ## What this is
 
-- A reproducible pipeline that pulls Sentinel-2 L2A, Hansen GFC v1.12, ESA WorldCover v200, Dynamic World v1, and Meta Canopy Height v2 for the NCR bounding box and computes a per-LGU annual canopy curve from 2016 to 2026.
+- A reproducible pipeline that pulls Sentinel-2 L2A, Hansen GFC v1.13, ESA WorldCover v200, Dynamic World v1, and Meta Canopy Height v2 for the NCR bounding box and computes a per-LGU annual canopy curve from 2019 to 2026.
 - An honest reconciliation of the four official 2024+ NCR canopy figures that disagree with each other (see "First finding" below).
 - A SALEX corridor before-and-after timelapse covering the 225 trees felled along Quirino Avenue in May 2026.
 - An interactive Astro + MapLibre site at https://leaves.ph (Phase 6).
@@ -55,13 +55,13 @@ make animate       # generate the 5 hero GIFs
 make verify        # release gate (must return N PASS / 0 FAIL)
 ```
 
-If `make fetch` is skipped, `make compute` runs against the cached composites under `data/`. The 17 LGU canopy curves drop into `data/per_lgu/per_lgu_canopy_2016_2026.csv` and the Astro site reads from `site/public/data/per_lgu_canopy.geojson`.
+If `make fetch` is skipped, `make compute` runs against the cached composites under `data/`. The 17 LGU canopy curves drop into `data/per_lgu/per_lgu_canopy_2019_2026.csv` and the Astro site reads from `site/public/data/per_lgu_canopy.geojson`.
 
 ## Methodology
 
 Full methodology in `docs/methodology.md`. One-paragraph version:
 
-For each year 2016 to 2026, we pull a median Sentinel-2 L2A composite over the NCR bbox (longitude 120.9 to 121.15, latitude 14.4 to 14.8), mask clouds with s2cloudless, compute NDVI per pixel, and threshold at a value tuned against Meta Canopy Height v2 (target: greater than 90 percent agreement with Meta pixels above 5 m). We cross-check the 2021 result against ESA WorldCover class 10 and ground long-term loss context against Hansen GFC v1.12 `lossyear`. Per-LGU statistics come from PSA / OSM administrative polygons via `pipeline/aggregate_lgu.py`. The full prior-work and tool survey is in `docs/research/prior-work.md`.
+For each year 2019 to 2026, we pull a median Sentinel-2 L2A composite over the NCR bbox (longitude 120.9 to 121.15, latitude 14.4 to 14.8), mask clouds with s2cloudless, compute NDVI per pixel, and threshold at a value tuned against Meta Canopy Height v2 (target: greater than 90 percent agreement with Meta pixels above 5 m). We cross-check the 2021 result against ESA WorldCover class 10 and ground long-term loss context against Hansen GFC v1.13 `lossyear`. Per-LGU statistics come from PSA / OSM administrative polygons via `pipeline/aggregate_lgu.py`. The full prior-work and tool survey is in `docs/research/prior-work.md`.
 
 ## Data products published
 
@@ -81,7 +81,7 @@ docker build -t leaves-ph:latest .
 docker run leaves-ph:latest make hash
 ```
 
-`make hash` prints the sha256 prefix of `data/per_lgu/per_lgu_canopy_2016_2026.csv`. The canonical hash is pinned in the Makefile (`EXPECTED_HASH`) and asserted in CI. If your build produces a different hash, your pinned dependencies have drifted; reinstall from `requirements.txt`.
+`make hash` prints the sha256 prefix of `data/per_lgu/per_lgu_canopy_2019_2026.csv`. The canonical hash is pinned in the Makefile (`EXPECTED_HASH`) and asserted in CI. If your build produces a different hash, your pinned dependencies have drifted; reinstall from `requirements.txt`.
 
 Until Phase 3 lands, `EXPECTED_HASH=PENDING_PHASE_3` and `make hash-verify` is a SKIP, not a FAIL.
 
