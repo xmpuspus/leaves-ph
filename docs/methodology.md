@@ -15,7 +15,7 @@ National Capital Region (NCR), Philippines. Bounding box:
 | Layer | Source | Resolution | Cadence | Role |
 |---|---|---|---|---|
 | Sentinel-2 L2A median composite | `COPERNICUS/S2_SR_HARMONIZED` via GEE | 10 m | annual 2016-2026 | NDVI + animation RGB |
-| Hansen GFC v1.12 | `UMD/hansen/global_forest_change_2024_v1_12` | 30 m | annual loss 2001-2024 | loss history baseline |
+| Hansen GFC v1.12 | `UMD/hansen/global_forest_change_2025_v1_13` | 30 m | annual loss 2001-2024 | loss history baseline |
 | ESA WorldCover v200 | `ESA/WorldCover/v200` | 10 m | single 2021 epoch | 2021 cross-check |
 | Dynamic World v1 `trees` | `GOOGLE/DYNAMICWORLD/V1` | 10 m | ~5 day | annual trend, fuzzy classification |
 | Meta Canopy Height v2 | AWS `s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/` | 1 m | one epoch (80 percent 2018-2020) | NDVI calibration truth |

@@ -88,7 +88,7 @@ def hansen_loss_cumulative(lgus: gpd.GeoDataFrame, through_year: int) -> dict[st
         transform = src.transform
         h, w = loss.shape
     pa_ha = pixel_area_ha(transform)
-    threshold_code = max(0, through_year - 2000)  # 2024 -> code 24
+    threshold_code = max(0, through_year - 2000)  # 2025 -> code 25 (Hansen v1.13)
     for _, row in lgus.iterrows():
         geom = row.geometry
         if geom is None or geom.is_empty:
@@ -156,7 +156,7 @@ def main() -> int:
             print(f"[aggregate_lgu] {year}: MISSING {canopy_path.name}; skip")
             continue
         per_lgu = aggregate_one_year(canopy_path, lgus)
-        hansen = hansen_loss_cumulative(lgus, through_year=min(year, 2024))
+        hansen = hansen_loss_cumulative(lgus, through_year=min(year, 2025))
         for lgu_name, stats in per_lgu.items():
             canopy_ha = stats["canopy_ha"]
             total_ha = stats["total_ha"]

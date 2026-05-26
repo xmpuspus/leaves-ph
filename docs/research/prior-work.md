@@ -19,7 +19,7 @@ Leaves.PH v1.0 is the **2026 update layer + per-LGU breakdown + reconciliation b
 
 | Source | Resolution | Cadence | License | GEE asset | Best as |
 |---|---|---|---|---|---|
-| Hansen GFC v1.12 | 30 m | annual loss 2001-2024 | Public domain | `UMD/hansen/global_forest_change_2024_v1_12` | long-term loss history |
+| Hansen GFC v1.12 | 30 m | annual loss 2001-2024 | Public domain | `UMD/hansen/global_forest_change_2025_v1_13` | long-term loss history |
 | ESA WorldCover v200 | 10 m | 2021 single epoch | CC-BY-4.0 | `ESA/WorldCover/v200` | 2021 cross-check |
 | Dynamic World v1 | 10 m | ~5 day (Sentinel-2) | CC-BY-4.0 | `GOOGLE/DYNAMICWORLD/V1` | annual per-LGU curve 2016-2026 |
 | Sentinel-2 L2A | 10 m | ~5 day | Copernicus (open) | `COPERNICUS/S2_SR_HARMONIZED` | RGB + NDVI for animations |
@@ -166,7 +166,7 @@ These are the items we cannot resolve from public web sources alone. Phase 1 sta
 Full URLs are inline above. Raw per-agent reports (not committed) at `/tmp/leaves-prior-work-{canonical,embeddings,canopy-height,ph}.md`.
 
 GEE asset paths confirmed live as of 2026-05-26:
-- `UMD/hansen/global_forest_change_2024_v1_12` (latest available 2024; v1.13 expected late 2026)
+- `UMD/hansen/global_forest_change_2025_v1_13` (latest available 2024; v1.13 expected late 2026)
 - `ESA/WorldCover/v200`
 - `GOOGLE/DYNAMICWORLD/V1`
 - `COPERNICUS/S2_SR_HARMONIZED`

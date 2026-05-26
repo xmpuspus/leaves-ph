@@ -7,7 +7,8 @@ Exports three bands as separate GeoTIFFs:
 
 Idempotent.
 
-Default GEE asset: UMD/hansen/global_forest_change_2024_v1_12.
+Default GEE asset: UMD/hansen/global_forest_change_2025_v1_13 (the latest
+release; v1.12 is deprecated as of mid-2026).
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from _gee_init import NCR_BBOX, init, ncr_geometry
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO_ROOT / "data" / "hansen"
 MANIFEST = OUT_DIR / "_fetch_manifest_hansen.json"
-DEFAULT_ASSET = "UMD/hansen/global_forest_change_2024_v1_12"
+DEFAULT_ASSET = "UMD/hansen/global_forest_change_2025_v1_13"
 BANDS = ("treecover2000", "lossyear", "gain")
 
 
