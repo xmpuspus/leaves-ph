@@ -67,9 +67,9 @@ await run(3, "data page: artifacts table + citation, no 'pending'", async (page)
   const body = await page.locator("body").innerText();
   return { pass: body.includes("Citation") && !body.toLowerCase().includes("pending") && body.includes("CC-BY"), detail: `pending=${body.toLowerCase().includes("pending")}` };
 }, { path: "/data" });
-await run(4, "methodology: ModelEvolution chart present", async (page) => {
-  const svg = await page.getByRole("img", { name: /Model accuracy across versions/ }).isVisible();
-  return { pass: svg, detail: `chartSvg=${svg}` };
+await run(4, "methodology loads with detection-model section", async (page) => {
+  const body = await page.locator("body").innerText();
+  return { pass: /detection model/i.test(body) && body.length > 600, detail: `hasModelSection=${/detection model/i.test(body)} len=${body.length}` };
 }, { path: "/methodology" });
 await run(5, "validation gallery panels present", async (page) => {
   const imgs = await page.locator("img").count();
@@ -182,16 +182,15 @@ await run(22, "map loading overlay is gone after load", async (page) => {
 }, mapOpts);
 
 // ───────────── CHARTS & DATA-VIZ (23-27) ─────────────
-await run(23, "ModelEvolution svg fills container (>=45% area)", async (page) => {
-  const svg = page.getByRole("img", { name: /Model accuracy across versions/ });
-  const sb = await svg.boundingBox();
-  const parent = await svg.locator("xpath=ancestor::div[1]").boundingBox();
-  const ratio = (sb.width * sb.height) / (parent.width * parent.height);
-  return { pass: ratio >= 0.45, detail: `fillRatio=${ratio.toFixed(2)}` };
-}, { path: "/methodology" });
-await run(24, "ModelEvolution shows deployed v9 callout + legend", async (page) => {
+await run(23, "methodology cites the detection model (R2 0.87, in optimization)", async (page) => {
   const body = await page.locator("body").innerText();
-  return { pass: body.includes("DEPLOYED") && /Classification F1/i.test(body) && /Regression/i.test(body), detail: `deployed+2tracks` };
+  return { pass: /0\.87/.test(body) && /optimi[sz]/i.test(body) && /detection model/i.test(body), detail: `r2=${/0\.87/.test(body)} optimizing=${/optimi[sz]/i.test(body)} model=${/detection model/i.test(body)}` };
+}, { path: "/methodology" });
+await run(24, "no model-evolution / deployed-version narrative on the site", async (page) => {
+  const body = await page.locator("body").innerText();
+  const banned = ["Eight model versions", "Five iterations", "model evolution", "DEPLOYED MODEL", "clf_v9", "clf_v3", "clf_v4"];
+  const hits = banned.filter((b) => body.includes(b));
+  return { pass: hits.length === 0, detail: `bannedHits=${hits.join(",") || "none"}` };
 }, { path: "/methodology" });
 await run(25, "CanopyTrend shows 2 series + 2026 provisional", async (page) => {
   const svg = await page.getByRole("img", { name: /NCR tree canopy percent per year/ }).isVisible();
