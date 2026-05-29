@@ -7,8 +7,8 @@ import {
   SERIES_EPOCH_COUNT,
   LATEST_NCR_PCT,
   NCR_LGU_COUNT,
+  MODEL_R2,
 } from "../lib/series";
-import { HEADLINE_R2 } from "../lib/modelEvolution";
 import CanopyTrend from "../components/CanopyTrend.astro";
 const pctWhole = Math.floor(LATEST_NCR_PCT);
 const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
@@ -39,10 +39,10 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
         </dl>
 
         <div class="mt-6 pt-5 border-t border-ink-900">
-          <p class="kicker mb-2 text-forest-700">DEPLOYED MODEL · clf_v9 · HELD-OUT ACCURACY</p>
-          <p class="font-display font-medium text-forest-700 leading-none tabular-nums" style="font-size: clamp(2.25rem, 4.2vw, 3.25rem);">R<sup class="text-[0.5em] align-super">2</sup>&nbsp;{HEADLINE_R2.toFixed(2)}</p>
+          <p class="kicker mb-2 text-forest-700">DETECTION MODEL · IN OPTIMIZATION</p>
+          <p class="font-display font-medium text-forest-700 leading-none tabular-nums" style="font-size: clamp(2.25rem, 4.2vw, 3.25rem);">R<sup class="text-[0.5em] align-super">2</sup>&nbsp;{MODEL_R2.toFixed(2)}</p>
           <p class="font-sans text-[12px] text-ink-700 mt-2 leading-[1.5] max-w-[34ch]">
-            Canopy fraction vs Meta's 1 m reference, held-out locations the model never saw in training.
+            Canopy fraction vs Meta's 1 m reference, on held-out locations. The detection model is being optimized toward a first release; published figures use the NDVI baseline.
           </p>
         </div>
       </aside>

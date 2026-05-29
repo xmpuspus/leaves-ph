@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import { SERIES_START, SERIES_END } from "../lib/series";
-import ModelEvolution from "../components/ModelEvolution.astro";
 ---
 <Base title="Leaves.PH · methodology" pathname="/methodology">
   <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
@@ -48,21 +47,9 @@ import ModelEvolution from "../components/ModelEvolution.astro";
     </ul>
     <p class="mb-3">Leaves.PH publishes a reproducible measurement series with the full pipeline committed. The intent is to add a separately-defined, fully reproducible measurement to the public record; not to rank against any of the above.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Confirmation + density layer (CLIP+LR + Ridge)</h2>
-    <p class="mb-3">On top of the NDVI v0 baseline, a second layer is trained to confirm and expand canopy detections at tile level, then to estimate continuous canopy density. The pattern follows the SolarMap.PH playbook: per-tile CLIP ViT-Large embeddings, LogisticRegression head, deterministic hyper-parameters across iterations, Meta v2 canopy height as the oracle.</p>
-    <p class="mb-3"><strong>Five iterations</strong> (v2 → v6):</p>
-    <ul class="list-disc pl-6 space-y-2 text-sm mb-4">
-      <li><strong>v2 (bootstrap):</strong> 5,460 OSM-bootstrapped tiles (<code>natural=tree</code>, <code>landuse=forest</code>, <code>leisure=park</code> positives; <code>building</code>, <code>highway</code>, <code>landuse=industrial</code> negatives). CV F1 = 0.69.</li>
-      <li><strong>v3 (teacher signal):</strong> v2 + 3,591 ESA WorldCover 2021 teacher tiles (class 10 positive; classes 50, 80, 30, 40 hard negatives). CV F1 = 0.78.</li>
-      <li><strong>v4 (active learning):</strong> v3 + 882 Meta-oracle tiles. Six-category mining: clf-NEW that Meta confirms (positives), clf-NEW that Meta rejects (hard negatives), clf-dropped that Meta confirms (positives), Meta-only positives (model+NDVI both missed). CV F1 = 0.77 on the harder distribution.</li>
-      <li><strong>v5 (Platt calibration):</strong> clf_v4 wrapped in <code>CalibratedClassifierCV(method="sigmoid", cv=5)</code>. Output probabilities are reliability-calibrated against the empirical positive rate (max bin gap = 0.055).</li>
-      <li><strong>v6 (continuous regression):</strong> CLIP embedding to Meta v2 &gt;5m canopy fraction (0..1) via Ridge regression. 5-fold CV MAE = 0.047, RMSE = 0.083, R² = 0.71. This replaces the binary tile mask with a continuous canopy-density estimate.</li>
-      <li><strong>v9 (deployed density head):</strong> the v6 continuous-density approach retrained as a HistGradientBoostingRegressor on the merged multi-epoch tile set (16,800 tiles). Held-out-location accuracy (5-fold GroupKFold by location, leakage-free) is R² = 0.87 (MAE 0.069). clf_v9 is the shipped model behind the published per-LGU and per-barangay canopy series.</li>
-    </ul>
-    <p class="mb-3">For the 2024 epoch at the v3 stage, against the NDVI baseline of 7.78% NCR canopy: the head confirms 4.54pp (shared with NDVI), adds 2.82pp NEW canopy that the per-pixel NDVI rule missed (urban tree clusters, mixed-class neighbourhoods), and trims 3.25pp where NDVI matches but the model considers it low-confidence vegetation. The v6 continuous-density head produces a multi-year canopy series that sits alongside the v0 NDVI series.</p>
-    <div class="my-8">
-      <ModelEvolution />
-    </div>
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Detection model (in optimization)</h2>
+    <p class="mb-3">Alongside the NDVI baseline, a detection model estimates continuous canopy density per tile. It follows the SolarMap.PH playbook: per-tile CLIP ViT-Large/14 embeddings regressed onto Meta v2's &gt;5 m canopy fraction (0..1) with gradient boosting, deterministic hyper-parameters, Meta canopy height as the reference signal.</p>
+    <p class="mb-3">On held-out locations the model never saw in training (5-fold cross-validation grouped by location, leakage-free, 16,800 tiles across 2019-2026), it reaches R&sup2; = 0.87 (MAE 0.069) against Meta's 1 m reference. The model is being optimized toward a first release; the published per-LGU and per-barangay canopy figures on this site use the NDVI baseline calibrated to Meta.</p>
 
     <p class="mb-6 text-sm text-ink-500">Per-LGU validation panels, one PNG per LGU, are browsable at <a href="/validation" class="no-underline text-umber-700">/validation</a> and stored at <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan/validation_v3" class="no-underline text-accent-steel">detection/scan/validation_v3/</a>. Each panel shows S-2 RGB, NDVI v0 baseline (orange), clf shared/confirmed (green), and clf NEW additions (yellow). Full benchmark table in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="no-underline text-accent-steel">BENCHMARKS.md</a>.</p>
 

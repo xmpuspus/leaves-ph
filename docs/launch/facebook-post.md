@@ -18,9 +18,9 @@ Inputs are all open, all canonical:
 
 NDVI threshold tuned against Meta canopy height > 5m, recall floor 0.85.
 
-On top of the pixel-rule baseline, a second-pass CLIP+LR head trained the same way SolarMap.PH was built confirms NDVI hits and proposes additions in tile-level windows the per-pixel rule misses. 9,051 labelled tiles, 5-fold CV F1 = 0.78. The deliverable includes a per-LGU validation gallery so anyone can inspect what the model added on top of the baseline.
+A separate detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained the same way SolarMap.PH was built onto Meta's 1m canopy fraction. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026). The deliverable includes a per-LGU validation gallery so anyone can inspect the model.
 
-Headline measurement for the latest annual epoch: NCR area-weighted canopy = 7.46%.
+Headline measurement for the latest annual epoch: NCR area-weighted canopy = 7.46%, from the NDVI baseline calibrated to Meta's 1m reference.
 
 Per-LGU:
 * Quezon City: 18.93% (La Mesa watershed + UP Diliman + Wack Wack)
@@ -46,7 +46,7 @@ Code MIT. Data CC-BY-4.0.
 ## Image to attach
 
 Primary: `docs/demo/remaining-canopy-satellite.gif`
-Alternative: any of the per-LGU validation panels under `detection/scan/validation_v3/`
+Alternative: any of the per-LGU validation panels under `detection/scan/validation/`
 
 ## Notes for posting
 

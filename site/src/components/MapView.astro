@@ -749,7 +749,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
                 <div style="color:#5a4f3a;">${p.lgu_name ?? ""}</div>
                 <div style="margin-top:6px;">${yr}${yr === 2026 ? " (provisional)" : ""}: <b>${pct == null ? "n/a" : Number(pct).toFixed(2) + "%"}</b></div>
                 <div style="color:#5a4f3a;">${ha == null ? "" : Number(ha).toFixed(1) + " ha canopy of " + Number(p.total_ha).toFixed(0) + " ha"}</div>
-                <div style="color:#837d6a;font-size:10px;margin-top:6px;">Source: clf_v9 canopy-density model (CLIP + HistGBR).</div>
+                <div style="color:#837d6a;font-size:10px;margin-top:6px;">Source: detection model (CLIP + gradient-boosted regression), in optimization.</div>
               </div>`,
             )
             .addTo(map);

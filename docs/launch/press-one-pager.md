@@ -8,13 +8,13 @@ Leaves.PH is an open-source, reproducible measurement series of Metro Manila tre
 
 ## Headline measurement
 
-NCR area-weighted canopy in 2026 (provisional, imagery Jan-May): **7.46%** under the v0 NDVI pixel rule, **8.40%** under the v9 multi-epoch CLIP+HistGBR head. Both numbers come from public-record Sentinel-2 imagery and a 1m Meta canopy-height reference. Across the published 2019 to 2026 series, regional canopy is flat to slightly declining (−0.62 percentage points under v0; near zero under v9).
+NCR area-weighted canopy in 2026 (provisional, imagery Jan-May): **7.46%** under the published NDVI pixel rule, calibrated to a 1m Meta canopy-height reference from public-record Sentinel-2 imagery. Across the published 2019 to 2026 series, regional canopy is flat to slightly declining (−0.62 percentage points).
 
 ## Method
 
-Pull annual Sentinel-2 L2A median composites over the NCR bbox. Mask clouds. Compute NDVI per pixel. Threshold at NDVI > 0.62, tuned against Meta's 1m canopy-height product at the >5m height level. Aggregate per LGU and per barangay against PSA / OSM admin boundaries. On top of the pixel rule, a second-pass CLIP model trained per the [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) playbook (OSM bootstrap → ESA WorldCover teacher → Meta-oracle active learning → Platt calibration → continuous canopy-fraction regression) confirms and expands the baseline at tile level. Two tracks: the binary classifier reaches 5-fold CV F1 = 0.78 (v3, classification); the deployed canopy-fraction regressor (clf_v9, CLIP + HistGBR) reaches R² = 0.87 on held-out locations (leakage-free GroupKFold). These are different tasks and metrics, not one trajectory.
+Pull annual Sentinel-2 L2A median composites over the NCR bbox. Mask clouds. Compute NDVI per pixel. Threshold at NDVI > 0.62, tuned against Meta's 1m canopy-height product at the >5m height level. Aggregate per LGU and per barangay against PSA / OSM admin boundaries. The published per-LGU and per-barangay series come from this baseline. Separately, a detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained per the [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) playbook onto Meta's 1m canopy fraction. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026). It is not yet the source of any published figure.
 
-## Per-LGU highlights (2026, v0 NDVI)
+## Per-LGU highlights (2026, NDVI baseline)
 
 - Quezon City 18.93 percent, anchored by La Mesa watershed, UP Diliman, the Wack Wack greens.
 - Mandaluyong 11.19 percent, Makati 8.92 percent, Caloocan 8.80 percent, Marikina 6.87 percent.
@@ -51,7 +51,7 @@ earthengine authenticate
 make fetch && make compute && make verify
 ```
 
-`make hash-verify` confirms a bit-exact reproduction of the canonical per-LGU CSV. The 27-check release gate (`make verify`) covers em-dash + AI-jargon hygiene, requirements-pinning, classifier CV F1 / R² floors, Astro typecheck, and per-LGU schema integrity.
+`make hash-verify` confirms a bit-exact reproduction of the canonical per-LGU CSV. The 27-check release gate (`make verify`) covers em-dash + AI-jargon hygiene, requirements-pinning, the detection model's held-out R² floor, Astro typecheck, and per-LGU schema integrity.
 
 ## Contact
 

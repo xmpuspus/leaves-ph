@@ -30,13 +30,13 @@ const RANKED = [
 ---
 <Base title="Leaves.PH · model validation" pathname="/validation">
   <article class="max-w-[1280px] mx-auto px-6 sm:px-10 pt-12 pb-16 text-ink-900">
-    <p class="kicker mb-4 text-sepia-500">SECTION 5 · VALIDATION GALLERY · v3 CONFIRMATION LAYER · t=0·60</p>
+    <p class="kicker mb-4 text-sepia-500">SECTION 5 · VALIDATION GALLERY · DETECTION MODEL · t=0·60</p>
     <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3"
         style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">
-      Per-LGU visual validation of the confirmation layer.
+      Per-LGU visual validation of the detection model.
     </h1>
     <p class="text-[15px] text-ink-700 leading-[1.6] mb-8 max-w-[68ch]">
-      Each panel shows, for one LGU: the Sentinel-2 RGB basemap, the NDVI v0 baseline in <span class="text-umber-700 font-semibold">orange</span>, the v3 confirmations in <span class="text-forest-700 font-semibold">green</span>, and the v3 NEW additions in <span style="color:#b6a020" class="font-semibold">yellow</span>. The v3 confirmation layer is the SolarMap-pattern CLIP+LR head trained on 9,051 labelled tiles (OSM bootstrap + ESA WorldCover teacher), 5-fold CV F1 = 0.78. The deployed canopy-density model is clf_v9 (CLIP ViT-L/14 + HistGBR, held-out-location R² = 0.87). Panels are sorted by v3 canopy percentage at confirmation threshold t = 0.60.
+      Each panel shows, for one LGU: the Sentinel-2 RGB basemap, the NDVI v0 baseline in <span class="text-umber-700 font-semibold">orange</span>, where the detection model confirms canopy in <span class="text-forest-700 font-semibold">green</span>, and where it adds canopy the NDVI rule missed in <span style="color:#b6a020" class="font-semibold">yellow</span>. The detection model is a CLIP ViT-Large/14 head trained on labelled tiles (OSM bootstrap + ESA WorldCover teacher); on held-out locations it reaches R&sup2; = 0.87 against Meta's 1 m reference and is being optimized toward a first release. Panels are sorted by the model's canopy percentage at threshold t = 0.60.
     </p>
 
     <table class="w-full text-[13px] mb-10 font-mono tabular-nums">
@@ -45,7 +45,7 @@ const RANKED = [
           <th class="text-left py-2 font-medium">№</th>
           <th class="text-left py-2 font-medium">LGU</th>
           <th class="text-right py-2 font-medium">NDVI v0</th>
-          <th class="text-right py-2 font-medium">v3 conf.</th>
+          <th class="text-right py-2 font-medium">Model %</th>
           <th class="text-right py-2 font-medium hidden sm:table-cell">Δ pp</th>
           <th class="text-right py-2 font-medium hidden sm:table-cell">NEW pp</th>
           <th class="text-right py-2 font-medium hidden sm:table-cell">dropped pp</th>
@@ -75,12 +75,12 @@ const RANKED = [
         <figure>
           <img
             src={`/validation/validation_${r.lgu}_t60.png`}
-            alt={`Validation panel for ${r.lgu.replace(/_/g, " ")}: S-2 RGB, NDVI v0 baseline (orange), v3 confirmation shared (green), v3 confirmation NEW (yellow), stats panel.`}
+            alt={`Validation panel for ${r.lgu.replace(/_/g, " ")}: S-2 RGB, NDVI v0 baseline (orange), detection model shared (green), detection model NEW additions (yellow), stats panel.`}
             class="block w-full h-auto border border-ink-900"
             loading="lazy"
           />
           <figcaption class="fig-caption mt-2 flex flex-wrap justify-between gap-2">
-            <span><span class="dateline">VAL · {r.lgu.replace(/_/g, " ")}</span> · NDVI {r.v0.toFixed(2)}% / v3 conf. {r.clf.toFixed(2)}% / Δ {(r.delta > 0 ? "+" : "")}{r.delta.toFixed(2)} pp</span>
+            <span><span class="dateline">VAL · {r.lgu.replace(/_/g, " ")}</span> · NDVI {r.v0.toFixed(2)}% / model {r.clf.toFixed(2)}% / Δ {(r.delta > 0 ? "+" : "")}{r.delta.toFixed(2)} pp</span>
             <span class="text-sepia-500">t = 0·60</span>
           </figcaption>
         </figure>
@@ -88,7 +88,7 @@ const RANKED = [
     </div>
 
     <p class="text-[14px] text-sepia-500 mt-12 leading-[1.6] max-w-[68ch]">
-      Source data, probability raster, and the t ∈ [0·30, 0·90] threshold sweep for the v3 confirmation layer are committed in the <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan" class="no-underline text-umber-700">public repository</a>.
+      Source data, probability raster, and the t ∈ [0·30, 0·90] threshold sweep for the detection model are committed in the <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan" class="no-underline text-umber-700">public repository</a>.
       Per-LGU table + full pipeline in <a href="/methodology" class="no-underline text-umber-700">/methodology</a>.
     </p>
   </article>

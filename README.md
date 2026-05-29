@@ -12,14 +12,14 @@ Live site: [leaves.ph](https://leaves.ph).
 
 ## What it measures
 
-For each year, what fraction of each LGU's area is covered by tree canopy taller than 5 m. Two layers stack on top of each other:
+For each year, what fraction of each LGU's area is covered by tree canopy taller than 5 m. The published figures come from the NDVI baseline; a separate detection model is in optimization toward a first release.
 
-1. **NDVI baseline (v0).** Per Sentinel-2 pixel: is the spectral signature green enough to be canopy? A single threshold (NDVI > 0.62) decides yes/no, calibrated against Meta v2's 1m canopy-height reference at heights above 5m.
-2. **CLIP + Ridge head (v6 to v9).** A second pass that looks at each 240m tile via CLIP image embeddings and predicts canopy fraction in [0, 1] with a regression head. Trained the same way [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) was built. Both layers are published; per-LGU canopy hectares can be computed from either.
+1. **NDVI baseline (published).** Per Sentinel-2 pixel: is the spectral signature green enough to be canopy? A single threshold (NDVI > 0.62) decides yes/no, calibrated against Meta v2's 1m canopy-height reference at heights above 5m. The map, the per-LGU and per-barangay series, and the headline number all come from this layer.
+2. **The detection model (in optimization).** A CLIP ViT-Large/14 embedding per 240m tile feeding a gradient-boosted regression head that predicts canopy fraction in [0, 1], trained on Meta's 1m canopy fraction the same way [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) was built. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, against Meta AI Global Canopy Height v2 at canopy > 5m, n = 16,800 tiles across 2019-2026). It is being optimized toward a first release and is not yet the source of any published figure.
 
-Headline number: NCR area-weighted canopy = **7.46%** in 2026 (v0 NDVI), **8.40%** (v9 CLIP+HistGBR). 2026 is provisional (imagery Jan-May). The two layers agree at NCR level; per-LGU they diverge in expected ways (the regression head compresses toward the mean).
+Headline number: NCR area-weighted canopy = **7.46%** in 2026, from the published NDVI baseline. 2026 is provisional (imagery Jan-May).
 
-| LGU | 2026 canopy % (v0 NDVI) | 2019 → 2026 Δ (pp) |
+| LGU | 2026 canopy % (NDVI baseline) | 2019 → 2026 Δ (pp) |
 |---|---|---|
 | Quezon City | 18.93 | −0.38 |
 | Mandaluyong | 11.19 | −0.28 |
@@ -30,13 +30,13 @@ Headline number: NCR area-weighted canopy = **7.46%** in 2026 (v0 NDVI), **8.40%
 | Manila | 0.89 | +0.21 |
 | Navotas | 0.47 | −0.40 |
 
-Full series, per-LGU table, model progression, and adjacent published estimates: [`BENCHMARKS.md`](BENCHMARKS.md).
+Full series, per-LGU table, detection-model accuracy, and adjacent published estimates: [`BENCHMARKS.md`](BENCHMARKS.md).
 
 ## What you can do with it
 
 - Read the per-LGU canopy series for all 17 NCR LGUs at [`data/per_lgu/per_lgu_canopy_2019_2026.csv`](data/per_lgu/per_lgu_canopy_2019_2026.csv). The CSV is hash-pinned; `make hash-verify` confirms a clean reproduction.
-- Browse the interactive map at [leaves.ph/map](https://leaves.ph/map). It carries an OSM/satellite basemap, a 1m Meta canopy raster overlay, 242k individual tree-crown polygons coloured by source (OSM-confirmed / tall canopy / candidate), and a year slider.
-- Inspect any model-detected tree: click a crown polygon and the popup shows an Esri aerial of that exact location plus the polygon's metadata (status, area, p50/p95 height).
+- Browse the interactive map at [leaves.ph/map](https://leaves.ph/map). It carries an OSM/satellite basemap, a 1m Meta canopy raster overlay, 242,810 individual tree-crown polygons (connected components of Meta's 1m canopy-height mask) coloured by source (OSM-confirmed / tall canopy / candidate), and a year slider.
+- Inspect any tree crown: click a crown polygon and the popup shows an Esri aerial of that exact location plus the polygon's metadata (status, area, p50/p95 height).
 - Re-run the pipeline on a different city. The Cebu City proof in `pipeline/fetch_cebu_proof.py` shows the same pipeline run end-to-end against a different bbox, with no NCR-specific retraining.
 
 ## What it is not
@@ -73,8 +73,8 @@ earthengine authenticate     # one-time browser flow
 make fetch                   # pull S2 + Hansen + ESA + Dynamic World + Meta (~30 min, network)
 make compute                 # per-LGU canopy series 2019-2026 from cached composites
 make calibrate               # tune the NDVI threshold against Meta canopy height
-make train                   # CLIP+LR v2 → v3 → v4 → v5 → v6 (optional, ~30 min on M-series GPU)
-make scan                    # multi-year v9 density rasters + per-LGU + per-barangay CSVs
+make train                   # train the CLIP + gradient-boosted detection model (optional, ~30 min on M-series GPU)
+make scan                    # multi-year density rasters + per-LGU + per-barangay CSVs
 make verify                  # 27-check release gate (must return all PASS)
 make hash                    # sha256 prefix of the canonical per-LGU CSV
 ```
@@ -83,9 +83,9 @@ If the GEE pull is skipped, `make compute` reads cached composites from `data/co
 
 ## Methodology
 
-Full version: [`docs/methodology.md`](docs/methodology.md). [`MODEL_CARD.md`](MODEL_CARD.md) documents intended use, known biases, and the v0 → v9 model progression. [`BENCHMARKS.md`](BENCHMARKS.md) carries every CV F1, MAE, R², per-bin residual, per-LGU table, and multi-year scan result.
+Full version: [`docs/methodology.md`](docs/methodology.md). [`MODEL_CARD.md`](MODEL_CARD.md) documents intended use, known biases, and the detection model. [`BENCHMARKS.md`](BENCHMARKS.md) carries the held-out accuracy, MAE, per-bin residual, per-LGU table, and multi-year scan result.
 
-Short version: pull annual Sentinel-2 L2A median composites over the NCR bbox, mask clouds with s2cloudless, compute NDVI, threshold at a value calibrated against Meta v2. On top of that, train a CLIP+LR head per the SolarMap pattern (OSM bootstrap → ESA WorldCover teacher → Meta-oracle active learning → Platt calibration → continuous canopy-fraction regression). Aggregate per LGU and per barangay from PSA / OSM admin boundaries.
+Short version: pull annual Sentinel-2 L2A median composites over the NCR bbox, mask clouds with s2cloudless, compute NDVI, threshold at a value calibrated against Meta v2. The published per-LGU and per-barangay series come from this baseline. Separately, the detection model (CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained per the SolarMap pattern onto Meta's 1m canopy fraction) is in optimization toward a first release. Aggregate per LGU and per barangay from PSA / OSM admin boundaries.
 
 ## Data products
 
@@ -95,18 +95,16 @@ Published under `site/public/data/` and `data/per_lgu/` (CC-BY-4.0):
 |---|---|---|
 | `data/per_lgu/per_lgu_canopy_2019_2026.csv` | (lgu_name, year, canopy_ha, canopy_pct, total_ha) | 17 × 8 = 136 rows; hash-pinned |
 | `site/public/data/per_lgu_canopy.geojson` | one feature per LGU; props = canopy_<year>_pct + canopy_<year>_ha | derived from the CSV |
-| `data/per_barangay/per_barangay_canopy_2019_2026.csv` | (barangay, lgu_name, canopy_pct_v6_<year> × 8, canopy_ha × 8) | 892 OSM admin-level=10 polygons inside NCR |
-| `data/per_barangay/per_barangay_canopy_2019_2026_v9.csv` | same schema; v9 multi-epoch GBR predictions | 892 barangays |
-| `site/public/data/tree_crowns_ncr_tagged.pmtiles` | 242,810 crown polygons; status ∈ {confirmed, new, candidate} | the map's vector layer |
-| `detection/scan/clf_v9_density_<year>.tif` | continuous canopy density 0..1 per pixel | one per year 2019-2026 |
-| `detection/scan/clf_v9_ncr_series.csv` | (year, ncr_canopy_pct_v9, ncr_canopy_ha_v9, ncr_total_ha) | the 8-year v9 series |
-| `detection/scan/validation_v3/*.png` | per-LGU visual validation panels | 17 panels showing v0 vs v3 |
+| `data/per_barangay/per_barangay_canopy_2019_2026.csv` | (barangay, lgu_name, canopy_pct_<year> × 8, canopy_ha × 8) | 892 OSM admin-level=10 polygons inside NCR |
+| `site/public/data/tree_crowns_ncr_tagged.pmtiles` | 242,810 crown polygons (connected components of Meta's 1m canopy-height mask); status ∈ {confirmed, new, candidate} | the map's vector layer |
+| `detection/scan/*_density_<year>.tif` | continuous canopy density 0..1 per pixel from the detection model | one per year 2019-2026 |
+| `site/public/validation/*.png` | per-LGU visual validation panels | 17 panels comparing baseline vs detection model |
 
 ## Roadmap
 
 - Per-barangay extension shipped at 892 OSM polygons; mapping them onto the PSA barangay roster is the next data-engineering step.
 - Cebu City proof shipped (`pipeline/fetch_cebu_proof.py`, `detection/scan/scan_cebu.py`). Davao, Iloilo, Cagayan de Oro are the next regional rollouts.
-- S2 10m chunked exports for a precision lift (v11 proof on a QC subset shows R² 0.36 → 0.53 over the same 240m physical window).
+- S2 10m chunked exports for a precision lift on the detection model over the same 240m physical window.
 - GEDI L2A monthly RH98 spot truth for per-epoch calibration (currently the NDVI threshold is calibrated to a single ~2019 Meta-derived truth and applied uniformly).
 
 ## License and attribution
