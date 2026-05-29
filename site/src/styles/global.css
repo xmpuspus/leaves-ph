@@ -2,71 +2,265 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,700;0,800;1,400;1,700&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* Editorial typography off the AI-default Google Fonts bucket:
+   - PT Serif (ParaType, Russian foundry; print-publication workhorse since
+     2010; distinctive italic; LOW traffic in AI-generated output)
+   - DM Sans (Indian Type Foundry / Colophon; regional warmth, less seen
+     than Inter / Plus Jakarta Sans / Geist)
+   - JetBrains Mono (functional; common but does its job).
+   Hanging punctuation, oldstyle figures, optical kerning are turned on
+   below in the body rule. */
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap");
 
 @layer base {
-  html { color-scheme: light; }
+  html {
+    color-scheme: light;
+    /* Hanging punctuation: pulls opening quote into the margin so the first
+       letter of text aligns with the left edge of the column. Print-grade. */
+    hanging-punctuation: first last;
+  }
   body {
-    @apply bg-paper text-ink-900 antialiased font-sans;
-    background-image: linear-gradient(180deg, #f7f3e9 0%, #efe9d8 80%);
+    @apply bg-paper text-ink-900 font-sans;
+    /* Real-paper not-quite-flat tint. */
+    background:
+      radial-gradient(at 0% 0%, rgba(0,0,0,0.02) 0, transparent 40%),
+      radial-gradient(at 100% 100%, rgba(0,0,0,0.025) 0, transparent 50%),
+      #f3eedb;
     background-attachment: fixed;
+    /* Body engages opsz (low) + warm soft for paragraph reading. */
+    font-feature-settings: "kern", "liga", "calt", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   a {
-    @apply underline decoration-ink-300 underline-offset-[3px] hover:text-forest-700 transition-colors;
-    text-decoration-thickness: 1px;
+    text-decoration: underline;
+    text-decoration-color: #a7a094;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 0.5px;
+    transition: color 0.15s, text-decoration-color 0.15s;
   }
-  a:hover { text-decoration-color: #1f3d2b; }
+  a:hover {
+    color: #1f3d2b;
+    text-decoration-color: #1f3d2b;
+  }
   h1, h2, h3, h4 {
-    @apply font-display font-medium tracking-tight text-ink-900;
+    @apply font-display text-ink-900;
+    font-weight: 700;
+  }
+  em, .pseudo-italic {
+    font-style: italic;
+    font-family: "PT Serif", "ui-serif", serif;
+    font-weight: 400;
   }
   code, pre { @apply font-mono text-[0.92em]; }
+  /* Long inline tokens (S3 URIs, file paths, GEE asset IDs) must wrap rather
+     than push the mobile viewport wider. pre keeps its own overflow-x-auto. */
+  :not(pre) > code { overflow-wrap: anywhere; word-break: break-word; }
+  /* Body text engages oldstyle figures by default; numbers in tables switch
+     to tabular via .tabular-nums utility. */
+  p { font-feature-settings: "onum", "kern", "liga"; }
   hr { @apply border-0 border-t border-ink-900; height: 0; }
 }
 
 @layer components {
-  .kicker { @apply font-mono uppercase text-ink-700; font-size: 0.7rem; line-height: 1.1; letter-spacing: 0.18em; }
-  .tag-verified { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-verified border border-signal-verified px-1.5 py-0.5; }
-  .tag-disputed { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-disputed border border-signal-disputed px-1.5 py-0.5; }
-  .tag-unverified { @apply font-mono text-[0.65rem] uppercase tracking-[0.15em] text-signal-unverified border border-signal-unverified px-1.5 py-0.5; }
+  /* Kicker: small caps, mono, NO uppercase transform (real small-caps via
+     OpenType, not faked-with-uppercase). Slight indent so it reads like a
+     dateline marker. */
+  .kicker {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    color: #5a4f3a;
+    text-transform: uppercase;
+    font-feature-settings: "tnum";
+  }
+  /* Status markers: inline glyphs, not bordered boxes. Reads as
+     editor's-mark, not Tailwind badge. */
+  .mark-verified { color: #2f6b3a; font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.06em; }
+  .mark-verified::before { content: "✓ "; }
+  .mark-disputed { color: #8b3f1d; font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-decoration: line-through; text-decoration-color: #8b3f1d; text-decoration-thickness: 1px; }
+  .mark-unverified { color: #837d6a; font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.06em; font-style: italic; }
+  .mark-unverified::after { content: " ?"; font-style: normal; }
+  /* Drop cap that wraps THREE lines, not just one — the real print convention. */
   .dropcap::first-letter {
-    @apply font-display float-left mr-3 mt-1;
-    font-size: 4.5rem; line-height: 0.85; font-weight: 700; color: #1f3d2b;
+    font-family: "PT Serif", serif;
+    float: left;
+    margin: 0.18em 0.16em 0 0;
+    line-height: 0.82;
+    font-size: 5em;
+    font-weight: 700;
+    color: #1f3d2b;
   }
+  /* Pull quote: hanging quote glyph in the margin, not a left border-rule. */
   .pullquote {
-    @apply font-display leading-snug text-forest-700 my-12 max-w-narrow border-l-4 border-forest-700 pl-6 italic;
-    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    font-family: "PT Serif", serif;
+    font-style: italic;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1.18;
+    color: #1a1a1a;
+    margin: 3.5rem 0;
+    max-width: 36ch;
+    position: relative;
+    padding-left: 0;
+    text-indent: -0.6em;
   }
-  .fig-caption { @apply font-mono text-xs uppercase tracking-[0.12em] text-ink-700 mt-3 leading-relaxed; }
-  .rule { @apply border-0 border-t border-ink-900 my-12 w-full; }
+  .pullquote::before {
+    content: "“";
+    font-family: "PT Serif", serif;
+    font-size: 1.6em;
+    line-height: 0;
+    color: #b65724;
+    position: relative;
+    top: 0.18em;
+    margin-right: 0.04em;
+  }
+  /* Figure caption: tight mono, NOT all-uppercase (mixed case + small caps in
+     OpenType). */
+  .fig-caption {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    color: #5a4f3a;
+    margin-top: 0.6rem;
+    font-feature-settings: "tnum";
+  }
+  /* Hairline rule with a small ornament breaking it: replaces the AI-default
+     plain <hr>. Use sparingly. */
+  .rule {
+    border: 0;
+    border-top: 0.5px solid #1a1a1a;
+    margin: 3rem 0;
+    position: relative;
+  }
+  .rule-ornament {
+    border: 0;
+    border-top: 0.5px solid #1a1a1a;
+    margin: 3rem 0;
+    position: relative;
+    overflow: visible;
+  }
+  .rule-ornament::after {
+    content: "§";
+    font-family: "PT Serif", serif;
+    font-size: 1rem;
+    color: #b65724;
+    background: #f3eedb;
+    padding: 0 0.7rem;
+    position: absolute;
+    top: -0.6em;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   .stat-hero {
-    @apply font-display font-medium leading-none tracking-tight text-forest-700 tabular-nums;
-    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-family: "PT Serif", serif;
+    font-weight: 700;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    color: #1f3d2b;
+    font-feature-settings: "tnum", "lnum";
   }
   .stat-medium {
-    @apply font-display font-medium leading-none tracking-tight text-forest-700 tabular-nums;
-    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    font-family: "PT Serif", serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.018em;
+    color: #1f3d2b;
+    font-feature-settings: "tnum", "lnum";
+  }
+  /* Marginal note: small text floated into the left margin alongside body
+     text. Editorial print convention. */
+  .marginal {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: #837d6a;
+    border-top: 0.5px solid #b0a890;
+    padding-top: 0.4rem;
+    margin-top: 0.8rem;
+  }
+  /* Run-in head: section starts with a small-caps lead instead of a stacked h2.
+     Print convention. */
+  .run-in {
+    font-family: "PT Serif", serif;
+    font-size: 1em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #1a1a1a;
+  }
+  /* Dateline: bold-mono short prefix used at the start of a section body to
+     anchor location/time, like a newspaper byline ("MANILA — "). */
+  .dateline {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1a1a1a;
   }
 }
 
 @layer utilities {
+  /* Editorial range slider styled like a print tick-rule, not a slick UI bar.
+     Tick marks are drawn behind the slider via a CSS background. */
   .editorial-slider {
     appearance: none;
-    height: 4px;
-    background: #1a1a1a;
+    height: 28px;
+    background:
+      linear-gradient(to right,
+        #1a1a1a 0, #1a1a1a 2px, transparent 2px) repeat-x,
+      linear-gradient(to right, transparent calc(50% - 0.25px), #1a1a1a calc(50% - 0.25px), #1a1a1a calc(50% + 0.25px), transparent calc(50% + 0.25px));
+    background-size: calc(100% / 7) 14px, 100% 1px;
+    background-position: 0 14px, 0 14px;
     outline: none;
+    padding: 0;
   }
   .editorial-slider::-webkit-slider-thumb {
     appearance: none;
-    width: 18px; height: 18px;
+    width: 14px; height: 26px;
     background: #b65724;
-    border: 2px solid #1a1a1a;
-    cursor: pointer;
+    border: 0;
+    cursor: ew-resize;
+    transform: translateY(0);
   }
   .editorial-slider::-moz-range-thumb {
-    width: 18px; height: 18px;
+    width: 14px; height: 26px;
     background: #b65724;
-    border: 2px solid #1a1a1a;
+    border: 0;
+    cursor: ew-resize;
+  }
+  /* Tabular figures + decimal aligned: data tables. */
+  .tabular-nums {
+    font-feature-settings: "tnum", "lnum";
+  }
+
+  /* Visible keyboard focus for all interactive map controls. The slider sets
+     outline:none above; this restores a clear, high-contrast focus ring. */
+  .map-focusable:focus-visible {
+    outline: 2px solid #1f3d2b;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .map-focusable {
     cursor: pointer;
+  }
+
+  /* Map loading spinner. */
+  .map-spinner {
+    animation: map-spin 0.8s linear infinite;
+  }
+  @keyframes map-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map-spinner {
+      animation: none;
+    }
   }
 }
 

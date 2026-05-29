@@ -4,63 +4,46 @@ For RadarPH, Inquirer, PhilStar, Rappler, ABS-CBN, Earth Journalism Network, Mon
 
 ## What
 
-Leaves.PH is an open-source, reproducible 2026 measurement of Metro Manila's tree cover. Per-LGU (16 NCR cities + Pateros). 8-year time series 2019 to 2026. CC-BY-4.0 data, MIT code.
+Leaves.PH is an open-source, reproducible measurement series of Metro Manila tree cover. Per-LGU and per-barangay annual values for the 17 LGUs of the National Capital Region (16 cities plus the municipality of Pateros) and 892 OSM admin-level=10 barangay polygons inside NCR. CC-BY-4.0 data, MIT code. Live at https://leaves.ph.
 
-## Headline finding
+## Headline measurement
 
-NCR canopy 2026 = 7.46 percent.
-
-This sits between the four 2024+ public figures that have been quoted in news coverage:
-
-| Source | Headline | Status |
-|---|---|---|
-| DENR FMB (cited in news / EJN) | 6 percent / 3,565 ha | Plausible. Our 2026 measurement is +1.46pp above. The original DENR source document is not in public 2024+ reports we could locate. |
-| Global Forest Watch dashboard | 4.0 percent / 2.3 kha (2020 baseline) | Understates 2026. Our 2026 measurement is +3.46pp above. Difference of methodology (Hansen 30 m loss-history vs our NDVI canopy mask). |
-| Earth Journalism Network 2024 ("open forest") | 2,071 ha in 2020 | Different definition. "Open forest" is a DENR sub-class, not directly comparable. |
-| ScienceKonek 2024 map | (referenced by RadarPH) | Map raster + methodology not publicly findable. |
-| Meta Canopy Height v2 | 7.5 percent (canopy > 5 m, 2018-2020 imagery) | Independent ground truth. Within 0.04pp of our 2026 number. |
-
-## Per-LGU highlights
-
-- Top canopy: Quezon City 18.93 percent (NE green zone: La Mesa watershed, UP Diliman, Wack Wack).
-- Bottom canopy: Manila 0.89 percent, Navotas 0.47 percent (densely built / reclamation).
-- Steepest 2019 to 2026 decline: Taguig -2.76pp, Malabon -1.54pp, Las Pinas -1.47pp, Valenzuela -1.39pp.
-- Notable gain: Makati +1.69pp.
+NCR area-weighted canopy in 2026 (provisional, imagery Jan-May): **7.46%** under the v0 NDVI pixel rule, **8.40%** under the v9 multi-epoch CLIP+HistGBR head. Both numbers come from public-record Sentinel-2 imagery and a 1m Meta canopy-height reference. Across the published 2019 to 2026 series, regional canopy is flat to slightly declining (−0.62 percentage points under v0; near zero under v9).
 
 ## Method
 
-Five canonical public canopy datasets stacked over NCR:
+Pull annual Sentinel-2 L2A median composites over the NCR bbox. Mask clouds. Compute NDVI per pixel. Threshold at NDVI > 0.62, tuned against Meta's 1m canopy-height product at the >5m height level. Aggregate per LGU and per barangay against PSA / OSM admin boundaries. On top of the pixel rule, a second-pass CLIP model trained per the [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) playbook (OSM bootstrap → ESA WorldCover teacher → Meta-oracle active learning → Platt calibration → continuous canopy-fraction regression) confirms and expands the baseline at tile level. Two tracks: the binary classifier reaches 5-fold CV F1 = 0.78 (v3, classification); the deployed canopy-fraction regressor (clf_v9, CLIP + HistGBR) reaches R² = 0.87 on held-out locations (leakage-free GroupKFold). These are different tasks and metrics, not one trajectory.
 
-1. **Sentinel-2 L2A** (Copernicus / ESA). Annual median composites, cloud-masked with s2cloudless at probability < 40, exported at 30 m to match Hansen's grid.
-2. **Hansen Global Forest Change v1.13** (UMD GLAD / Global Forest Watch). Year-2000 baseline + 2001-2025 annual loss + 2000-2012 binary gain.
-3. **ESA WorldCover v200** (ESA, 2021 single-epoch). Independent 10 m class-10 tree cross-check.
-4. **Dynamic World v1** (Google AI + WRI). Annual median tree-probability 2019 to 2026.
-5. **Meta Canopy Height v2** (Meta AI + Land & Carbon Lab). 1 m AI canopy height (source imagery 2018-2020). The calibration truth.
+## Per-LGU highlights (2026, v0 NDVI)
 
-NDVI threshold tuned to 0.62 (F1-maximised against Meta canopy height > 5 m, with recall floor 0.85). Per-LGU aggregation against OSM admin-level=6 polygons.
+- Quezon City 18.93 percent, anchored by La Mesa watershed, UP Diliman, the Wack Wack greens.
+- Mandaluyong 11.19 percent, Makati 8.92 percent, Caloocan 8.80 percent, Marikina 6.87 percent.
+- Manila 0.89 percent, Navotas 0.47 percent: reclamation and dense urban core.
+- Steepest year-over-year declines: Taguig (−2.76 pp), Malabon (−1.54), Las Pinas (−1.47), Valenzuela (−1.39).
 
-## What this is not
+Full per-LGU table and per-barangay top hits at https://leaves.ph and in `BENCHMARKS.md`.
 
-- Not a per-tree census. 30 m resolution misses sub-pixel events.
-- Not legal evidence of unpermitted cutting. We compute the canopy delta from public-domain satellite imagery. Specific allegations require independent investigation.
-- Not 2026 ground truth. Meta v2's source imagery is mostly 2018-2020, so our calibration layer is a ~2019 truth.
-- Not affiliated with DENR, GFW, ScienceKonek, EJN, or any LGU.
+## Adjacent published estimates
 
-## SALEX / Quirino Avenue
+Listed for context, not ranked. Each uses a different definition and vintage.
 
-The 225 trees felled along Quirino Avenue in May 2026 for the Southern Access Link Expressway (SALEX) had an Environmental Compliance Certificate from DENR-NCR. Whether the ECC's conditions were met is a separate question and not one Leaves.PH answers.
+| Source | Year | Method | NCR canopy |
+|---|---|---|---|
+| Meta v2 (canopy height > 5m) | 2018-2020 | 1m AI canopy-height regression | 7.5% |
+| ESA WorldCover v200 (class 10) | 2021 | 10m land-cover classification (esa_tree_pct_2021, per-LGU CSV) | 13.38% |
+| DENR FMB (cited in news / EJN) | 2024+ | not specified in public docs found | 6.0% |
+| Global Forest Watch dashboard PHL/47 | 2020 baseline | Hansen 30m tree-cover ≥ 30% canopy | 4.0% |
+| Earth Journalism Network | 2020 | DENR "open forest" sub-class | 2,071 ha |
+| ScienceKonek 2024 map | 2024 | raster + methodology not publicly findable | unknown |
 
-A before-and-after canopy strip of the SALEX corridor (3.97 km along Quirino Ave + San Marcelino + near Roxas Boulevard) lives at `docs/demo/salex-timeline.gif`. It is descriptive, not legal evidence. Hansen v1.13 at 30 m will probably not register the May 2026 event until a future release.
+## What this is and is not
 
-## Independent verification welcome
+This is a reproducible methodology-and-data ship: pipeline, model artefacts, per-LGU and per-barangay CSVs, multi-year density rasters, validation panels, all hash-pinned and CC-BY-4.0. It is not a verdict on any other source, not a permit-compliance tool, and not a per-tree census. Specific allegations of unpermitted clearing require independent investigation.
 
-Code: https://github.com/xmpuspus/leaves-ph
-Site: https://leaves.ph
-Data: CC-BY-4.0; downloads at https://leaves.ph/data
-Methodology: https://leaves.ph/methodology
-Per-LGU CSV: https://github.com/xmpuspus/leaves-ph/blob/main/data/per_lgu/per_lgu_canopy_2019_2026.csv
+## Verification welcome
 
-Reproduce with:
+Code, data, methodology, and full benchmarks at https://github.com/xmpuspus/leaves-ph. Reproduce locally with:
+
 ```bash
 git clone https://github.com/xmpuspus/leaves-ph
 cd leaves-ph
@@ -68,22 +51,22 @@ earthengine authenticate
 make fetch && make compute && make verify
 ```
 
-Hash-verified canonical CSV: the sha256 prefix is pinned in the Makefile and asserted in CI. Bit-exact across any environment with the pinned `requirements.txt` versions.
+`make hash-verify` confirms a bit-exact reproduction of the canonical per-LGU CSV. The 27-check release gate (`make verify`) covers em-dash + AI-jargon hygiene, requirements-pinning, classifier CV F1 / R² floors, Astro typecheck, and per-LGU schema integrity.
 
 ## Contact
 
-Open an issue at https://github.com/xmpuspus/leaves-ph/issues or use the LGU-correction template at https://github.com/xmpuspus/leaves-ph/issues/new?template=lgu_correction.md.
+Open an issue or LGU-correction at https://github.com/xmpuspus/leaves-ph/issues.
 
-For takedowns or privacy concerns: file a private security advisory at https://github.com/xmpuspus/leaves-ph/security/advisories/new. Acknowledged within 5 working days.
+Private security advisory (RA 10173 / takedown): https://github.com/xmpuspus/leaves-ph/security/advisories/new. Acknowledged within 5 working days.
 
 Direct: xpuspus@gmail.com.
 
 ## Citation
 
-```
+```bibtex
 @software{puspus_leaves_ph_2026,
   author = {Puspus, Xavier},
-  title  = {{Leaves.PH: open-source tree-cover validation for Metro Manila}},
+  title  = {{Leaves.PH: an open-source tree-cover measurement series for Metro Manila}},
   year   = {2026},
   url    = {https://github.com/xmpuspus/leaves-ph}
 }

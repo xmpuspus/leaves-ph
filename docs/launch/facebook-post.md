@@ -4,54 +4,52 @@ DO NOT POST until leaves.ph, github.com/xmpuspus/leaves-ph, and the Zenodo DOI r
 
 ---
 
-When RadarPH (Kieth Earl Rebano) posted "Metro Manila is rapidly becoming a city without trees" on 2026-05-26, the headline cited four different sources for the canopy number. They disagreed by half.
+Posting an open measurement series I built: Leaves.PH.
 
-ScienceKonek's 2024 map. DENR's "6 percent / 3,565 hectares". GFW's dashboard at 4.0 percent. Earth Journalism Network's "open forest" 2,071 ha in 2020.
+It maps tree-cover percentage across the 17 LGUs of the National Capital Region for every annual epoch in the published window, from Sentinel-2 surface-reflectance imagery, calibrated against Meta's 1m canopy-height reference.
 
-So I built Leaves.PH to settle it.
+Inputs are all open, all canonical:
+* Sentinel-2 L2A from Copernicus / ESA
+* Hansen Global Forest Change v1.13 (UMD GLAD) for the loss layer
+* ESA WorldCover v200 for an independent land-cover cross-check
+* Dynamic World v1 (Google / WRI) for fuzzy tree probability
+* Meta Canopy Height v2 as the 1m calibration reference
+* PSA boundaries for the 17 LGUs
 
-Fresh 2026 measurement using:
-* Sentinel-2 L2A (Copernicus / ESA, free)
-* Hansen Global Forest Change v1.13 (UMD GLAD, the global standard)
-* ESA WorldCover v200 (independent cross-check)
-* Dynamic World v1 (Google / WRI, fuzzy probability)
-* Meta Canopy Height v2 (1 m AI canopy height, the calibration truth)
+NDVI threshold tuned against Meta canopy height > 5m, recall floor 0.85.
 
-Stacked per-LGU for all 17 NCR cities and Pateros. NDVI threshold tuned against Meta canopy height > 5 m.
+On top of the pixel-rule baseline, a second-pass CLIP+LR head trained the same way SolarMap.PH was built confirms NDVI hits and proposes additions in tile-level windows the per-pixel rule misses. 9,051 labelled tiles, 5-fold CV F1 = 0.78. The deliverable includes a per-LGU validation gallery so anyone can inspect what the model added on top of the baseline.
 
-Result: NCR canopy 2026 = 7.46 percent.
-
-That validates DENR's cited 6 percent (within methodology variance). It refutes GFW's 4 percent (which materially understates 2026). It matches Meta's independent ground truth (7.5 percent) within 0.04 percentage points.
+Headline measurement for the latest annual epoch: NCR area-weighted canopy = 7.46%.
 
 Per-LGU:
-* Quezon City: 18.93 percent (the NE green zone, La Mesa, UP)
-* Mandaluyong: 11.19 percent
-* Makati: 8.92 percent
-* Caloocan: 8.80 percent
-* Marikina: 6.87 percent
+* Quezon City: 18.93% (La Mesa watershed + UP Diliman + Wack Wack)
+* Mandaluyong: 11.19%
+* Makati: 8.92%
+* Caloocan: 8.80%
+* Marikina: 6.87%
 ...
-* Manila: 0.89 percent
-* Navotas: 0.47 percent (densely built reclamation)
+* Manila: 0.89%
+* Navotas: 0.47% (reclamation-heavy)
 
-Steepest 2019 to 2026 declines: Taguig -2.76pp, Malabon -1.54pp, Las Pinas -1.47pp, Valenzuela -1.39pp. Makati is the rare gainer at +1.69pp.
+Steepest year-over-year declines across the series sit in Taguig, Malabon, Las Pinas, Valenzuela.
 
-The 225 trees felled along Quirino Avenue in May 2026 for the SALEX expressway: they will eventually show in Hansen, but 30 m resolution misses sub-pixel events. The before/after canopy strip is in the demo: docs/demo/salex-timeline.gif.
+Everything is open and reproducible. From a clean clone, `make hash-verify` reproduces the canonical CSV byte-for-byte:
 
-Everything is open and reproducible:
 https://github.com/xmpuspus/leaves-ph
 https://leaves.ph
 
-Code MIT. Data CC-BY-4.0. Cite as: Leaves.PH (2026-Q2), https://github.com/xmpuspus/leaves-ph.
+Code MIT. Data CC-BY-4.0.
 
 ---
 
 ## Image to attach
 
-Primary: `docs/demo/hero.gif`
-Alternative: per-LGU choropleth still or the SALEX before/after side-by-side
+Primary: `docs/demo/remaining-canopy-satellite.gif`
+Alternative: any of the per-LGU validation panels under `detection/scan/validation_v3/`
 
 ## Notes for posting
 
-- Tone is a notch friendlier than LinkedIn (FB audience). Less technical.
-- Tag: @ScienceKonek (PH science communication collective), @EarthJournalismNetwork
-- Comment-thread responses ready: link to BENCHMARKS reconciliation table, link to methodology, link to the data downloads page
+- Neutral standalone framing. No comparison to specific prior published estimates in the lead.
+- A methodology cross-reference table on the site lists adjacent published estimates side-by-side with their respective definitions.
+- Comment-thread responses ready: /methodology, /validation gallery, /data downloads.

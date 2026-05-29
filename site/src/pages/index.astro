@@ -1,162 +1,232 @@
 ---
 import Base from "../layouts/Base.astro";
-
-const today = new Date().toISOString().slice(0, 10);
+import {
+  SERIES_START,
+  SERIES_END,
+  SERIES_RANGE,
+  SERIES_EPOCH_COUNT,
+  LATEST_NCR_PCT,
+  NCR_LGU_COUNT,
+} from "../lib/series";
+import { HEADLINE_R2 } from "../lib/modelEvolution";
+import CanopyTrend from "../components/CanopyTrend.astro";
+const pctWhole = Math.floor(LATEST_NCR_PCT);
+const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
 ---
 <Base title="Leaves.PH · Metro Manila canopy report" pathname="/">
-  <!-- KICKER + HEADLINE -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 pb-4">
-    <p class="kicker mb-6">REPORT &middot; {today} &middot; NATIONAL CAPITAL REGION</p>
-    <div class="grid md:grid-cols-editorial gap-x-12 gap-y-6 items-end">
-      <h1 class="font-display font-medium tracking-tight text-ink-900 leading-[0.95]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
-        Metro Manila's tree cover, finally measured.
-      </h1>
-      <div class="space-y-4">
-        <p class="kicker text-ink-500">THE FIVE NUMBERS</p>
-        <dl class="text-sm font-mono space-y-1.5 tabular-nums leading-relaxed">
-          <div class="flex justify-between"><dt>DENR FMB cited</dt><dd>6.00<span class="text-ink-300">%</span> <span class="tag-disputed ml-1">unsourced</span></dd></div>
-          <div class="flex justify-between"><dt>GFW dashboard</dt><dd>4.00<span class="text-ink-300">%</span> <span class="tag-disputed ml-1">understates</span></dd></div>
-          <div class="flex justify-between"><dt>EJN open forest</dt><dd>2,071 ha <span class="tag-unverified ml-1">def. mismatch</span></dd></div>
-          <div class="flex justify-between"><dt>ScienceKonek 2024</dt><dd>n/a <span class="tag-unverified ml-1">not findable</span></dd></div>
-          <div class="flex justify-between text-ink-900"><dt>Meta v2 truth (&gt;5m)</dt><dd>7.50<span class="text-ink-300">%</span> <span class="tag-verified ml-1">independent</span></dd></div>
-          <div class="flex justify-between text-forest-700 font-medium pt-1 border-t border-ink-900"><dt>LEAVES.PH 2026</dt><dd>7.46<span class="text-forest-300">%</span> <span class="tag-verified ml-1">reproducible</span></dd></div>
-        </dl>
+
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 pt-10 pb-6">
+    <div class="grid lg:grid-cols-[1.05fr_minmax(0,1fr)] gap-x-12 gap-y-8 items-end">
+      <div>
+        <p class="kicker mb-5">METRO MANILA · TREE-COVER MEASUREMENT SERIES</p>
+        <h1 class="font-display text-ink-900 leading-[0.92] tracking-[-0.025em] text-balance"
+            style="font-size: clamp(2.25rem, 5.4vw, 4.25rem);">
+          Tree canopy across the National Capital Region, measured from <span class="text-forest-700 font-display">Sentinel-2</span> imagery.
+        </h1>
+        <p class="font-sans text-[15px] text-ink-700 mt-5 leading-[1.55] max-w-[55ch]">
+          {NCR_LGU_COUNT} LGUs, {SERIES_EPOCH_COUNT} annual epochs from {SERIES_START} to {SERIES_END}. Inputs, thresholds, and aggregation are committed; outputs are hash-pinned and reproducible from a clean clone.
+        </p>
       </div>
+
+      <aside class="border-l-2 border-ink-900 pl-5 sm:pl-7 pt-2 max-w-[28ch]">
+        <p class="kicker mb-2 text-sepia-500">AREA-WEIGHTED CANOPY · NCR · LATEST EPOCH</p>
+        <p class="stat-hero">{pctWhole}·{pctFrac}<span class="text-umber-500">%</span></p>
+        <dl class="mt-5 space-y-2 text-[13px] font-mono tabular-nums leading-[1.5]">
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Method</dt><dd class="text-ink-700">NDVI &gt; 0·62</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Reference</dt><dd class="text-ink-700">Meta v2 · 1 m</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Boundaries</dt><dd class="text-ink-700">PSA · {NCR_LGU_COUNT} LGUs</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Series</dt><dd class="text-ink-700">{SERIES_RANGE}</dd></div>
+        </dl>
+
+        <div class="mt-6 pt-5 border-t border-ink-900">
+          <p class="kicker mb-2 text-forest-700">DEPLOYED MODEL · clf_v9 · HELD-OUT ACCURACY</p>
+          <p class="font-display font-medium text-forest-700 leading-none tabular-nums" style="font-size: clamp(2.25rem, 4.2vw, 3.25rem);">R<sup class="text-[0.5em] align-super">2</sup>&nbsp;{HEADLINE_R2.toFixed(2)}</p>
+          <p class="font-sans text-[12px] text-ink-700 mt-2 leading-[1.5] max-w-[34ch]">
+            Canopy fraction vs Meta's 1 m reference, held-out locations the model never saw in training.
+          </p>
+        </div>
+      </aside>
     </div>
   </section>
 
-  <!-- TIME-ANIMATED HERO: side-by-side editorial / satellite variants -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-12 grid md:grid-cols-2 gap-6">
-    <figure class="border border-ink-900 bg-paper">
-      <img
-        src="/demo/remaining-canopy-timeline.gif"
-        alt="Editorial map of remaining tree cover in Metro Manila, 2019 to 2026. Per-pixel canopy density at 30 m drawn over LGU outlines on a paper basemap. Densest cover concentrates in the NE around Quezon City and the La Mesa watershed; sparse elsewhere."
-        class="block w-full h-auto"
-        loading="eager"
-      />
-      <figcaption class="fig-caption px-4 py-3 border-t border-ink-900 bg-paper-tint flex flex-wrap justify-between gap-2">
-        <span>FIG&nbsp;1A &middot; EDITORIAL BASEMAP</span>
-        <span>Hansen + NDVI density</span>
-      </figcaption>
-    </figure>
-    <figure class="border border-ink-900 bg-paper">
+  <!-- ───── LEDE - bleeds to the left edge, marginal note hangs in the gutter ───── -->
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 pb-10">
+    <div class="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] gap-x-12 lg:gap-x-16">
+      <article class="max-w-[60ch] text-[17px] leading-[1.65] text-ink-900">
+        <p class="dropcap">
+          This report measures tree canopy in Metro Manila using Sentinel-2 surface-reflectance imagery, aggregated to the seventeen LGUs of the National Capital Region defined by PSA. Canopy is classified at the pixel level by NDVI greater than zero point six two, a threshold calibrated against Meta's v2 one-metre canopy-height reference at heights greater than five metres.
+        </p>
+        <p class="mt-5 text-ink-700">
+          In the latest annual epoch the area-weighted canopy fraction across the NCR is <em>seven point four six per cent</em>. The same pipeline run against earlier Sentinel-2 imagery produces an annual time series; across the published series, regional canopy moves down zero point six two percentage points.
+        </p>
+        <p class="mt-5 text-ink-700">
+          Movement is uneven across LGUs. Quezon City carries the largest absolute canopy share by area, anchored by the La Mesa watershed, UP Diliman, and the Wack Wack greens. The steepest year-over-year declines sit in Taguig, Malabon, Las Pinas, and Valenzuela. Per-LGU values for every epoch in the series are in Fig 4 and the downloadable CSV. <a href="/map" class="no-underline">Open the map →</a>
+        </p>
+        <p class="mt-5 text-ink-700">
+          Inputs, NDVI threshold derivation, and aggregation logic are documented on the methodology page. The published CSV is hash-pinned; running <code class="font-mono text-[14px]">make hash-verify</code> against a clean checkout reproduces the canonical artefact byte-for-byte.
+        </p>
+      </article>
+
+      <aside class="hidden lg:block text-sepia-500">
+        <div class="marginal">
+          <p class="text-ink-700 font-semibold uppercase tracking-[0.12em] text-[10px] mb-1">SCOPE</p>
+          <p>Seventeen LGUs of the National Capital Region (sixteen cities plus Pateros), per PSA boundaries. No barangay-level breakdown in this release.</p>
+        </div>
+        <div class="marginal mt-6">
+          <p class="text-ink-700 font-semibold uppercase tracking-[0.12em] text-[10px] mb-1">SOURCES</p>
+          <p>Sentinel-2 L2A via Google Earth Engine. Meta canopy height v2 via AWS Open Data. PSA LGU boundaries via OSM mirrors. All canonical, all public.</p>
+        </div>
+        <div class="marginal mt-6">
+          <p class="text-ink-700 font-semibold uppercase tracking-[0.12em] text-[10px] mb-1">CORRECTIONS</p>
+          <p>Methodology questions and LGU-level corrections via the repository issue tracker.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───── CANOPY TREND - two readings of the per-year series ───── -->
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 pb-10">
+    <div class="max-w-[820px] mx-auto">
+      <CanopyTrend />
+    </div>
+  </section>
+
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 py-6">
+    <figure class="max-w-[820px] mx-auto">
       <img
         src="/demo/remaining-canopy-satellite.gif"
-        alt="Sentinel-2 RGB satellite basemap of Metro Manila with remaining tree cover density overlay, animated 2019 to 2026. Real satellite imagery as the basemap, density gradient overlay shows where canopy disappears year over year."
-        class="block w-full h-auto"
+        alt={`Sentinel-2 RGB satellite basemap of Metro Manila with remaining tree-cover density overlay, animated ${SERIES_START} to ${SERIES_END}. The basemap cycles each epoch; the green density layer shows where canopy persists.`}
+        class="block w-full h-auto border border-ink-900"
         loading="eager"
       />
-      <figcaption class="fig-caption px-4 py-3 border-t border-ink-900 bg-paper-tint flex flex-wrap justify-between gap-2">
-        <span>FIG&nbsp;1B &middot; SATELLITE BASEMAP</span>
-        <span>S-2 RGB + density overlay</span>
+      <figcaption class="fig-caption mt-3 flex flex-wrap justify-between gap-2">
+        <span><span class="dateline">FIG&nbsp;1 ·</span> {SERIES_START} → {SERIES_END} · Sentinel-2 RGB basemap · canopy density overlay · {SERIES_EPOCH_COUNT} frames</span>
+        <span class="text-sepia-500">30 m pixel · on-frame value = mean canopy density (Hansen-adjusted), not the area-weighted headline</span>
       </figcaption>
     </figure>
   </section>
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-8">
-    <p class="fig-caption">REMAINING TREE COVER &middot; NCR &middot; 2019 to 2026 (8 frames each) &middot; 30 m pixel &middot; Source: Sentinel-2 NDVI &ge; 0.62 calibrated against Meta canopy height v2, with Hansen GFC v1.13 loss-year subtraction.</p>
+
+  <hr class="rule-ornament" />
+
+  <!-- ───── FIG 3 - methodology cross-reference table, neutral references ───── -->
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 py-8">
+    <p class="kicker mb-3 text-sepia-500">FIG&nbsp;3 · METHODOLOGY CROSS-REFERENCE</p>
+    <h2 class="font-display text-ink-900 mb-3" style="font-size: clamp(1.5rem, 3vw, 2.25rem); letter-spacing: -0.015em;">
+      Adjacent published estimates of Metro Manila tree cover.
+    </h2>
+    <p class="font-sans text-[14px] text-ink-700 leading-[1.55] mb-6 max-w-[68ch]">
+      Definitions differ across sources: canopy fraction versus closed-canopy area, percentage versus hectares, single-epoch versus multi-year baselines. The table lists figures as published; it is a methodology reference, not a ranking.
+    </p>
+    <table class="w-full text-[14px]">
+      <thead class="text-[11px] uppercase tracking-[0.14em] text-sepia-500 font-mono">
+        <tr class="border-b border-ink-900">
+          <th class="text-left py-2 font-medium">Source</th>
+          <th class="text-left py-2 font-medium">Figure</th>
+          <th class="text-left py-2 font-medium hidden sm:table-cell">Epoch</th>
+          <th class="text-left py-2 font-medium">Definition</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-ink-300/60 font-sans">
+        <tr>
+          <td class="py-3 pr-4 align-top"><em>DENR FMB</em></td>
+          <td class="py-3 pr-4 align-top font-mono tabular-nums">6·00%</td>
+          <td class="py-3 pr-4 align-top text-sepia-500 hidden sm:table-cell">2024 release</td>
+          <td class="py-3 pr-4 align-top text-ink-700">Canopy fraction (cited)</td>
+        </tr>
+        <tr>
+          <td class="py-3 pr-4 align-top">Global Forest Watch</td>
+          <td class="py-3 pr-4 align-top font-mono tabular-nums">4·00%</td>
+          <td class="py-3 pr-4 align-top text-sepia-500 hidden sm:table-cell">2020 baseline</td>
+          <td class="py-3 pr-4 align-top text-ink-700">Hansen GFC tree-cover, 30% canopy threshold</td>
+        </tr>
+        <tr>
+          <td class="py-3 pr-4 align-top">Earth Journalism Network</td>
+          <td class="py-3 pr-4 align-top font-mono tabular-nums">2,071 ha</td>
+          <td class="py-3 pr-4 align-top text-sepia-500 hidden sm:table-cell">2020</td>
+          <td class="py-3 pr-4 align-top text-ink-700">Open-forest area (hectares)</td>
+        </tr>
+        <tr>
+          <td class="py-3 pr-4 align-top">Meta canopy v2</td>
+          <td class="py-3 pr-4 align-top font-mono tabular-nums">7·50%</td>
+          <td class="py-3 pr-4 align-top text-sepia-500 hidden sm:table-cell">2018–20 epoch</td>
+          <td class="py-3 pr-4 align-top text-ink-700">1 m canopy height &gt; 5 m</td>
+        </tr>
+        <tr class="bg-forest-100/40">
+          <td class="py-3 pr-4 align-top font-semibold text-forest-700">Leaves.PH</td>
+          <td class="py-3 pr-4 align-top font-mono tabular-nums font-semibold text-forest-700">{pctWhole}·{pctFrac}%</td>
+          <td class="py-3 pr-4 align-top text-sepia-500 hidden sm:table-cell">latest epoch</td>
+          <td class="py-3 pr-4 align-top text-ink-700">Sentinel-2 NDVI &gt; 0·62, Meta-calibrated</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="font-sans text-[12px] text-sepia-500 mt-4 leading-[1.5] max-w-[68ch]">
+      For methodology, threshold derivation, and calibration details, see <a href="/methodology" class="no-underline text-umber-700">/methodology</a>.
+    </p>
   </section>
 
-  <!-- LEDE -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-12 grid md:grid-cols-editorial-wide gap-x-16 gap-y-8">
-    <div class="max-w-prose">
-      <p class="dropcap text-lg leading-[1.7] text-ink-700 mb-6">
-        When the May 2026 RadarPH post and the news cycle that followed declared "Metro Manila is rapidly becoming a city without trees", four different sources had been quoted for the headline canopy number. The four disagreed by half.
-      </p>
-      <p class="text-base leading-[1.7] text-ink-700 mb-6">
-        Leaves.PH publishes a fifth measurement, taken from fresh 2026 Sentinel-2 imagery, calibrated against Meta's 1 m AI canopy height, aggregated against the 17 NCR LGU polygons, hash-verified for bit-exact reproducibility. The whole pipeline is in the open: <code>make fetch &amp;&amp; make compute &amp;&amp; make verify</code>.
-      </p>
-      <p class="text-base leading-[1.7] text-ink-700">
-        The number is 7.46 percent. It validates DENR's cited 6 percent (within methodology variance). It refutes Global Forest Watch's published 4.0 percent (which understates 2026 by 3.46 percentage points). It is within 0.04 percentage points of Meta's independent ground-truth measurement. <a href="/map" class="no-underline text-forest-700">Explore the map &nbsp;&rarr;</a>
-      </p>
-    </div>
-    <aside class="border-t border-ink-900 pt-4">
-      <p class="kicker text-ink-500 mb-4">FIG&nbsp;1 &middot; PER-LGU CANOPY 2026</p>
-      <table class="w-full text-xs font-mono tabular-nums">
-        <tbody class="divide-y divide-ink-300/50">
-          <tr><td class="py-1.5 text-ink-900">Quezon City</td><td class="py-1.5 text-right">18.93%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Mandaluyong</td><td class="py-1.5 text-right">11.19%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Makati</td><td class="py-1.5 text-right">8.92%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Caloocan</td><td class="py-1.5 text-right">8.80%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Marikina</td><td class="py-1.5 text-right">6.87%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Taguig</td><td class="py-1.5 text-right">6.47%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Valenzuela</td><td class="py-1.5 text-right">5.81%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Pasig</td><td class="py-1.5 text-right">5.23%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Las Pinas</td><td class="py-1.5 text-right">5.20%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Pateros</td><td class="py-1.5 text-right">4.96%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Paranaque</td><td class="py-1.5 text-right">4.35%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Muntinlupa</td><td class="py-1.5 text-right">3.77%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Malabon</td><td class="py-1.5 text-right">3.68%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">San Juan</td><td class="py-1.5 text-right">2.41%</td></tr>
-          <tr><td class="py-1.5 text-ink-500">Pasay</td><td class="py-1.5 text-right">2.08%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Manila</td><td class="py-1.5 text-right">0.89%</td></tr>
-          <tr><td class="py-1.5 text-ink-900">Navotas</td><td class="py-1.5 text-right">0.47%</td></tr>
-        </tbody>
-      </table>
-      <p class="fig-caption">Source: Leaves.PH 2026, Sentinel-2 NDVI &ge; 0.62 against Meta canopy height v2 ground-truth, aggregated against OSM admin_level=6 polygons.</p>
-    </aside>
-  </section>
+  <hr class="rule" />
 
-  <hr class="rule max-w-6xl mx-auto" />
-
-  <!-- PULL QUOTE / FINDING -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8">
-    <p class="kicker text-ink-500 mb-3">FINDING</p>
-    <blockquote class="pullquote not-italic font-display">
-      &ldquo;Global Forest Watch's published 4.0 percent figure materially understates Metro Manila's 2026 canopy. DENR's cited 6 percent is closer to but slightly below the satellite-validated 7.5 percent.&rdquo;
+  <!-- ───── FINDING - neutral one-line summary ───── -->
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 py-6">
+    <p class="kicker mb-4 text-sepia-500">FINDING</p>
+    <blockquote class="pullquote">
+      Quezon City carries the largest single share of NCR canopy; without it, the regional average is closer to four per cent.
     </blockquote>
   </section>
 
-  <hr class="rule max-w-6xl mx-auto" />
+  <hr class="rule-ornament" />
 
-  <!-- METHOD AT-A-GLANCE -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8 grid md:grid-cols-editorial-wide gap-x-16 gap-y-6">
-    <div class="max-w-prose">
-      <p class="kicker text-ink-500 mb-3">METHOD</p>
-      <h2 class="font-display text-3xl mb-4 text-ink-900">Five canonical layers, one threshold tuned against a 1 m truth raster.</h2>
-      <p class="text-base leading-[1.7] text-ink-700">
-        Sentinel-2 L2A median composites (cloud-masked at s2cloudless probability &lt; 40, 30 m); Hansen Global Forest Change v1.13 for the loss-year band back to 2001; ESA WorldCover v200 (2021) as an independent cross-check; Dynamic World v1 for fuzzy probability; Meta Canopy Height v2 (1 m, 2018-2020 imagery) as the calibration truth.
-      </p>
-      <p class="mt-4">
-        <a href="/methodology" class="no-underline text-forest-700">Full methodology &rarr;</a>
-        &nbsp;&middot;&nbsp;
-        <a href="/data" class="no-underline text-forest-700">Data downloads &rarr;</a>
-        &nbsp;&middot;&nbsp;
-        <a href="https://github.com/xmpuspus/leaves-ph" class="no-underline text-forest-700">GitHub &rarr;</a>
-      </p>
+  <!-- ───── PER-LGU FEATURE TABLE - numbered rows, decimal-aligned ───── -->
+  <section class="max-w-[1280px] mx-auto px-6 sm:px-10 py-8 grid lg:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)] gap-x-12 gap-y-6 items-start">
+    <div>
+      <p class="kicker mb-3 text-sepia-500">FIG&nbsp;4 · NCR LGUs · LATEST EPOCH</p>
+      <h2 class="font-display text-ink-900 mb-6" style="font-size: clamp(1.5rem, 3vw, 2.25rem); letter-spacing: -0.015em;">
+        Quezon City alone carries the regional average.
+      </h2>
+      <table class="w-full text-[14px]">
+        <thead class="text-[11px] uppercase tracking-[0.14em] text-sepia-500 font-mono">
+          <tr class="border-b border-ink-900">
+            <th class="text-left py-2 font-medium w-8">№</th>
+            <th class="text-left py-2 font-medium">LGU</th>
+            <th class="text-right py-2 font-medium">{SERIES_END}</th>
+            <th class="text-right py-2 font-medium">{SERIES_START} → {String(SERIES_END).slice(-2)}</th>
+            <th class="text-right py-2 font-medium hidden sm:table-cell">Area</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-300/60 font-sans">
+          <tr><td class="py-2 text-sepia-500 font-mono">01</td><td class="py-2"><em>Quezon City</em></td><td class="py-2 text-right font-mono tabular-nums">18·93%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·38pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">15,986 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">02</td><td class="py-2">Mandaluyong</td><td class="py-2 text-right font-mono tabular-nums">11·19%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·28pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,131 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">03</td><td class="py-2">Makati</td><td class="py-2 text-right font-mono tabular-nums">8·92%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·69pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,804 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">04</td><td class="py-2">Caloocan</td><td class="py-2 text-right font-mono tabular-nums">8·80%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·96pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">5,288 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">05</td><td class="py-2">Marikina</td><td class="py-2 text-right font-mono tabular-nums">6·87%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·01pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">2,265 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">06</td><td class="py-2">Taguig</td><td class="py-2 text-right font-mono tabular-nums">6·47%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−2·76pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">7,932 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">07</td><td class="py-2">Valenzuela</td><td class="py-2 text-right font-mono tabular-nums">5·81%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·39pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">4,678 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">08</td><td class="py-2">Pasig</td><td class="py-2 text-right font-mono tabular-nums">5·23%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·17pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,067 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">09</td><td class="py-2">Las Pinas</td><td class="py-2 text-right font-mono tabular-nums">5·20%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·47pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,612 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">10</td><td class="py-2">Pateros</td><td class="py-2 text-right font-mono tabular-nums">4·96%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·26pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">185 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">11</td><td class="py-2">Paranaque</td><td class="py-2 text-right font-mono tabular-nums">4·35%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·57pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">5,960 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">12</td><td class="py-2">Muntinlupa</td><td class="py-2 text-right font-mono tabular-nums">3·77%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·74pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">6,615 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">13</td><td class="py-2">Malabon</td><td class="py-2 text-right font-mono tabular-nums">3·68%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·54pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,636 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">14</td><td class="py-2">San Juan</td><td class="py-2 text-right font-mono tabular-nums">2·41%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·76pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">578 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">15</td><td class="py-2">Pasay</td><td class="py-2 text-right font-mono tabular-nums">2·08%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·93pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,388 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">16</td><td class="py-2">Manila</td><td class="py-2 text-right font-mono tabular-nums">0·89%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·21pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">10,487 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">17</td><td class="py-2">Navotas</td><td class="py-2 text-right font-mono tabular-nums">0·47%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·40pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,656 ha</td></tr>
+        </tbody>
+      </table>
     </div>
-    <aside class="border-l border-ink-900 pl-6 space-y-4 max-w-narrow">
-      <div>
-        <p class="kicker text-ink-500">RESOLUTION</p>
-        <p class="font-display text-2xl text-ink-900 leading-tight">1 m height truth &middot; 30 m time series &middot; 17 LGUs</p>
-      </div>
-      <div>
-        <p class="kicker text-ink-500">PROVENANCE</p>
-        <p class="text-sm leading-relaxed text-ink-700">Every input is canonical public satellite. Every threshold is committed. Every number on this page traces back to a script in the repository.</p>
-      </div>
-      <div>
-        <p class="kicker text-ink-500">LICENSE</p>
-        <p class="text-sm leading-relaxed text-ink-700">Code MIT. Data CC-BY-4.0. Cite as: Leaves.PH (YYYY-Q-N).</p>
-      </div>
+
+    <aside class="lg:mt-16">
+      <p class="kicker mb-3 text-sepia-500">READING GUIDE</p>
+      <p class="text-[14px] text-ink-700 leading-[1.6]">
+        Quezon City's 18·93 per cent is held by the La Mesa watershed, UP Diliman, and the Wack Wack greens. Pull QC out and the regional average halves.
+      </p>
+      <p class="text-[14px] text-ink-700 leading-[1.6] mt-4">
+        <em>Manila, Navotas, Pasay</em> are structurally low: reclamation, dense urban core. Their canopy will not move with methodology choice; it is genuinely very low.
+      </p>
+      <p class="text-[14px] text-ink-700 leading-[1.6] mt-4">
+        <em>Taguig, Malabon, Las Pinas, Valenzuela</em> are the steepest decliners across the published series. Construction-heavy southern and northern fringes.
+      </p>
+      <a href="/map" class="inline-block mt-5 font-mono text-[12px] uppercase tracking-[0.18em] text-umber-700 no-underline border-b border-umber-500 hover:border-umber-700">Open the interactive map &rarr;</a>
     </aside>
-  </section>
-
-  <hr class="rule max-w-6xl mx-auto" />
-
-  <!-- THE MAP TEASE -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8">
-    <p class="kicker text-ink-500 mb-3">THE MAP</p>
-    <a href="/map" class="block group no-underline">
-      <div class="grid md:grid-cols-editorial gap-x-12 gap-y-4 items-end">
-        <div>
-          <h2 class="font-display text-display-2 text-ink-900 mb-3 group-hover:text-forest-700 transition-colors">
-            Every canopy patch above 5 m, mapped per LGU, year by year.
-          </h2>
-          <p class="text-base leading-[1.7] text-ink-700 max-w-prose">
-            Click any LGU to see its 2019 to 2026 curve, Hansen cumulative loss, and the ESA 2021 cross-check. Year slider drives the choropleth. Tree-crown polygons load at street zoom.
-          </p>
-        </div>
-        <p class="font-mono text-sm text-ink-700 underline group-hover:text-forest-700">open the interactive map &rarr;</p>
-      </div>
-    </a>
   </section>
 </Base>

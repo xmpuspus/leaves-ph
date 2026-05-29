@@ -1,0 +1,223 @@
+---
+import {
+  SERIES_YEARS,
+  SERIES_NCR_V0,
+  SERIES_NCR_V9,
+  SERIES_START,
+  SERIES_END,
+  LATEST_NCR_PCT,
+  DELTA_START_TO_LATEST_PP,
+} from "../lib/series";
+
+// Chart geometry. Wide viewBox; the SVG scales to fill its container width.
+const W = 820,
+  H = 440;
+const m = { top: 52, right: 30, bottom: 72, left: 56 };
+const plotW = W - m.left - m.right;
+const plotH = H - m.top - m.bottom;
+
+const years = SERIES_YEARS;
+const n = years.length;
+
+// Fixed y domain so both series share an honest scale.
+const yMin = 6,
+  yMax = 11;
+
+const x = (i: number) => m.left + (n === 1 ? 0 : (i / (n - 1)) * plotW);
+const y = (v: number) => m.top + (1 - (v - yMin) / (yMax - yMin)) * plotH;
+
+type Pt = { i: number; year: number; v: number; cx: number; cy: number; provisional: boolean };
+const mkPts = (vals: number[]): Pt[] =>
+  vals.map((v, i) => ({
+    i,
+    year: years[i],
+    v,
+    cx: x(i),
+    cy: y(v),
+    provisional: years[i] === SERIES_END,
+  }));
+
+const v0 = mkPts(SERIES_NCR_V0);
+const v9 = mkPts(SERIES_NCR_V9);
+
+const line = (ps: Pt[]) =>
+  ps.map((p, k) => `${k === 0 ? "M" : "L"}${p.cx.toFixed(1)},${p.cy.toFixed(1)}`).join(" ");
+
+// 2026 is provisional; draw the final segment of each line dashed.
+const solid = (ps: Pt[]) => ps.slice(0, n - 1);
+const lastSeg = (ps: Pt[]) => ps.slice(n - 2);
+
+const gridVals = [6, 7, 8, 9, 10, 11];
+
+const deltaStr = `${DELTA_START_TO_LATEST_PP > 0 ? "+" : ""}${DELTA_START_TO_LATEST_PP.toFixed(2)} pp`;
+const provisionalX = x(n - 1);
+---
+
+<figure class="my-2">
+  <figcaption class="mb-4">
+    <p class="kicker text-ink-500 mb-2">FIG · NCR CANOPY · {SERIES_START}&ndash;{SERIES_END}</p>
+    <p class="font-display text-2xl text-ink-900 leading-tight mb-2">
+      The NDVI pixel rule swings; the model holds steadier.
+    </p>
+    <p class="text-sm text-ink-700 max-w-prose leading-relaxed">
+      Two readings of NCR canopy, same years. The <strong>NDVI pixel rule</strong> (the displayed
+      series) moves year to year with the imagery itself: cloud masks, sun angle, and seasonal
+      phenology shift the per-pixel threshold. The <strong>CLIP&nbsp;+&nbsp;HistGBR model</strong>
+      recovers a steadier signal from the same scenes. The {SERIES_END} epoch is provisional
+      (imagery January&ndash;May only) and shown dashed.
+    </p>
+  </figcaption>
+
+  <div class="border border-ink-900 bg-paper-tint/40 p-3 sm:p-5">
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      class="w-full h-auto"
+      role="img"
+      aria-labelledby="ct-title ct-desc"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <title id="ct-title">NCR tree canopy percent per year, {SERIES_START} to {SERIES_END}</title>
+      <desc id="ct-desc">
+        Two lines on a shared scale of NCR canopy percent. The NDVI pixel rule swings between
+        {Math.min(...SERIES_NCR_V0).toFixed(2)} and {Math.max(...SERIES_NCR_V0).toFixed(2)} percent
+        across the series, ending at {LATEST_NCR_PCT.toFixed(2)} percent in {SERIES_END}. The
+        CLIP plus HistGBR model stays within a narrower band near 8 to 9 percent over the same years.
+        The {SERIES_END} value of each series is provisional because that year's imagery covers
+        January through May only.
+      </desc>
+
+      <!-- gridlines + y labels -->
+      {
+        gridVals.map((g) => (
+          <g>
+            <line
+              x1={m.left}
+              y1={y(g)}
+              x2={W - m.right}
+              y2={y(g)}
+              stroke="#a7a094"
+              stroke-width="0.5"
+              stroke-dasharray="2 3"
+              opacity="0.6"
+            />
+            <text x={m.left - 10} y={y(g) + 3.5} text-anchor="end" class="ct-axis">
+              {g}
+            </text>
+          </g>
+        ))
+      }
+      <text
+        transform={`translate(14 ${m.top + plotH / 2}) rotate(-90)`}
+        text-anchor="middle"
+        class="ct-axis-title">NCR canopy %</text>
+
+      <!-- provisional band over the final epoch -->
+      <rect
+        x={provisionalX}
+        y={m.top}
+        width={W - m.right - provisionalX}
+        height={plotH}
+        fill="#8b3f1d"
+        opacity="0.05"
+      />
+      <text x={provisionalX + 4} y={m.top + 12} class="ct-provisional">{SERIES_END} provisional</text>
+
+      <!-- x-axis year ticks -->
+      {
+        years.map((yr, i) => (
+          <text x={x(i)} y={m.top + plotH + 22} text-anchor="middle" class="ct-year">
+            {yr}
+          </text>
+        ))
+      }
+
+      <!-- NDVI pixel-rule line (umber): solid through 2025, dashed final segment -->
+      <path d={line(solid(v0))} fill="none" stroke="#b65724" stroke-width="2.5" stroke-linejoin="round" class="ct-path" />
+      <path d={line(lastSeg(v0))} fill="none" stroke="#b65724" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="5 4" class="ct-path-prov" />
+
+      <!-- model line (forest): solid through 2025, dashed final segment -->
+      <path d={line(solid(v9))} fill="none" stroke="#1f3d2b" stroke-width="2.5" stroke-linejoin="round" class="ct-path" />
+      <path d={line(lastSeg(v9))} fill="none" stroke="#1f3d2b" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="5 4" class="ct-path-prov" />
+
+      <!-- markers + hover targets, NDVI series -->
+      {
+        v0.map((p) => (
+          <g class="ct-node">
+            <circle
+              cx={p.cx}
+              cy={p.cy}
+              r={p.provisional ? 4 : 3.5}
+              fill={p.provisional ? "#f7f3e9" : "#b65724"}
+              stroke="#b65724"
+              stroke-width="1.5"
+            />
+            <text x={p.cx} y={p.cy - 9} text-anchor="middle" class="ct-val ct-val-umber ct-hover-label">
+              {p.v.toFixed(2)}
+            </text>
+            <circle cx={p.cx} cy={p.cy} r="14" fill="transparent" class="ct-hit">
+              <title>
+                NDVI pixel rule · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
+              </title>
+            </circle>
+          </g>
+        ))
+      }
+
+      <!-- markers + hover targets, model series -->
+      {
+        v9.map((p) => (
+          <g class="ct-node">
+            <circle
+              cx={p.cx}
+              cy={p.cy}
+              r={p.provisional ? 4 : 3.5}
+              fill={p.provisional ? "#f7f3e9" : "#1f3d2b"}
+              stroke="#1f3d2b"
+              stroke-width="1.5"
+            />
+            <text x={p.cx} y={p.cy + 17} text-anchor="middle" class="ct-val ct-val-forest ct-hover-label">
+              {p.v.toFixed(2)}
+            </text>
+            <circle cx={p.cx} cy={p.cy} r="14" fill="transparent" class="ct-hit">
+              <title>
+                CLIP + HistGBR model · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
+              </title>
+            </circle>
+          </g>
+        ))
+      }
+    </svg>
+
+    <!-- legend -->
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3 pt-3 border-t border-ink-300/60 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-500">
+      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#b65724"></span>NDVI pixel rule · displayed series</span>
+      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#1f3d2b"></span>CLIP + HistGBR model</span>
+      <span class="flex items-center gap-2 normal-case tracking-normal text-ink-700"><span class="inline-block w-5 border-t border-dashed border-ink-500"></span>dashed = {SERIES_END} provisional</span>
+      <span class="ml-auto text-ink-700 normal-case tracking-normal">{SERIES_START}&rarr;{SERIES_END} shift, displayed series: {deltaStr}</span>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .ct-axis { font-family: "JetBrains Mono", monospace; font-size: 11px; fill: #6a6a6a; }
+  .ct-axis-title { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; fill: #6a6a6a; }
+  .ct-year { font-family: "JetBrains Mono", monospace; font-size: 11px; fill: #6a6a6a; }
+  .ct-provisional { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; fill: #8b3f1d; }
+  .ct-val { font-family: "JetBrains Mono", monospace; font-size: 10.5px; }
+  .ct-val-umber { fill: #8b3f1d; }
+  .ct-val-forest { fill: #1f3d2b; }
+
+  /* Direct value labels are always legible; hover targets add a focus emphasis. */
+  .ct-hit { cursor: pointer; }
+  .ct-hit:hover ~ .ct-val,
+  .ct-node:hover .ct-val { font-weight: 700; }
+
+  .ct-path { stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: ct-draw 1.2s ease-out forwards; }
+  .ct-path-prov { opacity: 0; animation: ct-fade 0.4s ease-out 1.1s forwards; }
+  @keyframes ct-draw { to { stroke-dashoffset: 0; } }
+  @keyframes ct-fade { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .ct-path { animation: none; stroke-dashoffset: 0; }
+    .ct-path-prov { animation: none; opacity: 1; }
+  }
+</style>

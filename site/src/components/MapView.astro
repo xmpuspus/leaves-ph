@@ -1,13 +1,5 @@
 ---
-// Editorial map: full-bleed MapLibre canvas, three stacked data layers
-// (Meta canopy raster, per-LGU choropleth, individual tree-crown vectors),
-// sticky year-slider header, slide-over LGU sheet.
-//
-// Layers:
-//   1. OSM raster basemap (desaturated)
-//   2. Meta canopy height >= 5 m raster tiles (z11-14) - the granularity layer
-//   3. Tree-crown vector pmtiles (z11-16) - 242,810 individual canopy polygons
-//   4. Per-LGU choropleth (color follows year slider)
+import { SERIES_START, SERIES_END } from "../lib/series";
 ---
 <div class="border-t border-b border-ink-900 bg-paper">
   <!-- Sticky year slider strip -->
@@ -15,13 +7,23 @@
     <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 grid md:grid-cols-[1fr_minmax(180px,2fr)_1fr] gap-4 items-center">
       <div class="flex items-baseline gap-3">
         <span class="kicker text-ink-500">YEAR</span>
-        <span id="year-label" class="font-display font-medium text-3xl tabular-nums text-ink-900 leading-none">2026</span>
+        <span id="year-label" class="font-display font-medium text-3xl tabular-nums text-ink-900 leading-none">{SERIES_END}</span>
       </div>
-      <input id="year-slider" type="range" min="2019" max="2026" step="1" value="2026" class="editorial-slider w-full" />
+      <input
+        id="year-slider"
+        type="range"
+        min={SERIES_START}
+        max={SERIES_END}
+        step="1"
+        value={SERIES_END}
+        class="editorial-slider map-focusable w-full"
+        aria-label={`Select map year between ${SERIES_START} and ${SERIES_END}`}
+        aria-valuetext={`${SERIES_END}`}
+      />
       <div class="font-mono text-[11px] uppercase tracking-[0.15em] text-ink-500 flex justify-between md:justify-end gap-3">
-        <span>2019</span>
+        <span>{SERIES_START}</span>
         <span class="text-ink-300">|</span>
-        <span>2026</span>
+        <span>{SERIES_END}</span>
       </div>
     </div>
   </div>
@@ -29,51 +31,96 @@
   <!-- Headline strip: four KPIs in editorial-table layout (no card grid) -->
   <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 divide-x divide-ink-300">
     <div class="pl-0">
-      <p class="kicker text-ink-500 mb-1.5">NCR &middot; SELECTED YEAR</p>
+      <p class="kicker text-ink-500 mb-1.5">CANOPY COVER</p>
       <p id="strip-total-pct" class="stat-medium leading-none">--</p>
       <p id="strip-total-ha" class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">--</p>
     </div>
     <div class="pl-6">
-      <p class="kicker text-ink-500 mb-1.5">2019 to 2026 DELTA</p>
+      <p class="kicker text-ink-500 mb-1.5">SHIFT, {SERIES_START}&ndash;{SERIES_END}</p>
       <p id="strip-delta" class="stat-medium leading-none">--</p>
-      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">percentage points</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">8-year change</p>
     </div>
     <div class="pl-6">
-      <p class="kicker text-ink-500 mb-1.5">VS DENR 6&middot;0%</p>
-      <p id="strip-vs-denr" class="stat-medium leading-none">--</p>
-      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">2026 only</p>
+      <p class="kicker text-ink-500 mb-1.5">TREES MAPPED</p>
+      <p class="stat-medium leading-none">242,810</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">individual crown polygons</p>
     </div>
     <div class="pl-6">
-      <p class="kicker text-ink-500 mb-1.5">VS GFW 4&middot;0%</p>
-      <p id="strip-vs-gfw" class="stat-medium leading-none">--</p>
-      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">2026 only</p>
+      <p class="kicker text-ink-500 mb-1.5">CANOPY REFERENCE</p>
+      <p class="stat-medium leading-none">Meta v2</p>
+      <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">1 m canopy height &middot; &gt;5 m</p>
     </div>
   </div>
 </div>
 
-<!-- Layer toggles + full-bleed map -->
+<!-- Basemap toggle + layer toggles + crown-status legend + full-bleed map -->
 <section class="border-b border-ink-900">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-wrap gap-x-4 gap-y-2 items-center justify-between border-b border-ink-300">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 border-b border-ink-300">
     <div class="flex flex-wrap gap-x-4 gap-y-1 items-center font-mono text-[11px] uppercase tracking-[0.15em] text-ink-700">
+      <span class="text-ink-500">BASEMAP:</span>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="basemap" id="basemap-osm" value="osm" checked class="accent-forest-700 map-focusable" aria-label="Streets basemap (OpenStreetMap)" />Streets (OSM)</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="basemap" id="basemap-sat" value="sat" class="accent-forest-700 map-focusable" aria-label="Satellite basemap (Esri)" />Satellite (Esri)</label>
+      <span class="text-ink-300">|</span>
       <span class="text-ink-500">LAYERS:</span>
-      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-meta" checked class="accent-forest-700" />Meta canopy 1 m</label>
-      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-crowns" checked class="accent-forest-700" />Tree crowns (242k)</label>
-      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-lgus" checked class="accent-forest-700" />LGU choropleth</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-meta" checked class="accent-forest-700 map-focusable" aria-label="Toggle Meta 1 m canopy raster layer" />Meta canopy 1 m</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-crowns" checked class="accent-forest-700 map-focusable" aria-label="Toggle tree-crown polygon layer" />Tree crowns (242k)</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-lgus" checked class="accent-forest-700 map-focusable" aria-label="Toggle LGU choropleth layer" />LGU choropleth</label>
+      <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="layer-barangays" class="accent-forest-700 map-focusable" aria-label="Toggle barangay canopy layer" />Barangay canopy (892)</label>
     </div>
-    <p class="font-mono text-[10px] text-ink-500 uppercase tracking-[0.12em]">click any LGU for the curve &nbsp;&middot;&nbsp; zoom 14+ for crowns</p>
+    <div class="flex flex-wrap gap-x-3 gap-y-1 items-center font-mono text-[11px] uppercase tracking-[0.15em] text-ink-700 mt-2">
+      <label for="barangay-search" class="text-ink-500">FIND BARANGAY:</label>
+      <input
+        id="barangay-search"
+        type="search"
+        list="barangay-list"
+        placeholder="type a barangay name…"
+        autocomplete="off"
+        aria-label="Search for a barangay by name and zoom to it"
+        class="map-focusable !cursor-text border border-ink-300 bg-paper px-2 py-1 text-[11px] font-mono lowercase tracking-normal text-ink-900 placeholder:text-ink-300 w-56 disabled:opacity-40 disabled:!cursor-not-allowed"
+      />
+      <datalist id="barangay-list"></datalist>
+      <span id="barangay-search-msg" class="text-ink-500/70 normal-case tracking-normal" aria-live="polite"></span>
+    </div>
+    <div class="flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[10px] uppercase tracking-[0.12em] text-ink-500 mt-2">
+      <span>CROWN COLOR:</span>
+      <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3" style="background:#1f6634"></span>confirmed by OSM <span class="text-ink-300">(3.6%)</span></span>
+      <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3" style="background:#d4a019"></span>tall canopy &ge; 8 m <span class="text-ink-300">(50.7%)</span></span>
+      <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3" style="background:#9ca3af"></span>candidate, 5-8 m height <span class="text-ink-300">(45.6%)</span></span>
+      <span class="text-ink-500/70">&middot; zoom in for crowns &middot; click any crown for its aerial &middot; click any LGU for its curve</span>
+    </div>
   </div>
-  <div id="map" class="w-full h-[640px] bg-paper-tint"></div>
+  <div class="relative">
+    <div id="map" class="w-full h-[640px] bg-paper-tint"></div>
+    <div
+      id="map-loading"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-paper-tint/85 backdrop-blur-[1px] pointer-events-none transition-opacity duration-300"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="flex items-center gap-3 font-mono text-[12px] uppercase tracking-[0.15em] text-ink-700">
+        <span class="map-spinner inline-block w-4 h-4 border-2 border-ink-300 border-t-forest-700 rounded-full"></span>
+        Loading map…
+      </div>
+    </div>
+    <div
+      id="map-error"
+      class="absolute inset-0 z-10 hidden items-center justify-center bg-paper-tint/95"
+      role="alert"
+    >
+      <p id="map-error-msg" class="font-mono text-[12px] text-umber-700 px-6 text-center leading-relaxed"></p>
+    </div>
+  </div>
 </section>
 
 <!-- Per-LGU rankings table beneath the map (no card grid; magazine table) -->
 <section class="max-w-6xl mx-auto px-5 sm:px-8 py-10 grid md:grid-cols-editorial-wide gap-x-12 gap-y-8">
   <div>
-    <p class="kicker text-ink-500 mb-3">FIG&nbsp;2 &middot; LGU CANOPY 2026 &middot; SORTED HIGH TO LOW</p>
+    <p class="kicker text-ink-500 mb-3">FIG&nbsp;2 &middot; LGU CANOPY &middot; LATEST EPOCH &middot; SORTED</p>
     <table class="w-full text-sm font-mono tabular-nums">
       <thead class="border-b border-ink-900">
         <tr class="text-left text-[11px] uppercase tracking-[0.12em] text-ink-500">
           <th class="py-2 font-medium">LGU</th>
-          <th class="py-2 font-medium text-right">2026</th>
+          <th class="py-2 font-medium text-right">{SERIES_END}</th>
           <th class="py-2 font-medium text-right">DELTA</th>
         </tr>
       </thead>
@@ -83,13 +130,13 @@
   <aside class="max-w-narrow">
     <p class="kicker text-ink-500 mb-3">READING NOTE</p>
     <p class="text-sm leading-[1.7] text-ink-700">
-      Quezon City carries the NCR average. The La Mesa watershed, UP Diliman campus, and the Wack Wack greens together hold an 18.93 percent canopy in 2026. Drop QC and the NCR figure halves.
+      Quezon City carries the NCR average. The La Mesa watershed, UP Diliman campus, and the Wack Wack greens together hold an 18.93 percent canopy in the latest epoch. Drop QC and the NCR figure halves.
     </p>
     <p class="text-sm leading-[1.7] text-ink-700 mt-4">
       Manila, Navotas, and Pasay are <span class="font-medium">structurally low</span>: dense reclamation and historic urban core. Their canopy will not change by methodology choice; it is just very low.
     </p>
     <p class="text-sm leading-[1.7] text-ink-700 mt-4">
-      Taguig, Malabon, Las Pinas, and Valenzuela are the steepest 2019 to 2026 decliners. Construction-heavy southern and northern fringes.
+      Taguig, Malabon, Las Pinas, and Valenzuela are the steepest decliners across the published series. Construction-heavy southern and northern fringes.
     </p>
   </aside>
 </section>
@@ -106,18 +153,18 @@
 
     <div class="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-ink-900 py-5">
       <div>
-        <p class="kicker text-ink-500 mb-1" id="lgu-pct-year-label">2026 CANOPY</p>
+        <p class="kicker text-ink-500 mb-1" id="lgu-pct-year-label">LATEST CANOPY</p>
         <p id="lgu-pct" class="font-display font-medium text-3xl text-forest-700 tabular-nums leading-none">--</p>
         <p id="lgu-ha" class="font-mono text-[10px] text-ink-500 mt-1.5 leading-relaxed">--</p>
       </div>
       <div>
-        <p class="kicker text-ink-500 mb-1">2019 to 2026 DELTA</p>
+        <p class="kicker text-ink-500 mb-1">{SERIES_START} to {SERIES_END} DELTA</p>
         <p id="lgu-delta" class="font-display font-medium text-3xl text-umber-700 tabular-nums leading-none">--</p>
         <p class="font-mono text-[10px] text-ink-500 mt-1.5 leading-relaxed">percentage points</p>
       </div>
     </div>
 
-    <p class="kicker text-ink-500 mt-6 mb-3">8-YEAR CURVE</p>
+    <p class="kicker text-ink-500 mt-6 mb-3">SERIES CURVE</p>
     <svg id="lgu-curve" viewBox="0 0 320 90" class="w-full h-24" preserveAspectRatio="none"></svg>
 
     <div class="mt-6 pt-5 border-t border-ink-300 space-y-4">
@@ -138,6 +185,25 @@
   import "maplibre-gl/dist/maplibre-gl.css";
   import { interpolateYlGn } from "d3-scale-chromatic";
   import { Protocol } from "pmtiles";
+  import centroid from "@turf/centroid";
+
+  // Loading / error overlay helpers.
+  function hideLoading() {
+    const el = document.getElementById("map-loading");
+    if (el) el.style.opacity = "0";
+    window.setTimeout(() => el && (el.style.display = "none"), 320);
+  }
+  function showError(msg: string) {
+    const load = document.getElementById("map-loading");
+    if (load) load.style.display = "none";
+    const err = document.getElementById("map-error");
+    const errMsg = document.getElementById("map-error-msg");
+    if (errMsg) errMsg.textContent = msg;
+    if (err) {
+      err.classList.remove("hidden");
+      err.classList.add("flex");
+    }
+  }
 
   // Register the pmtiles:// protocol with MapLibre so vector tile sources can
   // load straight from a static .pmtiles archive (no tile server needed).
@@ -147,7 +213,6 @@
   const DATA_BASE = "/data";
   const YEARS = Array.from({ length: 8 }, (_, i) => 2019 + i);
   const MAX_PCT_FOR_COLOR = 22;
-  const REF_PCT = { denr_cited: 6.0, gfw_dashboard: 4.0 };
   const FOREST_GREEN = "#1f3d2b";
   // const UMBER = "#b65724";
   const INK = "#1a1a1a";
@@ -162,13 +227,14 @@
   }
   function fmtHa(n: number | null | undefined): string {
     if (n == null) return "n/a";
-    if (n >= 10000) return `${(n / 1000).toFixed(1)} kha`;
+    // Drop "kha" jargon: keep readable hectare numbers for laymen.
     return `${Math.round(n).toLocaleString()} ha`;
   }
   function fmtDelta(n: number | null | undefined): string {
     if (n == null) return "n/a";
     const sign = n > 0 ? "+" : "";
-    return `${sign}${n.toFixed(2)}pp`;
+    // "pts" reads more clearly to laymen than the academic "pp" abbreviation.
+    return `${sign}${n.toFixed(2)} pts`;
   }
 
   async function loadJSON<T = any>(path: string): Promise<T> {
@@ -196,10 +262,7 @@
     try {
       lgus = await loadJSON<any>("per_lgu_canopy.geojson");
     } catch (e) {
-      const el = document.getElementById("map");
-      if (el) {
-        el.innerHTML = '<div class="p-6 text-sm text-ink-500 font-mono">Per-LGU canopy data not yet published. Run `make compute` locally.</div>';
-      }
+      showError("Per-LGU canopy data could not be loaded. Run `make compute` locally, or retry.");
       return;
     }
 
@@ -218,6 +281,15 @@
             tileSize: 256,
             attribution: "&copy; OpenStreetMap contributors",
           },
+          sat: {
+            type: "raster",
+            tiles: [
+              "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            ],
+            tileSize: 256,
+            maxzoom: 19,
+            attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
+          },
           meta: {
             type: "raster",
             tiles: ["/tiles/meta/{z}/{x}/{y}.png"],
@@ -229,16 +301,21 @@
         },
         layers: [
           { id: "osm", type: "raster", source: "osm", paint: { "raster-saturation": -0.4, "raster-opacity": 0.7 } },
+          { id: "sat", type: "raster", source: "sat", layout: { visibility: "none" } },
           { id: "meta-canopy", type: "raster", source: "meta", paint: { "raster-opacity": 0.85 } },
         ],
       },
-      center: [121.03, 14.6],
-      zoom: 11,
+      center: [121.05, 14.65],
+      zoom: 12,
       maxZoom: 16,
       minZoom: 9,
+      clickTolerance: 6,  // 2x the default; helps land clicks on small crown polygons
     });
     // Expose for debugging from devtools / agent-browser:
-    if (typeof window !== "undefined") (window as any).__map = map;
+    if (typeof window !== "undefined") {
+      (window as any).__map = map;
+      (window as any).maplibregl = maplibregl;
+    }
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     const slider = document.getElementById("year-slider");
@@ -259,21 +336,18 @@
 
       const agg = ncrAggregate(lgus.features, year);
       document.getElementById("strip-total-pct")!.textContent = fmtPct(agg.pct, 2);
-      document.getElementById("strip-total-ha")!.textContent = `${fmtHa(agg.canopyHa)} of ${fmtHa(agg.totalHa)} NCR`;
-      if (year === 2026) {
-        document.getElementById("strip-vs-denr")!.textContent = agg.pct != null ? fmtDelta(agg.pct - REF_PCT.denr_cited) : "n/a";
-        document.getElementById("strip-vs-gfw")!.textContent = agg.pct != null ? fmtDelta(agg.pct - REF_PCT.gfw_dashboard) : "n/a";
-      } else {
-        document.getElementById("strip-vs-denr")!.textContent = "(2026)";
-        document.getElementById("strip-vs-gfw")!.textContent = "(2026)";
-      }
+      document.getElementById("strip-total-ha")!.textContent = `${fmtHa(agg.canopyHa)} of ${fmtHa(agg.totalHa)} in NCR`;
     }
     function ncrDelta() {
-      const a19 = ncrAggregate(lgus.features, 2019).pct;
-      const a26 = ncrAggregate(lgus.features, 2026).pct;
-      return (a19 != null && a26 != null) ? a26 - a19 : null;
+      const aStart = ncrAggregate(lgus.features, YEARS[0]).pct;
+      const aEnd = ncrAggregate(lgus.features, YEARS[YEARS.length - 1]).pct;
+      return (aStart != null && aEnd != null) ? aEnd - aStart : null;
     }
-    slider!.addEventListener("input", (e) => applyYearStyle(Number((e.target as HTMLInputElement).value)));
+    slider!.addEventListener("input", (e) => {
+      const v = (e.target as HTMLInputElement).value;
+      (e.target as HTMLInputElement).setAttribute("aria-valuetext", v);
+      applyYearStyle(Number(v));
+    });
 
     map.on("load", () => {
       map.addSource("lgus", { type: "geojson", data: lgus });
@@ -281,7 +355,7 @@
         id: "lgus-fill",
         type: "fill",
         source: "lgus",
-        paint: { "fill-color": ["get", "_fill"], "fill-opacity": 0.5 },
+        paint: { "fill-color": ["get", "_fill"], "fill-opacity": 0.22 },
       });
       map.addLayer({
         id: "lgus-outline",
@@ -290,13 +364,14 @@
         paint: { "line-color": INK, "line-width": 0.8, "line-opacity": 0.85 },
       });
 
-      // 242,810 tree-crown polygons via pmtiles. Loads as a vector source;
-      // styled as semi-transparent forest-green fills + thin outlines.
-      // Renders at zoom >= 11 (matches tippecanoe minimum-zoom in the pyramid).
+      // 242,810 tree-crown polygons via pmtiles, tagged confirmed/new/candidate.
+      //   confirmed (~3.6%): OSM-corroborated (natural=tree halo or in a forest/park/wood polygon)
+      //   new       (~50.7%): Meta-derived, p95 height >= 8m, no OSM tag (tall canopy)
+      //   candidate (~45.6%): Meta-derived, p95 height 5-8m, no OSM tag (lower-confidence)
       try {
         map.addSource("crowns", {
           type: "vector",
-          url: "pmtiles:///data/tree_crowns_ncr.pmtiles",
+          url: "pmtiles:///data/tree_crowns_ncr_tagged.pmtiles",
           minzoom: 11,
           maxzoom: 16,
           attribution: "Meta Canopy Height v2 derived crown polygons (CC-BY-4.0)",
@@ -308,12 +383,18 @@
           "source-layer": "crowns",
           minzoom: 12,
           paint: {
-            "fill-color": "#1f3d2b",
+            "fill-color": [
+              "match", ["get", "status"],
+              "confirmed", "#1f6634",  // forest green - OSM corroborated
+              "new",       "#d4a019",  // umber/yellow - tall canopy (Meta-derived)
+              "candidate", "#9ca3af",  // gray - lower-confidence (Meta-derived)
+              "#1f3d2b",
+            ],
             "fill-opacity": [
               "interpolate", ["linear"], ["zoom"],
-              12, 0.35,
-              14, 0.55,
-              16, 0.7,
+              12, 0.45,
+              14, 0.65,
+              16, 0.8,
             ],
           },
         });
@@ -324,7 +405,13 @@
           "source-layer": "crowns",
           minzoom: 14,
           paint: {
-            "line-color": "#13251c",
+            "line-color": [
+              "match", ["get", "status"],
+              "confirmed", "#13251c",
+              "new",       "#8b6d10",
+              "candidate", "#5a4f3a",
+              "#13251c",
+            ],
             "line-width": 0.4,
             "line-opacity": 0.6,
           },
@@ -336,14 +423,97 @@
         console.warn('pmtiles crown layer failed to load:', e);
       }
 
-      // Click handlers
-      map.on("click", "lgus-fill", (e) => {
+      // Click handlers. Order matters: the LGU handler must run AFTER the
+      // crown handler so it can see _crownConsumed and bail. The crown
+      // registration is below, after crownPopupHTML is defined; we use a
+      // late-bound deferred LGU handler to enforce that ordering.
+      const lguClickHandler = (e: any) => {
+        if (e.originalEvent?._crownConsumed) return;
         const f = e.features?.[0];
         if (!f) return;
         showLgu(f.properties.lgu_name);
-      });
+      };
+      // (LGU handler is attached after the crown handler below.)
       map.on("mouseenter", "lgus-fill", () => (map.getCanvas().style.cursor = "pointer"));
       map.on("mouseleave", "lgus-fill", () => (map.getCanvas().style.cursor = ""));
+
+      // Click a tree-crown polygon -> popup with an Esri satellite snapshot of
+      // that exact location so users can visually verify whether the model
+      // landed on a real tree. SolarMap.PH does the same for solar-panel
+      // detections; this is the canopy-version of that interaction.
+      const STATUS_META: Record<string, { color: string; label: string }> = {
+        confirmed: { color: "#1f6634", label: "OSM-confirmed" },
+        new:       { color: "#d4a019", label: "tall canopy · ≥ 8 m (Meta-derived)" },
+        candidate: { color: "#9ca3af", label: "candidate · 5-8 m height" },
+      };
+      function crownPopupHTML(f: any): string {
+        const g = f.geometry;
+        const coords = g.type === "Polygon" ? g.coordinates[0]
+                     : g.type === "MultiPolygon" ? g.coordinates[0][0]
+                     : [];
+        if (!coords.length) return "";
+        let minLon = 1e9, maxLon = -1e9, minLat = 1e9, maxLat = -1e9;
+        for (const [lon, lat] of coords) {
+          if (lon < minLon) minLon = lon; if (lon > maxLon) maxLon = lon;
+          if (lat < minLat) minLat = lat; if (lat > maxLat) maxLat = lat;
+        }
+        // Expand bbox to ~50 m context around the crown
+        const padLon = Math.max(0.0005, (maxLon - minLon) * 1.8);
+        const padLat = Math.max(0.0005, (maxLat - minLat) * 1.8);
+        const bbox = [
+          minLon - padLon, minLat - padLat,
+          maxLon + padLon, maxLat + padLat,
+        ].join(",");
+        const W = 420, H = 420;
+        const img = `https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=${bbox}&size=${W},${H}&imageSR=4326&bboxSR=4326&format=jpg&f=image`;
+        const p = f.properties || {};
+        const status = String(p.status || "new");
+        const meta = STATUS_META[status] || { color: "#1f3d2b", label: status };
+        const isNum = (v: any) => typeof v === "number" && !Number.isNaN(v);
+        const area = isNum(p.area_m2) ? `${Number(p.area_m2).toFixed(0)} m²` : "--";
+        const p50 = isNum(p.p50_height_m) ? `${Number(p.p50_height_m).toFixed(1)} m` : "--";
+        const p95 = isNum(p.p95_height_m) ? `${Number(p.p95_height_m).toFixed(1)} m` : "--";
+        const lgu_raw = p.lgu_name;
+        const lgu = (typeof lgu_raw === "string" && lgu_raw && lgu_raw !== "null") ? lgu_raw : "n/a";
+        const cx = (minLon + maxLon) / 2;
+        const cy = (minLat + maxLat) / 2;
+        const osmLink = `https://www.openstreetmap.org/?mlat=${cy}&mlon=${cx}&zoom=19`;
+        return `
+<div style="font-family: 'PT Serif', serif; max-width: ${W}px; padding: 4px;">
+  <div style="position: relative; width: ${W}px; height: ${H}px; background:#eee; overflow:hidden; border:1px solid #1a1a1a;">
+    <img src="${img}" alt="Esri aerial of crown" style="width:${W}px;height:${H}px;display:block;" />
+    <div style="position:absolute; left:8px; top:8px; padding:3px 8px; background:${meta.color}; color:white; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.10em; text-transform:uppercase; font-weight:600;">${status}</div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace; font-size:11px; line-height:1.5; color:#1a1a1a; margin-top:8px;">
+    <div style="font-size:12px;"><b>${meta.label}</b></div>
+    <div style="color:#5a4f3a; margin-top:2px;">LGU: ${lgu}</div>
+    <div style="color:#5a4f3a;">Area: ${area} &nbsp;&middot;&nbsp; p50 height: ${p50} &nbsp;&middot;&nbsp; p95 height: ${p95}</div>
+    <div style="margin-top:6px;">
+      <a href="${osmLink}" target="_blank" rel="noopener" style="color:#1f6634; text-decoration:underline;">open this point in OSM &rarr;</a>
+    </div>
+    <div style="color:#837d6a; font-size:10px; margin-top:6px;">Imagery: Esri / Maxar / Earthstar Geographics. Detection: Meta v2 canopy height &gt;5 m + NDVI 0.62 calibration.</div>
+  </div>
+</div>`;
+      }
+
+      map.on("click", "crowns-fill", (e) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        const html = crownPopupHTML(f);
+        if (!html) return;
+        // Prevent the click bubbling to lgus-fill (which would open the LGU sheet)
+        if ((e as any).originalEvent) (e as any).originalEvent._crownConsumed = true;
+        new maplibregl.Popup({ maxWidth: "460px", closeButton: true })
+          .setLngLat(e.lngLat)
+          .setHTML(html)
+          .addTo(map);
+      });
+      map.on("mouseenter", "crowns-fill", () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", "crowns-fill", () => (map.getCanvas().style.cursor = ""));
+
+      // Now attach the LGU click handler (after the crown click handler so
+      // _crownConsumed is set first).
+      map.on("click", "lgus-fill", lguClickHandler);
 
       // Layer toggles
       const toggle = (id: string, layers: string[]) => {
@@ -359,9 +529,35 @@
       toggle("layer-crowns", ["crowns-fill", "crowns-outline"]);
       toggle("layer-lgus", ["lgus-fill", "lgus-outline"]);
 
+      // Basemap radio: OSM streets vs Esri satellite imagery.
+      // When satellite is on, OSM is hidden; the Meta canopy overlay also drops to
+      // 0.55 opacity so users can see the underlying aerial photo and visually
+      // verify whether the crown polygons land on real trees.
+      const setBasemap = (which: "osm" | "sat") => {
+        if (map.getLayer("osm")) map.setLayoutProperty("osm", "visibility", which === "osm" ? "visible" : "none");
+        if (map.getLayer("sat")) map.setLayoutProperty("sat", "visibility", which === "sat" ? "visible" : "none");
+        if (map.getLayer("meta-canopy")) {
+          map.setPaintProperty("meta-canopy", "raster-opacity", which === "sat" ? 0.55 : 0.85);
+        }
+      };
+      document.getElementById("basemap-osm")?.addEventListener("change", () => setBasemap("osm"));
+      document.getElementById("basemap-sat")?.addEventListener("change", () => setBasemap("sat"));
+
       applyYearStyle(Number((slider as HTMLInputElement).value));
       const d = ncrDelta();
       document.getElementById("strip-delta")!.textContent = d != null ? fmtDelta(d) : "n/a";
+
+      // Barangay canopy layer (892 polygons, the v6/v9 canopy-density model, not
+      // the crown layer). Loaded lazily the first time the toggle is switched on
+      // so the initial map paint stays light.
+      setupBarangays(map);
+
+      hideLoading();
+    });
+
+    // Surface fatal style/source errors (bad tiles, blocked CDN) to the user.
+    map.on("error", (e: any) => {
+      console.warn("maplibre error:", e?.error || e);
     });
 
     function showLgu(name: string) {
@@ -373,7 +569,7 @@
       document.getElementById("lgu-pct-year-label")!.textContent = `${year} CANOPY`;
       document.getElementById("lgu-pct")!.textContent = fmtPct(p[`canopy_${year}_pct`]);
       document.getElementById("lgu-ha")!.textContent = `${fmtHa(p[`canopy_${year}_ha`])} of ${fmtHa(p.total_ha)} LGU area`;
-      document.getElementById("lgu-delta")!.textContent = fmtDelta(p.canopy_delta_2019_2026_pct);
+      document.getElementById("lgu-delta")!.textContent = fmtDelta(p[`canopy_delta_${YEARS[0]}_${YEARS[YEARS.length - 1]}_pct`]);
       document.getElementById("lgu-hansen")!.textContent = fmtHa(p.hansen_loss_ha_cumulative_2024);
       document.getElementById("lgu-esa")!.textContent = fmtPct(p.esa_tree_pct_2021);
       drawCurve(p);
@@ -446,23 +642,240 @@
       svg.appendChild(lblR);
     }
 
-    // Bottom rankings table
-    type Row = { name: string; pct2026: number | null; delta: number | null };
+    // ── Barangay canopy layer + name search ──────────────────────────────
+    // Honest attribution: these 892 values are the v6/v9 CLIP+HistGBR canopy-
+    // density model (canopy_pct_v9_<year>), NOT the Meta-derived crown layer.
+    function setupBarangays(map: any) {
+      const cb = document.getElementById("layer-barangays") as HTMLInputElement | null;
+      const search = document.getElementById("barangay-search") as HTMLInputElement | null;
+      const datalist = document.getElementById("barangay-list");
+      const searchMsg = document.getElementById("barangay-search-msg");
+      if (!cb) return;
+
+      let bgons: any = null;
+      let loaded = false;
+      let loading = false;
+      // name (lowercased) -> { lon, lat, display }
+      const index = new Map<string, { lon: number; lat: number; display: string }>();
+
+      function styleBarangays(year: number) {
+        if (!bgons) return;
+        for (const f of bgons.features) {
+          const pct = f.properties[`canopy_pct_v9_${year}`];
+          f.properties._bfill = colorForPct(pct);
+          f.properties._bpct = pct;
+        }
+        const src = map.getSource("barangays") as any;
+        if (src) src.setData(bgons);
+      }
+
+      async function ensureLoaded(): Promise<boolean> {
+        if (loaded) return true;
+        if (loading) return false;
+        loading = true;
+        try {
+          bgons = await loadJSON<any>("per_barangay_canopy_v9.geojson");
+        } catch (e) {
+          loading = false;
+          cb!.checked = false;
+          cb!.disabled = true;
+          const lbl = cb!.closest("label");
+          if (lbl) lbl.classList.add("opacity-40");
+          console.warn("barangay layer failed to load:", e);
+          return false;
+        }
+
+        const year = Number((slider as HTMLInputElement).value);
+        for (const f of bgons.features) {
+          const pct = f.properties[`canopy_pct_v9_${year}`];
+          f.properties._bfill = colorForPct(pct);
+          f.properties._bpct = pct;
+          const name = f.properties.barangay_name;
+          const lgu = f.properties.lgu_name;
+          if (typeof name === "string" && name) {
+            try {
+              const c = centroid(f as any);
+              const [lon, lat] = c.geometry.coordinates as [number, number];
+              const display = lgu ? `${name} · ${lgu}` : name;
+              index.set(`${name}, ${lgu}`.toLowerCase(), { lon, lat, display });
+              // Also key by bare name for first-match lookups.
+              const bare = name.toLowerCase();
+              if (!index.has(bare)) index.set(bare, { lon, lat, display });
+            } catch {
+              // skip malformed geometry
+            }
+          }
+        }
+
+        map.addSource("barangays", { type: "geojson", data: bgons });
+        // Insert below the LGU outline so LGU borders stay visible on top.
+        const before = map.getLayer("lgus-outline") ? "lgus-outline" : undefined;
+        // Added hidden; shown when the toggle is checked or a search runs, so the
+        // layer state always matches the checkbox.
+        const startVis = cb!.checked ? "visible" : "none";
+        map.addLayer(
+          {
+            id: "barangays-fill",
+            type: "fill",
+            source: "barangays",
+            layout: { visibility: startVis },
+            paint: { "fill-color": ["get", "_bfill"], "fill-opacity": 0.45 },
+          },
+          before,
+        );
+        map.addLayer(
+          {
+            id: "barangays-outline",
+            type: "line",
+            source: "barangays",
+            layout: { visibility: startVis },
+            paint: { "line-color": INK, "line-width": 0.4, "line-opacity": 0.5 },
+          },
+          before,
+        );
+
+        map.on("click", "barangays-fill", (e: any) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const p = f.properties || {};
+          const yr = Number((slider as HTMLInputElement).value);
+          const pct = p[`canopy_pct_v9_${yr}`];
+          const ha = p[`canopy_ha_v9_${yr}`];
+          new maplibregl.Popup({ maxWidth: "300px", closeButton: true })
+            .setLngLat(e.lngLat)
+            .setHTML(
+              `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#1a1a1a;padding:10px 12px;">
+                <div style="font-family:'PT Serif',serif;font-size:14px;">${p.barangay_name ?? "Barangay"}</div>
+                <div style="color:#5a4f3a;">${p.lgu_name ?? ""}</div>
+                <div style="margin-top:6px;">${yr}${yr === 2026 ? " (provisional)" : ""}: <b>${pct == null ? "n/a" : Number(pct).toFixed(2) + "%"}</b></div>
+                <div style="color:#5a4f3a;">${ha == null ? "" : Number(ha).toFixed(1) + " ha canopy of " + Number(p.total_ha).toFixed(0) + " ha"}</div>
+                <div style="color:#837d6a;font-size:10px;margin-top:6px;">Source: clf_v9 canopy-density model (CLIP + HistGBR).</div>
+              </div>`,
+            )
+            .addTo(map);
+        });
+        map.on("mouseenter", "barangays-fill", () => (map.getCanvas().style.cursor = "pointer"));
+        map.on("mouseleave", "barangays-fill", () => (map.getCanvas().style.cursor = ""));
+
+        // Populate the search datalist with "Name · LGU" options.
+        if (datalist) {
+          const opts: string[] = [];
+          for (const f of bgons.features) {
+            const name = f.properties.barangay_name;
+            const lgu = f.properties.lgu_name;
+            if (typeof name === "string" && name) {
+              opts.push(`<option value="${name}, ${lgu}"></option>`);
+            }
+          }
+          datalist.innerHTML = opts.join("");
+        }
+
+        loaded = true;
+        loading = false;
+        return true;
+      }
+
+      // Re-style barangay fills when the year changes (only if loaded).
+      slider!.addEventListener("input", (e) => {
+        if (loaded) styleBarangays(Number((e.target as HTMLInputElement).value));
+      });
+
+      cb.addEventListener("change", async () => {
+        if (cb.checked) {
+          const ok = await ensureLoaded();
+          if (!ok) return;
+          for (const ly of ["barangays-fill", "barangays-outline"]) {
+            if (map.getLayer(ly)) map.setLayoutProperty(ly, "visibility", "visible");
+          }
+        } else {
+          for (const ly of ["barangays-fill", "barangays-outline"]) {
+            if (map.getLayer(ly)) map.setLayoutProperty(ly, "visibility", "none");
+          }
+        }
+      });
+
+      function runSearch() {
+        if (!search) return;
+        const q = search.value.trim().toLowerCase();
+        if (!q) {
+          if (searchMsg) searchMsg.textContent = "";
+          return;
+        }
+        let hit = index.get(q);
+        if (!hit) {
+          // fall back to first prefix match
+          for (const [k, v] of index) {
+            if (k.startsWith(q)) {
+              hit = v;
+              break;
+            }
+          }
+        }
+        if (!hit) {
+          if (searchMsg) searchMsg.textContent = "no match";
+          return;
+        }
+        if (searchMsg) searchMsg.textContent = hit.display;
+        map.flyTo({ center: [hit.lon, hit.lat], zoom: 14.5, speed: 1.2 });
+      }
+
+      // Preload the geojson (and datalist options) the first time the user
+      // focuses the search field, so autocomplete is populated as they type.
+      search?.addEventListener("focus", () => {
+        ensureLoaded();
+      });
+
+      search?.addEventListener("change", () => {
+        ensureLoaded().then((ok) => {
+          if (!ok) return;
+          if (!cb.checked) {
+            cb.checked = true;
+            for (const ly of ["barangays-fill", "barangays-outline"]) {
+              if (map.getLayer(ly)) map.setLayoutProperty(ly, "visibility", "visible");
+            }
+          }
+          runSearch();
+        });
+      });
+      search?.addEventListener("keydown", (e) => {
+        if ((e as KeyboardEvent).key === "Enter") {
+          e.preventDefault();
+          ensureLoaded().then((ok) => {
+            if (!ok) return;
+            if (!cb.checked) {
+              cb.checked = true;
+              for (const ly of ["barangays-fill", "barangays-outline"]) {
+                if (map.getLayer(ly)) map.setLayoutProperty(ly, "visibility", "visible");
+              }
+            }
+            runSearch();
+          });
+        }
+      });
+    }
+
+    // Bottom rankings table - latest-epoch pct and series delta are read
+    // dynamically from the GeoJSON via SERIES_START / SERIES_END keys.
+    const yStart = YEARS[0];
+    const yEnd = YEARS[YEARS.length - 1];
+    const latestKey = `canopy_${yEnd}_pct`;
+    const deltaKey = `canopy_delta_${yStart}_${yEnd}_pct`;
+    type Row = { name: string; pctLatest: number | null; delta: number | null };
     const rows: Row[] = lgus.features
       .map((f: any) => ({
         name: f.properties.lgu_name,
-        pct2026: f.properties.canopy_2026_pct ?? null,
-        delta: f.properties.canopy_delta_2019_2026_pct ?? null,
+        pctLatest: f.properties[latestKey] ?? null,
+        delta: f.properties[deltaKey] ?? null,
       }))
-      .filter((r: Row) => r.pct2026 != null)
-      .sort((a: Row, b: Row) => (b.pct2026 ?? 0) - (a.pct2026 ?? 0));
+      .filter((r: Row) => r.pctLatest != null)
+      .sort((a: Row, b: Row) => (b.pctLatest ?? 0) - (a.pctLatest ?? 0));
     const tbody = document.getElementById("lgu-table-body");
     if (tbody) {
       tbody.innerHTML = rows.map((r: Row) => {
         const deltaColor = (r.delta ?? 0) < 0 ? "text-umber-700" : (r.delta ?? 0) > 0 ? "text-forest-700" : "text-ink-500";
         return `<tr class="cursor-pointer hover:bg-paper-tint" data-lgu="${r.name}">
           <td class="py-2 text-ink-900">${r.name}</td>
-          <td class="py-2 text-right text-ink-900 font-medium">${fmtPct(r.pct2026)}</td>
+          <td class="py-2 text-right text-ink-900 font-medium">${fmtPct(r.pctLatest)}</td>
           <td class="py-2 text-right ${deltaColor}">${fmtDelta(r.delta)}</td>
         </tr>`;
       }).join("");
@@ -477,7 +890,6 @@
 
   init().catch((err) => {
     console.error(err);
-    const el = document.getElementById("map");
-    if (el) el.innerHTML = '<div class="p-6 text-sm text-ink-500 font-mono">Map data failed to load. Check the browser console.</div>';
+    showError("Map data failed to load. Check the browser console, then retry.");
   });
 </script>

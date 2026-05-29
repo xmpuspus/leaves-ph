@@ -40,8 +40,13 @@ export default {
         },
       },
       fontFamily: {
-        display: ["'Libre Bodoni'", "Bodoni Moda", "Didot", "serif"],
-        sans: ["'Public Sans'", "Inter", "system-ui", "-apple-system", "sans-serif"],
+        // Display: PT Serif (ParaType, Russian foundry, 2010). Off the
+        // Fraunces/Tiempos/Newsreader AI-default path; reads like an actual
+        // newsroom workhorse, not an indie-startup template.
+        display: ["'PT Serif'", "ui-serif", "Georgia", "serif"],
+        // Body: DM Sans (Indian Type Foundry / Colophon). Less seen in AI
+        // training data than Inter, Plus Jakarta Sans, Geist, Outfit.
+        sans: ["'DM Sans'", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {

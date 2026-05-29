@@ -1,0 +1,95 @@
+---
+import Base from "../layouts/Base.astro";
+
+const LGUS = [
+  "Caloocan", "Las_Pinas", "Makati", "Malabon", "Mandaluyong",
+  "Manila", "Marikina", "Muntinlupa", "Navotas", "Paranaque",
+  "Pasay", "Pasig", "Pateros", "Quezon_City", "San_Juan",
+  "Taguig", "Valenzuela",
+];
+
+const RANKED = [
+  { lgu: "Quezon_City", v0: 19.53, clf: 18.74, delta: -0.79, newpp: 4.33, drop: 5.11 },
+  { lgu: "Mandaluyong", v0: 10.59, clf: 12.11, delta: 1.51, newpp: 4.64, drop: 3.12 },
+  { lgu: "Taguig", v0: 8.24, clf: 10.22, delta: 1.98, newpp: 4.62, drop: 2.63 },
+  { lgu: "Makati", v0: 7.89, clf: 8.61, delta: 0.71, newpp: 4.54, drop: 3.82 },
+  { lgu: "Valenzuela", v0: 7.64, clf: 7.56, delta: -0.09, newpp: 4.88, drop: 4.97 },
+  { lgu: "Marikina", v0: 8.43, clf: 7.51, delta: -0.91, newpp: 4.59, drop: 5.50 },
+  { lgu: "Caloocan", v0: 8.79, clf: 5.79, delta: -3.00, newpp: 3.02, drop: 6.02 },
+  { lgu: "Malabon", v0: 5.28, clf: 5.60, delta: 0.32, newpp: 4.16, drop: 3.84 },
+  { lgu: "Pasig", v0: 5.60, clf: 3.84, delta: -1.76, newpp: 2.45, drop: 4.22 },
+  { lgu: "Muntinlupa", v0: 3.61, clf: 3.51, delta: -0.10, newpp: 2.06, drop: 2.15 },
+  { lgu: "Las_Pinas", v0: 4.58, clf: 3.26, delta: -1.32, newpp: 2.01, drop: 3.32 },
+  { lgu: "Paranaque", v0: 3.12, clf: 2.12, delta: -1.00, newpp: 1.44, drop: 2.44 },
+  { lgu: "Pasay", v0: 2.50, clf: 2.10, delta: -0.40, newpp: 0.84, drop: 1.25 },
+  { lgu: "Pateros", v0: 4.68, clf: 0.84, delta: -3.84, newpp: 0.80, drop: 4.64 },
+  { lgu: "Manila", v0: 0.69, clf: 0.52, delta: -0.17, newpp: 0.41, drop: 0.58 },
+  { lgu: "Navotas", v0: 0.39, clf: 0.45, delta: 0.06, newpp: 0.34, drop: 0.28 },
+  { lgu: "San_Juan", v0: 2.31, clf: 0.21, delta: -2.10, newpp: 0.20, drop: 2.29 },
+];
+---
+<Base title="Leaves.PH · model validation" pathname="/validation">
+  <article class="max-w-[1280px] mx-auto px-6 sm:px-10 pt-12 pb-16 text-ink-900">
+    <p class="kicker mb-4 text-sepia-500">SECTION 5 · VALIDATION GALLERY · v3 CONFIRMATION LAYER · t=0·60</p>
+    <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3"
+        style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">
+      Per-LGU visual validation of the confirmation layer.
+    </h1>
+    <p class="text-[15px] text-ink-700 leading-[1.6] mb-8 max-w-[68ch]">
+      Each panel shows, for one LGU: the Sentinel-2 RGB basemap, the NDVI v0 baseline in <span class="text-umber-700 font-semibold">orange</span>, the v3 confirmations in <span class="text-forest-700 font-semibold">green</span>, and the v3 NEW additions in <span style="color:#b6a020" class="font-semibold">yellow</span>. The v3 confirmation layer is the SolarMap-pattern CLIP+LR head trained on 9,051 labelled tiles (OSM bootstrap + ESA WorldCover teacher), 5-fold CV F1 = 0.78. The deployed canopy-density model is clf_v9 (CLIP ViT-L/14 + HistGBR, held-out-location R² = 0.87). Panels are sorted by v3 canopy percentage at confirmation threshold t = 0.60.
+    </p>
+
+    <table class="w-full text-[13px] mb-10 font-mono tabular-nums">
+      <thead class="text-[10px] uppercase tracking-[0.12em] text-sepia-500">
+        <tr class="border-b border-ink-900">
+          <th class="text-left py-2 font-medium">№</th>
+          <th class="text-left py-2 font-medium">LGU</th>
+          <th class="text-right py-2 font-medium">NDVI v0</th>
+          <th class="text-right py-2 font-medium">v3 conf.</th>
+          <th class="text-right py-2 font-medium hidden sm:table-cell">Δ pp</th>
+          <th class="text-right py-2 font-medium hidden sm:table-cell">NEW pp</th>
+          <th class="text-right py-2 font-medium hidden sm:table-cell">dropped pp</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-ink-300/50 font-sans">
+        {RANKED.map((r, i) => (
+          <tr>
+            <td class="py-2 text-sepia-500 font-mono">{String(i+1).padStart(2,"0")}</td>
+            <td class="py-2 font-medium">{r.lgu.replace(/_/g, " ")}</td>
+            <td class="py-2 text-right font-mono">{r.v0.toFixed(2)}%</td>
+            <td class="py-2 text-right font-mono text-forest-700 font-medium">{r.clf.toFixed(2)}%</td>
+            <td class="py-2 text-right font-mono hidden sm:table-cell" style={r.delta < 0 ? "color:#8b3f1d" : "color:#1f6634"}>
+              {r.delta > 0 ? "+" : ""}{r.delta.toFixed(2)}
+            </td>
+            <td class="py-2 text-right font-mono hidden sm:table-cell" style="color:#b6a020">+{r.newpp.toFixed(2)}</td>
+            <td class="py-2 text-right font-mono hidden sm:table-cell" style="color:#8b3f1d">−{r.drop.toFixed(2)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <hr class="rule-ornament my-10" />
+
+    <div class="grid grid-cols-1 gap-8">
+      {RANKED.map((r) => (
+        <figure>
+          <img
+            src={`/validation/validation_${r.lgu}_t60.png`}
+            alt={`Validation panel for ${r.lgu.replace(/_/g, " ")}: S-2 RGB, NDVI v0 baseline (orange), v3 confirmation shared (green), v3 confirmation NEW (yellow), stats panel.`}
+            class="block w-full h-auto border border-ink-900"
+            loading="lazy"
+          />
+          <figcaption class="fig-caption mt-2 flex flex-wrap justify-between gap-2">
+            <span><span class="dateline">VAL · {r.lgu.replace(/_/g, " ")}</span> · NDVI {r.v0.toFixed(2)}% / v3 conf. {r.clf.toFixed(2)}% / Δ {(r.delta > 0 ? "+" : "")}{r.delta.toFixed(2)} pp</span>
+            <span class="text-sepia-500">t = 0·60</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <p class="text-[14px] text-sepia-500 mt-12 leading-[1.6] max-w-[68ch]">
+      Source data, probability raster, and the t ∈ [0·30, 0·90] threshold sweep for the v3 confirmation layer are committed in the <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan" class="no-underline text-umber-700">public repository</a>.
+      Per-LGU table + full pipeline in <a href="/methodology" class="no-underline text-umber-700">/methodology</a>.
+    </p>
+  </article>
+</Base>

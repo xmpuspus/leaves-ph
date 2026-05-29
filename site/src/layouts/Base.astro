@@ -16,7 +16,7 @@ const DEFAULT_IMAGE = "/og-preview.png";
 
 const {
   title,
-  description = "A fifth, fully reproducible 2026 measurement of Metro Manila tree cover. DENR says 6 percent. Global Forest Watch says 4 percent. We measure 7.46 percent and reconcile the four. Per-LGU, per-year, hash-verified.",
+  description = "An open, reproducible measurement series of Metro Manila tree cover. Sentinel-2 imagery, NDVI canopy classification calibrated against Meta v2 1 m. Per-LGU annual values across the 17 NCR LGUs.",
   pathname = Astro.url.pathname,
   image = DEFAULT_IMAGE,
   fullBleed = false,
@@ -44,14 +44,14 @@ const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Leaves.PH 2026 canopy reconciliation for Metro Manila" />
+    <meta property="og:image:alt" content="Leaves.PH canopy measurement series for Metro Manila" />
     <meta property="og:locale" content="en_PH" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="Leaves.PH 2026 canopy reconciliation for Metro Manila" />
+    <meta name="twitter:image:alt" content="Leaves.PH canopy measurement series for Metro Manila" />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header pathname={pathname} />

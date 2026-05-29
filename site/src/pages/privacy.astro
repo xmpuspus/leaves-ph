@@ -11,7 +11,7 @@ import Base from "../layouts/Base.astro";
 
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">What we publish</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
-      <li><strong>Per-LGU aggregates only.</strong> 17 polygons. No per-building data, no per-household inference, no individual identification.</li>
+      <li><strong>Per-LGU (17), per-barangay (892), and per-crown (242,810) canopy polygons.</strong> Crown polygons are vegetation outlines derived from a 1 m canopy-height mask, not buildings: no per-household inference, no individual identification.</li>
       <li><strong>Source rasters cropped to NCR.</strong> Sentinel-2 RGB at 30 m, Hansen GFC v1.13, ESA WorldCover v200, Dynamic World v1, Meta canopy height v2 (reprojected to EPSG:4326). All public-record.</li>
       <li><strong>Per-LGU CSV.</strong> One row per (LGU, year). Columns: canopy_ha, canopy_pct, total_ha, hansen_loss_ha_cumulative, esa_tree_pct_2021.</li>
       <li><strong>Animation GIFs.</strong> 10 m to 30 m resolution time-series over hotspots (NCR-wide, SALEX corridor, Quirino Avenue, La Mesa watershed, per-LGU choropleth). No individual identification at these scales.</li>
@@ -19,10 +19,9 @@ import Base from "../layouts/Base.astro";
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">What we deliberately do not publish</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
-      <li>Per-building canopy attribution.</li>
-      <li>Backyard inventories.</li>
+      <li>Per-household or per-occupant attribution.</li>
+      <li>Backyard inventories tied to an address or resident.</li>
       <li>Photographs of identifiable people.</li>
-      <li>Anything below 10 m granularity in any public artifact.</li>
     </ul>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Public-record disclaimer</h2>
@@ -32,9 +31,9 @@ import Base from "../layouts/Base.astro";
     <p class="text-sm mb-4">If you believe a published artifact identifies a specific private individual or violates RA 10173, file a private security advisory at <a href="https://github.com/xmpuspus/leaves-ph/security/advisories/new" class="no-underline text-accent-steel">github.com/xmpuspus/leaves-ph/security</a>. Acknowledged within 5 working days. Self-designated DPO: xpuspus@gmail.com.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Attribution required when redistributing data</h2>
-    <p class="text-sm mb-4">Data products are CC-BY-4.0. When redistributing, cite as: "Leaves.PH (YYYY-Q-N), https://github.com/xmpuspus/leaves-ph". Upstream sources retain their own licenses, listed in the repo <a href="https://github.com/xmpuspus/leaves-ph/blob/main/LICENSE" class="no-underline text-accent-steel">LICENSE</a>.</p>
+    <p class="text-sm mb-4">Data products are CC-BY-4.0. When redistributing, cite as: "Leaves.PH (2026), Sentinel-2 2019-2026 (2026 provisional), https://github.com/xmpuspus/leaves-ph". Upstream sources retain their own licenses, listed in the repo <a href="https://github.com/xmpuspus/leaves-ph/blob/main/LICENSE" class="no-underline text-accent-steel">LICENSE</a>.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Cookies and tracking</h2>
-    <p class="text-sm">leaves.ph does not set any cookies. The site is statically served from Vercel; the only third-party request the browser makes is for OpenStreetMap base tiles (a.tile.openstreetmap.org / b / c). OSM logs your IP for tile serving; their privacy policy lives at <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" class="no-underline text-accent-steel">osmfoundation.org/wiki/Privacy_Policy</a>. No backend, no auth, no analytics.</p>
+    <p class="text-sm">leaves.ph does not set any cookies. The site is statically served from Vercel. The map fetches tiles and imagery from two third parties: OpenStreetMap (the default streets basemap, a.tile.openstreetmap.org / b / c) and Esri ArcGIS Online (the Satellite basemap and the aerial shown when you click a crown, server.arcgisonline.com / services.arcgisonline.com). Both log your IP for tile serving; OSM's privacy policy lives at <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" class="no-underline text-accent-steel">osmfoundation.org/wiki/Privacy_Policy</a>. The Meta canopy raster, crown polygons, and per-LGU data are served from leaves.ph itself. No backend, no auth, no analytics.</p>
   </article>
 </Base>

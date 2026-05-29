@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f7f3e9;
+    --ink: #1a1a1a;
+    --ink-2: #6a6a6a;
+    --forest: #1f3d2b;
+    --forest-2: #3a6c4b;
+    --umber: #b65724;
+    --hair: #d8d0bd;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "DM Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .card {
+    width: 1200px;
+    height: 630px;
+    padding: 56px 72px 48px 72px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  /* top kicker row */
+  .kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 17px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--forest);
+    font-weight: 500;
+  }
+  .kicker .right { color: var(--ink-2); letter-spacing: 0.18em; font-weight: 400; }
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--hair);
+    margin: 22px 0 0 0;
+  }
+  /* headline block */
+  .headline-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; }
+  h1 {
+    font-family: "PT Serif", Georgia, serif;
+    font-weight: 700;
+    font-size: 78px;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 980px;
+  }
+  h1 .accent { color: var(--forest-2); font-style: italic; font-weight: 400; }
+  .sub {
+    margin-top: 22px;
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink-2);
+    max-width: 760px;
+  }
+  /* stat tiles */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    align-items: stretch;
+    gap: 0;
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+    padding: 20px 0;
+    margin-bottom: 22px;
+  }
+  .tile { padding: 0 30px; display: flex; flex-direction: column; justify-content: center; }
+  .tile:first-child { padding-left: 0; }
+  .vline { background: var(--hair); width: 1px; }
+  .tile .num {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 600;
+    font-size: 40px;
+    color: var(--forest);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .tile .num .u { color: var(--umber); }
+  .tile .lab {
+    margin-top: 11px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16.5px;
+    color: var(--ink-2);
+    line-height: 1.25;
+  }
+  /* footer */
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+  .foot .brand { color: var(--ink); font-weight: 600; letter-spacing: 0.08em; }
+  .leaf {
+    position: absolute;
+    top: 50px; right: 70px;
+    width: 12px; height: 12px;
+    background: var(--umber);
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="kicker">
+      <span>LEAVES.PH · METRO MANILA CANOPY</span>
+      <span class="right">SATELLITE CANOPY SERIES</span>
+    </div>
+    <hr class="rule" />
+
+    <div class="headline-wrap">
+      <h1>Mapping Metro Manila's tree canopy <span class="accent">from space</span></h1>
+      <p class="sub">A measured, open record of how much green cover the capital region has left, barangay by barangay.</p>
+    </div>
+
+    <div class="stats">
+      <div class="tile">
+        <div class="num">7.46<span class="u">%</span></div>
+        <div class="lab">NCR canopy<br/>(2026, provisional)</div>
+      </div>
+      <div class="vline"></div>
+      <div class="tile">
+        <div class="num">17 · 892</div>
+        <div class="lab">17 LGUs<br/>892 barangays</div>
+      </div>
+      <div class="vline"></div>
+      <div class="tile">
+        <div class="num">R&sup2; 0.87</div>
+        <div class="lab">canopy model<br/>vs Meta 1 m</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>Sentinel-2 2019–2026 · open data · CC-BY-4.0</span>
+      <span class="brand">LEAVES.PH</span>
+    </div>
+  </div>
+</body>
+</html>

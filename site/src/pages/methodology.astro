@@ -1,49 +1,87 @@
 ---
 import Base from "../layouts/Base.astro";
+import { SERIES_START, SERIES_END } from "../lib/series";
+import ModelEvolution from "../components/ModelEvolution.astro";
 ---
 <Base title="Leaves.PH · methodology" pathname="/methodology">
   <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
     <p class="kicker mb-4">SECTION 1 &middot; METHOD</p>
     <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">How Leaves.PH measures Metro Manila tree cover.</h1>
-    <p class="text-sm text-ink-500 mb-10 max-w-narrow">Current scope: the 17 NCR LGUs (16 cities + Pateros). Per-barangay (142 polygons) is the next granularity push, pending OSM name reconciliation.</p>
+    <p class="text-sm text-ink-500 mb-10 max-w-narrow">Current scope: 17 NCR LGUs at canonical PSA boundaries, plus 892 OSM admin-level=10 barangay polygons for the finer view.</p>
+
+    <hr class="rule" />
+
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Plain-English version</h2>
+    <p class="mb-3">Pick a year. For every patch of the National Capital Region, look at the Sentinel-2 satellite image of that patch for that year. If the patch looks green enough on a standard vegetation index (NDVI), call it canopy. Add up the canopy patches inside each LGU. Divide by the LGU's total area. That is the canopy fraction for that LGU that year.</p>
+    <p class="mb-3">The single number "green enough" is tuned by checking against Meta's separate 1-meter canopy-height product: at what NDVI threshold do most of our "canopy" pixels also have a Meta height greater than 5 meters? The answer for NCR is NDVI greater than 0.62.</p>
+    <p class="mb-3">On top of that pixel rule, we train a second pass that looks at 240m tiles of imagery instead of single pixels. It learns from OSM-tagged trees, ESA-tagged tree cover, and Meta's canopy-height map all together. The second pass agrees with the per-pixel rule at the regional level and corrects local cases where a single NDVI threshold over- or under-counts (sparse urban trees, mixed-class neighborhoods).</p>
+    <p class="mb-3">Everything below is the same story, with the parameters and citations.</p>
 
     <hr class="rule" />
 
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Inputs</h2>
     <p class="mb-3">Five canonical canopy / land-cover datasets, all pulled via Google Earth Engine or AWS Open Data, all bit-exact reproducible from the committed manifests:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
-      <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites 2019 to 2026, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>
+      <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites {SERIES_START} to {SERIES_END}, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>
       <li><strong>Hansen Global Forest Change v1.13</strong> via <code>UMD/hansen/global_forest_change_2025_v1_13</code>. Year-2000 baseline (treecover2000), 2001-2025 annual loss (lossyear), 2000-2012 binary gain. 30 m native.</li>
       <li><strong>ESA WorldCover v200</strong> via <code>ESA/WorldCover/v200</code>. 2021 single-epoch, 10 m class-10 = trees. Independent cross-check.</li>
-      <li><strong>Dynamic World v1</strong> via <code>GOOGLE/DYNAMICWORLD/V1</code>. Annual median <code>trees</code> probability 2019 to 2026, downsampled to 30 m for the shared GEE 50 MB sync-URL limit.</li>
+      <li><strong>Dynamic World v1</strong> via <code>GOOGLE/DYNAMICWORLD/V1</code>. Annual median <code>trees</code> probability {SERIES_START} to {SERIES_END}, downsampled to 30 m for the shared GEE 50 MB sync-URL limit.</li>
       <li><strong>Meta Canopy Height v2</strong> from <code>s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/chm/</code>. 1 m height truth (source imagery 2018-2020), Bing-style quadkey tiles, downloaded for the 4 zoom-9 tiles overlapping NCR, mosaicked, reprojected EPSG:3857 to EPSG:4326.</li>
     </ul>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">NDVI threshold</h2>
     <p class="mb-3">For each year, we compute NDVI = (NIR - RED) / (NIR + RED) per pixel from the Sentinel-2 composite. A binary canopy mask is derived by thresholding NDVI &ge; T, where T is calibrated against Meta canopy height v2.</p>
     <p class="mb-3">Calibration is F1-maximising over a 0.40 to 0.70 sweep, with a recall floor of 0.85 against Meta height &gt; 5 m. The sweep table lives at <code>data/calibration_report.json</code>. The result is documented in <code>BENCHMARKS.md</code>.</p>
-    <p class="mb-3"><strong>Honesty caveat:</strong> Meta v2's source imagery is 80 percent from 2018-2020, so the calibration layer is a ~2019 truth, not a 2026 truth. We treat NDVI-vs-Meta agreement as a constant offset and apply the same threshold to every year. A future revision can introduce a per-year calibration once GEDI L2A monthly RH98 spot-truth is integrated.</p>
+    <p class="mb-3"><strong>Honesty caveat:</strong> Meta v2's source imagery is 80 percent from 2018-2020, so the calibration layer is closer to a 2019 truth than a current-epoch truth. We treat NDVI-vs-Meta agreement as a constant offset and apply the same threshold to every epoch. A future revision can introduce a per-epoch calibration once GEDI L2A monthly RH98 spot-truth is integrated.</p>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Per-LGU aggregation</h2>
     <p class="mb-3">LGU polygons come from OpenStreetMap admin-level=6 relations for the 17 NCR LGUs (16 cities + Pateros). Each year's canopy mask is masked by each LGU polygon; canopy hectares are computed by multiplying pixel count by the latitude-corrected pixel area (cos(14.6 deg)) and dividing by 100 (km^2 -&gt; ha). The result is the per-LGU CSV <code>data/per_lgu/per_lgu_canopy_2019_2026.csv</code>, the hash-verified canonical artifact.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Reconciliation against the four public 2024+ figures</h2>
-    <p class="mb-3">The four 2024+ NCR canopy figures in public circulation disagree by roughly 50 percent for the same area:</p>
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Adjacent published estimates</h2>
+    <p class="mb-3">Other publicly available estimates of Metro Manila tree cover use different definitions, sensors, and vintages. They are listed here for methodology context, not as a ranking:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
-      <li><strong>DENR FMB</strong> (cited in news and EJN): 6 percent / 3,565 hectares. Source document not in public 2024+ reports as of 2026-05-26.</li>
-      <li><strong>Global Forest Watch</strong> dashboard PHL/47: 2.3 kha / 4.0 percent.</li>
-      <li><strong>Earth Journalism Network</strong> 2024 (DENR-sourced "open forest"): 2,071 ha in 2020. Different definition.</li>
-      <li><strong>ScienceKonek 2024 map</strong>: referenced by RadarPH May 2026; raster + methodology not publicly findable.</li>
+      <li><strong>DENR FMB</strong> (cited in news and EJN, 2024+): 6 percent canopy fraction. Source document not in public 2024+ reports we have located at the time of this release.</li>
+      <li><strong>Global Forest Watch</strong> dashboard PHL/47: 4.0 percent, derived from Hansen GFC at the 30 percent canopy-cover threshold, 2020 baseline.</li>
+      <li><strong>Earth Journalism Network</strong> 2024 (DENR-sourced "open forest"): 2,071 hectares for 2020. Reports an area, not a fraction; different class definition.</li>
+      <li><strong>ScienceKonek 2024 map</strong>: referenced by RadarPH; raster and methodology not publicly findable at the time of this release.</li>
+      <li><strong>Meta canopy v2</strong> (canopy height &gt; 5 m): 7.5 percent. Used here as the calibration reference for the NDVI threshold.</li>
     </ul>
-    <p class="mb-3">Leaves.PH publishes a fifth, fully reproducible 2026 number with the methodology committed. The map page's headline strip reconciles all four.</p>
+    <p class="mb-3">Leaves.PH publishes a reproducible measurement series with the full pipeline committed. The intent is to add a separately-defined, fully reproducible measurement to the public record; not to rank against any of the above.</p>
+
+    <h2 class="text-xl text-ink-900 mt-8 mb-3">Confirmation + density layer (CLIP+LR + Ridge)</h2>
+    <p class="mb-3">On top of the NDVI v0 baseline, a second layer is trained to confirm and expand canopy detections at tile level, then to estimate continuous canopy density. The pattern follows the SolarMap.PH playbook: per-tile CLIP ViT-Large embeddings, LogisticRegression head, deterministic hyper-parameters across iterations, Meta v2 canopy height as the oracle.</p>
+    <p class="mb-3"><strong>Five iterations</strong> (v2 → v6):</p>
+    <ul class="list-disc pl-6 space-y-2 text-sm mb-4">
+      <li><strong>v2 (bootstrap):</strong> 5,460 OSM-bootstrapped tiles (<code>natural=tree</code>, <code>landuse=forest</code>, <code>leisure=park</code> positives; <code>building</code>, <code>highway</code>, <code>landuse=industrial</code> negatives). CV F1 = 0.69.</li>
+      <li><strong>v3 (teacher signal):</strong> v2 + 3,591 ESA WorldCover 2021 teacher tiles (class 10 positive; classes 50, 80, 30, 40 hard negatives). CV F1 = 0.78.</li>
+      <li><strong>v4 (active learning):</strong> v3 + 882 Meta-oracle tiles. Six-category mining: clf-NEW that Meta confirms (positives), clf-NEW that Meta rejects (hard negatives), clf-dropped that Meta confirms (positives), Meta-only positives (model+NDVI both missed). CV F1 = 0.77 on the harder distribution.</li>
+      <li><strong>v5 (Platt calibration):</strong> clf_v4 wrapped in <code>CalibratedClassifierCV(method="sigmoid", cv=5)</code>. Output probabilities are reliability-calibrated against the empirical positive rate (max bin gap = 0.055).</li>
+      <li><strong>v6 (continuous regression):</strong> CLIP embedding to Meta v2 &gt;5m canopy fraction (0..1) via Ridge regression. 5-fold CV MAE = 0.047, RMSE = 0.083, R² = 0.71. This replaces the binary tile mask with a continuous canopy-density estimate.</li>
+      <li><strong>v9 (deployed density head):</strong> the v6 continuous-density approach retrained as a HistGradientBoostingRegressor on the merged multi-epoch tile set (16,800 tiles). Held-out-location accuracy (5-fold GroupKFold by location, leakage-free) is R² = 0.87 (MAE 0.069). clf_v9 is the shipped model behind the published per-LGU and per-barangay canopy series.</li>
+    </ul>
+    <p class="mb-3">For the 2024 epoch at the v3 stage, against the NDVI baseline of 7.78% NCR canopy: the head confirms 4.54pp (shared with NDVI), adds 2.82pp NEW canopy that the per-pixel NDVI rule missed (urban tree clusters, mixed-class neighbourhoods), and trims 3.25pp where NDVI matches but the model considers it low-confidence vegetation. The v6 continuous-density head produces a multi-year canopy series that sits alongside the v0 NDVI series.</p>
+    <div class="my-8">
+      <ModelEvolution />
+    </div>
+
+    <p class="mb-6 text-sm text-ink-500">Per-LGU validation panels, one PNG per LGU, are browsable at <a href="/validation" class="no-underline text-umber-700">/validation</a> and stored at <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan/validation_v3" class="no-underline text-accent-steel">detection/scan/validation_v3/</a>. Each panel shows S-2 RGB, NDVI v0 baseline (orange), clf shared/confirmed (green), and clf NEW additions (yellow). Full benchmark table in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="no-underline text-accent-steel">BENCHMARKS.md</a>.</p>
+
+    <figure class="my-6">
+      <img src="/validation/validation_Quezon_City_t60.png"
+           alt="Validation panel for Quezon City showing S-2 RGB, NDVI v0 baseline (orange), v3 confirmation shared (green), and v3 confirmation NEW additions (yellow), with stats."
+           class="block w-full h-auto border border-ink-900" loading="lazy" />
+      <figcaption class="fig-caption mt-3">
+        <span class="dateline">FIG&nbsp;A1 ·</span> Quezon City validation. NDVI v0 = 19.5%. The v3 confirmation layer confirms 14.4pp (green); adds 4.3pp NEW (yellow) along urban edges and tree clusters NDVI's per-pixel rule missed; trims 5.1pp where the per-pixel rule called canopy on low-confidence vegetation.
+      </figcaption>
+    </figure>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Known limitations</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li>30 m output resolution (matched to Hansen; trades off some urban-tree detail).</li>
-      <li>Calibration epoch is ~2019 (Meta source imagery); the same threshold is applied to every year 2019 to 2026.</li>
-      <li>Hansen 30 m misses small-scale urban tree-cutting events (e.g. the 225 SALEX trees in May 2026 will not appear in the global Hansen product until at least the next Hansen release).</li>
+      <li>Calibration epoch is ~2019 (Meta source imagery); the same threshold is applied to every epoch in the {SERIES_START}–{SERIES_END} series.</li>
+      <li>Hansen 30 m misses small-scale urban tree-cutting events; localised clearings appear in the global Hansen product only at the next release cadence.</li>
       <li>Dynamic World probability values reflect model confidence, not ground truth.</li>
-      <li>Per-LGU only; per-barangay is the next granularity push.</li>
+      <li>Per-LGU and per-barangay (892 OSM admin-level=10 polygons) ship in this release; 10 m chunked exports for finer urban-tree detail are the next granularity push.</li>
     </ul>
 
     <h2 class="text-xl text-ink-900 mt-8 mb-3">Reproduce locally</h2>
