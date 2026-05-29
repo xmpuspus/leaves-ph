@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import io
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -337,6 +338,27 @@ def reproject_rgb_to_hansen_grid(year: int, hansen_meta: dict) -> np.ndarray | N
     return np.transpose(dst, (1, 2, 0))
 
 
+def _retime_gif(path: Path, year_cs: int = 100, end_cs: int = 250) -> None:
+    """Set per-frame GIF delays with gifsicle (imageio does not persist them).
+
+    Year frames hold for `year_cs` centiseconds, the final frame for `end_cs`
+    so the loop has a clear pause. No-op if gifsicle is unavailable.
+    """
+    with imageio.get_reader(str(path)) as r:
+        n = r.get_length()
+    if n is None or n < 2:
+        return
+    try:
+        subprocess.run(
+            ["gifsicle", "-O3", str(path),
+             f"-d{year_cs}", f"#0-{n - 2}", f"-d{end_cs}", f"#{n - 1}",
+             "-o", str(path)],
+            check=True, capture_output=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        print(f"[remaining] gifsicle retime skipped ({e}); frames keep default delay")
+
+
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print("[remaining] loading Hansen treecover2000 + lossyear")
@@ -356,8 +378,8 @@ def main() -> int:
         pct = ncr_pct_from_density(density, lgu_mask)
         print(f"  {year}: NCR mean density {pct:.2f}%")
         frames.append(render_frame(density, lgu_mask, outlines, bounds, year, pct))
-    frames.extend([frames[-1]] * 4)  # hold last
-    imageio.mimsave(str(OUT_GIF), frames, duration=1.0, loop=0)
+    imageio.mimsave(str(OUT_GIF), frames, loop=0)
+    _retime_gif(OUT_GIF)  # imageio loses per-frame delays; gifsicle sets them reliably
     print(f"[remaining] wrote {OUT_GIF.name}  ({OUT_GIF.stat().st_size / 1_000_000:.1f} MB)")
 
     # ---- Variant B: Sentinel-2 satellite basemap (if RGB composites exist) ----
@@ -373,8 +395,8 @@ def main() -> int:
                 print(f"  {year}: missing s2_rgb; skipping satellite variant")
                 return 0
             sat_frames.append(render_frame(density, lgu_mask, outlines, bounds, year, pct, satellite_rgb=rgb))
-        sat_frames.extend([sat_frames[-1]] * 4)
-        imageio.mimsave(str(OUT_GIF_SAT), sat_frames, duration=1.0, loop=0)
+        imageio.mimsave(str(OUT_GIF_SAT), sat_frames, loop=0)
+        _retime_gif(OUT_GIF_SAT)
         print(f"[remaining] wrote {OUT_GIF_SAT.name}  ({OUT_GIF_SAT.stat().st_size / 1_000_000:.1f} MB)")
     else:
         print("[remaining] s2_rgb composites not present; skipping satellite variant")

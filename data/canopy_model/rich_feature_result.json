@@ -1,0 +1,44 @@
+{
+  "base [ndvi,dw,meta,esa]": {
+    "threshold": 0.2,
+    "precision": 0.672,
+    "recall": 0.849,
+    "f1": 0.75,
+    "iou": 0.6
+  },
+  "base + texture": {
+    "threshold": 0.28,
+    "precision": 0.729,
+    "recall": 0.802,
+    "f1": 0.764,
+    "iou": 0.618
+  },
+  "base + context": {
+    "threshold": 0.22,
+    "precision": 0.711,
+    "recall": 0.768,
+    "f1": 0.738,
+    "iou": 0.585
+  },
+  "base + esa-nbhd": {
+    "threshold": 0.3,
+    "precision": 0.713,
+    "recall": 0.838,
+    "f1": 0.77,
+    "iou": 0.627
+  },
+  "base + spectral": {
+    "threshold": 0.72,
+    "precision": 0.768,
+    "recall": 0.788,
+    "f1": 0.778,
+    "iou": 0.637
+  },
+  "base + ALL rich": {
+    "threshold": 0.26,
+    "precision": 0.72,
+    "recall": 0.768,
+    "f1": 0.743,
+    "iou": 0.591
+  }
+}

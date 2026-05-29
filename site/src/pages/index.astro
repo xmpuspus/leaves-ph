@@ -8,6 +8,9 @@ import {
   LATEST_NCR_PCT,
   NCR_LGU_COUNT,
   MODEL_R2,
+  GOLD_LABEL_N,
+  CANOPY_MODEL_F1,
+  BASELINE_NDVI_F1,
 } from "../lib/series";
 import CanopyTrend from "../components/CanopyTrend.astro";
 const pctWhole = Math.floor(LATEST_NCR_PCT);
@@ -32,8 +35,8 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
         <p class="kicker mb-2 text-sepia-500">AREA-WEIGHTED CANOPY · NCR · LATEST EPOCH</p>
         <p class="stat-hero">{pctWhole}·{pctFrac}<span class="text-umber-500">%</span></p>
         <dl class="mt-5 space-y-2 text-[13px] font-mono tabular-nums leading-[1.5]">
-          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Method</dt><dd class="text-ink-700">NDVI &gt; 0·62</dd></div>
-          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Reference</dt><dd class="text-ink-700">Meta v2 · 1 m</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Method</dt><dd class="text-ink-700">calibrated model</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Validated</dt><dd class="text-ink-700">F1 0·79 · n {GOLD_LABEL_N}</dd></div>
           <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Boundaries</dt><dd class="text-ink-700">PSA · {NCR_LGU_COUNT} LGUs</dd></div>
           <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Series</dt><dd class="text-ink-700">{SERIES_RANGE}</dd></div>
         </dl>
@@ -42,7 +45,7 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
           <p class="kicker mb-2 text-forest-700">DETECTION MODEL · IN OPTIMIZATION</p>
           <p class="font-display font-medium text-forest-700 leading-none tabular-nums" style="font-size: clamp(2.25rem, 4.2vw, 3.25rem);">R<sup class="text-[0.5em] align-super">2</sup>&nbsp;{MODEL_R2.toFixed(2)}</p>
           <p class="font-sans text-[12px] text-ink-700 mt-2 leading-[1.5] max-w-[34ch]">
-            Canopy fraction vs Meta's 1 m reference, on held-out locations. The detection model is being optimized toward a first release; published figures use the NDVI baseline.
+            Location-grouped CV agreement with Meta's 1 m reference (its calibration target, not independent ground truth) on held-out locations; stricter spatial-block CV gives 0.83. This CLIP detection model is a separate research track. Published figures use the human-calibrated canopy model (F1 {CANOPY_MODEL_F1.toFixed(2)} vs manual high-resolution labels, against the NDVI baseline's {BASELINE_NDVI_F1.toFixed(2)}).
           </p>
         </div>
       </aside>
@@ -54,16 +57,16 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
     <div class="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] gap-x-12 lg:gap-x-16">
       <article class="max-w-[60ch] text-[17px] leading-[1.65] text-ink-900">
         <p class="dropcap">
-          This report measures tree canopy in Metro Manila using Sentinel-2 surface-reflectance imagery, aggregated to the seventeen LGUs of the National Capital Region defined by PSA. Canopy is classified at the pixel level by NDVI greater than zero point six two, a threshold calibrated against Meta's v2 one-metre canopy-height reference at heights greater than five metres.
+          This report measures tree canopy in Metro Manila using Sentinel-2 surface-reflectance imagery, aggregated to the seventeen LGUs of the National Capital Region defined by PSA. Each 30-metre pixel is classified by a human-calibrated model, a gradient-boosted classifier over NDVI, Dynamic-World tree probability, Meta v2 one-metre canopy height, ESA land cover, and the raw Sentinel-2 spectral bands, trained on 656 manually labelled high-resolution pixels. Against those labels it scores F1 zero point seven eight and IoU zero point six four, well above the older NDVI greater-than-zero-point-six-two baseline (F1 zero point six eight), which is kept only as a comparison. It still over-calls some dense low vegetation, so the figure is a tree-canopy estimate with a known grass-and-scrub margin, not a pixel-exact census.
         </p>
         <p class="mt-5 text-ink-700">
-          In the latest annual epoch the area-weighted canopy fraction across the NCR is <em>seven point four six per cent</em>. The same pipeline run against earlier Sentinel-2 imagery produces an annual time series; across the published series, regional canopy moves down zero point six two percentage points.
+          The area-weighted canopy across the NCR is roughly <em>nine to ten per cent</em> (the latest annual epoch reads eight point eight two per cent but is provisional). These are annual cross-sectional snapshots, not a change series. The calibrated model holds a steady band year to year; the old NDVI baseline swung about two point eight percentage points as greenness shifts pushed pixels across the fixed threshold, an imagery artefact the model removes.
         </p>
         <p class="mt-5 text-ink-700">
-          Movement is uneven across LGUs. Quezon City carries the largest absolute canopy share by area, anchored by the La Mesa watershed, UP Diliman, and the Wack Wack greens. The steepest year-over-year declines sit in Taguig, Malabon, Las Pinas, and Valenzuela. Per-LGU values for every epoch in the series are in Fig 4 and the downloadable CSV. <a href="/map" class="no-underline">Open the map →</a>
+          Quezon City carries the largest absolute canopy share by area at about twenty-two per cent, anchored by the La Mesa watershed, UP Diliman, and the Wack Wack greens. The largest 2019-to-2026 snapshot differences sit in Caloocan, Valenzuela, and Marikina, but these are differences between cross-sectional snapshots, not measured canopy loss. Per-LGU values for every epoch in the series are in Fig 4 and the downloadable CSV. <a href="/map" class="no-underline">Open the map →</a>
         </p>
         <p class="mt-5 text-ink-700">
-          Inputs, NDVI threshold derivation, and aggregation logic are documented on the methodology page. The published CSV is hash-pinned; running <code class="font-mono text-[14px]">make hash-verify</code> against a clean checkout reproduces the canonical artefact byte-for-byte.
+          Inputs, the canopy model and its feature set, and aggregation logic are documented on the methodology page. The published CSV is hash-pinned; running <code class="font-mono text-[14px]">make hash-verify</code> against a clean checkout reproduces the canonical artefact byte-for-byte.
         </p>
       </article>
 
@@ -194,23 +197,23 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
           </tr>
         </thead>
         <tbody class="divide-y divide-ink-300/60 font-sans">
-          <tr><td class="py-2 text-sepia-500 font-mono">01</td><td class="py-2"><em>Quezon City</em></td><td class="py-2 text-right font-mono tabular-nums">18·93%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·38pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">15,986 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">02</td><td class="py-2">Mandaluyong</td><td class="py-2 text-right font-mono tabular-nums">11·19%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·28pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,131 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">03</td><td class="py-2">Makati</td><td class="py-2 text-right font-mono tabular-nums">8·92%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·69pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,804 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">04</td><td class="py-2">Caloocan</td><td class="py-2 text-right font-mono tabular-nums">8·80%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·96pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">5,288 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">05</td><td class="py-2">Marikina</td><td class="py-2 text-right font-mono tabular-nums">6·87%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·01pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">2,265 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">06</td><td class="py-2">Taguig</td><td class="py-2 text-right font-mono tabular-nums">6·47%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−2·76pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">7,932 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">07</td><td class="py-2">Valenzuela</td><td class="py-2 text-right font-mono tabular-nums">5·81%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·39pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">4,678 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">08</td><td class="py-2">Pasig</td><td class="py-2 text-right font-mono tabular-nums">5·23%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·17pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,067 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">09</td><td class="py-2">Las Pinas</td><td class="py-2 text-right font-mono tabular-nums">5·20%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·47pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,612 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">10</td><td class="py-2">Pateros</td><td class="py-2 text-right font-mono tabular-nums">4·96%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·26pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">185 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">11</td><td class="py-2">Paranaque</td><td class="py-2 text-right font-mono tabular-nums">4·35%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·57pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">5,960 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">12</td><td class="py-2">Muntinlupa</td><td class="py-2 text-right font-mono tabular-nums">3·77%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·74pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">6,615 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">13</td><td class="py-2">Malabon</td><td class="py-2 text-right font-mono tabular-nums">3·68%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·54pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">1,636 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">14</td><td class="py-2">San Juan</td><td class="py-2 text-right font-mono tabular-nums">2·41%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·76pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">578 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">15</td><td class="py-2">Pasay</td><td class="py-2 text-right font-mono tabular-nums">2·08%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·93pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,388 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">16</td><td class="py-2">Manila</td><td class="py-2 text-right font-mono tabular-nums">0·89%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·21pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">10,487 ha</td></tr>
-          <tr><td class="py-2 text-sepia-500 font-mono">17</td><td class="py-2">Navotas</td><td class="py-2 text-right font-mono tabular-nums">0·47%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·40pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,656 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">01</td><td class="py-2"><em>Quezon City</em></td><td class="py-2 text-right font-mono tabular-nums">22·10%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·22pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">3,533 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">02</td><td class="py-2">Caloocan</td><td class="py-2 text-right font-mono tabular-nums">14·36%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−1·42pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">759 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">03</td><td class="py-2">Makati</td><td class="py-2 text-right font-mono tabular-nums">12·22%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·77pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">220 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">04</td><td class="py-2">Mandaluyong</td><td class="py-2 text-right font-mono tabular-nums">10·36%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·73pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">117 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">05</td><td class="py-2">Marikina</td><td class="py-2 text-right font-mono tabular-nums">7·96%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·32pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">180 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">06</td><td class="py-2">Pateros</td><td class="py-2 text-right font-mono tabular-nums">7·40%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+1·73pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">14 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">07</td><td class="py-2">Las Pinas</td><td class="py-2 text-right font-mono tabular-nums">7·12%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·20pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">257 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">08</td><td class="py-2">Pasig</td><td class="py-2 text-right font-mono tabular-nums">6·63%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·53pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">203 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">09</td><td class="py-2">Paranaque</td><td class="py-2 text-right font-mono tabular-nums">6·26%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·93pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">373 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">10</td><td class="py-2">Muntinlupa</td><td class="py-2 text-right font-mono tabular-nums">5·06%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·15pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">335 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">11</td><td class="py-2">Taguig</td><td class="py-2 text-right font-mono tabular-nums">4·80%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·60pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">380 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">12</td><td class="py-2">Valenzuela</td><td class="py-2 text-right font-mono tabular-nums">4·46%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·68pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">208 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">13</td><td class="py-2">San Juan</td><td class="py-2 text-right font-mono tabular-nums">4·45%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·24pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">26 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">14</td><td class="py-2">Pasay</td><td class="py-2 text-right font-mono tabular-nums">2·97%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·07pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">101 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">15</td><td class="py-2">Malabon</td><td class="py-2 text-right font-mono tabular-nums">2·53%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·20pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">41 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">16</td><td class="py-2">Manila</td><td class="py-2 text-right font-mono tabular-nums">1·37%</td><td class="py-2 text-right font-mono tabular-nums text-forest-700">+0·23pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">144 ha</td></tr>
+          <tr><td class="py-2 text-sepia-500 font-mono">17</td><td class="py-2">Navotas</td><td class="py-2 text-right font-mono tabular-nums">0·30%</td><td class="py-2 text-right font-mono tabular-nums text-umber-700">−0·24pp</td><td class="py-2 text-right font-mono tabular-nums text-sepia-500 hidden sm:table-cell">11 ha</td></tr>
         </tbody>
       </table>
     </div>
@@ -218,13 +221,13 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
     <aside class="lg:mt-16">
       <p class="kicker mb-3 text-sepia-500">READING GUIDE</p>
       <p class="text-[14px] text-ink-700 leading-[1.6]">
-        Quezon City's 18·93 per cent is held by the La Mesa watershed, UP Diliman, and the Wack Wack greens. Pull QC out and the regional average halves.
+        Quezon City's 22 per cent is held by the La Mesa watershed, UP Diliman, and the Wack Wack greens. Pull QC out and the regional average halves.
       </p>
       <p class="text-[14px] text-ink-700 leading-[1.6] mt-4">
         <em>Manila, Navotas, Pasay</em> are structurally low: reclamation, dense urban core. Their canopy will not move with methodology choice; it is genuinely very low.
       </p>
       <p class="text-[14px] text-ink-700 leading-[1.6] mt-4">
-        <em>Taguig, Malabon, Las Pinas, Valenzuela</em> are the steepest decliners across the published series. Construction-heavy southern and northern fringes.
+        <em>Caloocan, Valenzuela, Marikina</em> show the largest snapshot differences across the published series (cross-sectional differences, not measured canopy loss). Construction-heavy southern and northern fringes.
       </p>
       <a href="/map" class="inline-block mt-5 font-mono text-[12px] uppercase tracking-[0.18em] text-umber-700 no-underline border-b border-umber-500 hover:border-umber-700">Open the interactive map &rarr;</a>
     </aside>

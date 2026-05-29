@@ -8,10 +8,10 @@ const year = new Date().getFullYear();
       <div class="max-w-prose">
         <p class="kicker text-ink-500 mb-2">COLOPHON</p>
         <p class="font-display text-2xl leading-snug text-ink-900 mb-3">
-          Leaves.PH is an open, reproducible measurement series of Metro Manila tree cover.
+          Leaves.PH is an open, reproducible measurement series of Metro Manila tree cover, measured as a dense-vegetation proxy.
         </p>
         <p class="text-sm leading-relaxed text-ink-700">
-          Independent. Not affiliated with any government agency, NGO, or LGU. Inputs are public-record satellite imagery and open datasets. Code MIT, data CC-BY-4.0. The published value is a methodology-specific measurement; particular allegations of unpermitted cutting require independent investigation.
+          "Tree cover" here is a human-calibrated canopy model (gradient boosting over NDVI, Dynamic-World tree probability, Meta 1 m canopy height, ESA land cover, and Sentinel-2 spectral bands), validated at F1 0.78 against 656 manually labelled high-resolution pixels; the older NDVI &gt; 0.62 proxy (F1 0.68) is kept only as a comparison baseline. The model still over-calls some dense low vegetation, so read the figure as a tree-canopy estimate with a known grass/scrub margin. Independent. Not affiliated with any government agency, NGO, or LGU. Inputs are public-record satellite imagery and open datasets. Code MIT, data CC-BY-4.0. The published value is a methodology-specific measurement; particular allegations of unpermitted cutting require independent investigation.
         </p>
       </div>
       <div class="font-mono text-xs uppercase tracking-[0.12em] text-ink-700 space-y-3">

@@ -8,18 +8,18 @@ Leaves.PH is an open-source, reproducible measurement series of Metro Manila tre
 
 ## Headline measurement
 
-NCR area-weighted canopy in 2026 (provisional, imagery Jan-May): **7.46%** under the published NDVI pixel rule, calibrated to a 1m Meta canopy-height reference from public-record Sentinel-2 imagery. Across the published 2019 to 2026 series, regional canopy is flat to slightly declining (−0.62 percentage points).
+NCR area-weighted canopy is **~8–10%** (pooled cross-sectional estimate under the published NDVI pixel rule, calibrated to a 1m Meta canopy-height reference from public-record Sentinel-2 imagery; 2026 reads 7.46% but is provisional, imagery Jan-May). The 2019 to 2026 values are per-year cross-sectional snapshots, not a change series: year-to-year swings of ~2 pp are composite-greenness threshold-crossing noise, not measured canopy gain or loss.
 
 ## Method
 
-Pull annual Sentinel-2 L2A median composites over the NCR bbox. Mask clouds. Compute NDVI per pixel. Threshold at NDVI > 0.62, tuned against Meta's 1m canopy-height product at the >5m height level. Aggregate per LGU and per barangay against PSA / OSM admin boundaries. The published per-LGU and per-barangay series come from this baseline. Separately, a detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained per the [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) playbook onto Meta's 1m canopy fraction. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026). It is not yet the source of any published figure.
+Pull annual Sentinel-2 L2A median composites over the NCR bbox. Mask clouds. Compute NDVI per pixel. Threshold at NDVI > 0.62, tuned against Meta's 1m canopy-height product at the >5m height level. Aggregate per LGU and per barangay against PSA / OSM admin boundaries. The published per-LGU and per-barangay series come from this baseline. Separately, a detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained per the [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) playbook onto Meta's 1m canopy fraction. On held-out locations it reaches R² 0.83–0.86 under grouped 5-fold cross-validation (0.86 location-grouped, 0.83 spatial-block, n = 38,260 tiles) — agreement with Meta, its calibration target, not accuracy against independent ground truth. It is not yet the source of any published figure.
 
 ## Per-LGU highlights (2026, NDVI baseline)
 
 - Quezon City 18.93 percent, anchored by La Mesa watershed, UP Diliman, the Wack Wack greens.
 - Mandaluyong 11.19 percent, Makati 8.92 percent, Caloocan 8.80 percent, Marikina 6.87 percent.
 - Manila 0.89 percent, Navotas 0.47 percent: reclamation and dense urban core.
-- Steepest year-over-year declines: Taguig (−2.76 pp), Malabon (−1.54), Las Pinas (−1.47), Valenzuela (−1.39).
+- Largest 2019-to-2026 snapshot differences: Taguig (−2.76 pp), Malabon (−1.54), Las Pinas (−1.47), Valenzuela (−1.39). These are differences of two cross-sectional snapshots, not measured canopy loss (they inherit the composite-greenness threshold-crossing artifact).
 
 Full per-LGU table and per-barangay top hits at https://leaves.ph and in `BENCHMARKS.md`.
 

@@ -36,7 +36,7 @@ const RANKED = [
       Per-LGU visual validation of the detection model.
     </h1>
     <p class="text-[15px] text-ink-700 leading-[1.6] mb-8 max-w-[68ch]">
-      Each panel shows, for one LGU: the Sentinel-2 RGB basemap, the NDVI v0 baseline in <span class="text-umber-700 font-semibold">orange</span>, where the detection model confirms canopy in <span class="text-forest-700 font-semibold">green</span>, and where it adds canopy the NDVI rule missed in <span style="color:#b6a020" class="font-semibold">yellow</span>. The detection model is a CLIP ViT-Large/14 head trained on labelled tiles (OSM bootstrap + ESA WorldCover teacher); on held-out locations it reaches R&sup2; = 0.87 against Meta's 1 m reference and is being optimized toward a first release. Panels are sorted by the model's canopy percentage at threshold t = 0.60.
+      Each panel shows, for one LGU: the Sentinel-2 RGB basemap, the NDVI v0 baseline in <span class="text-umber-700 font-semibold">orange</span>, where the detection model confirms canopy in <span class="text-forest-700 font-semibold">green</span>, and where it differs from the NDVI rule in <span style="color:#b6a020" class="font-semibold">yellow</span> (a difference, not a verified correction). The detection model is a CLIP ViT-Large/14 head with a gradient-boosted regression onto Meta's 1 m canopy fraction; on held-out locations it reaches R&sup2; 0.83 to 0.86 under grouped cross-validation against Meta's 1 m reference (its calibration target, not independent ground truth) and is being optimized toward a first release. Panels are sorted by the model's canopy percentage at threshold t = 0.60.
     </p>
 
     <table class="w-full text-[13px] mb-10 font-mono tabular-nums">

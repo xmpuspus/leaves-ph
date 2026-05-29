@@ -1,0 +1,19 @@
+{
+  "features": [
+    "ndvi",
+    "dw",
+    "meta_h",
+    "esatree",
+    "red",
+    "nir",
+    "green",
+    "blue",
+    "gndvi",
+    "nir_red"
+  ],
+  "threshold": 0.5,
+  "n_train": 656,
+  "n_canopy": 115,
+  "validation": "F1 0.78 / IoU 0.64 vs manual labels (region-grouped OOF CV, post-stratified); 4-feature model 0.75; NDVI>0.62 baseline 0.68 / 0.52",
+  "gold_labels": "data/canopy_model/master_labels.csv (n=656)"
+}

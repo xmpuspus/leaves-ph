@@ -136,7 +136,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       Manila, Navotas, and Pasay are <span class="font-medium">structurally low</span>: dense reclamation and historic urban core. Their canopy will not change by methodology choice; it is just very low.
     </p>
     <p class="text-sm leading-[1.7] text-ink-700 mt-4">
-      Taguig, Malabon, Las Pinas, and Valenzuela are the steepest decliners across the published series. Construction-heavy southern and northern fringes.
+      Caloocan, Valenzuela, and Marikina show the largest snapshot differences across the published series (cross-sectional differences, not measured canopy loss). Construction-heavy northern and eastern fringes.
     </p>
   </aside>
 </section>
@@ -643,8 +643,8 @@ import { SERIES_START, SERIES_END } from "../lib/series";
     }
 
     // ── Barangay canopy layer + name search ──────────────────────────────
-    // Honest attribution: these 892 values are the v6/v9 CLIP+HistGBR canopy-
-    // density model (canopy_pct_v9_<year>), NOT the Meta-derived crown layer.
+    // These 892 values are the published human-calibrated canopy model
+    // (canopy_pct_model_<year>), NOT the Meta-derived crown layer.
     function setupBarangays(map: any) {
       const cb = document.getElementById("layer-barangays") as HTMLInputElement | null;
       const search = document.getElementById("barangay-search") as HTMLInputElement | null;
@@ -661,7 +661,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       function styleBarangays(year: number) {
         if (!bgons) return;
         for (const f of bgons.features) {
-          const pct = f.properties[`canopy_pct_v9_${year}`];
+          const pct = f.properties[`canopy_pct_model_${year}`];
           f.properties._bfill = colorForPct(pct);
           f.properties._bpct = pct;
         }
@@ -674,7 +674,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
         if (loading) return false;
         loading = true;
         try {
-          bgons = await loadJSON<any>("per_barangay_canopy_v9.geojson");
+          bgons = await loadJSON<any>("per_barangay_canopy_model.geojson");
         } catch (e) {
           loading = false;
           cb!.checked = false;
@@ -687,7 +687,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
 
         const year = Number((slider as HTMLInputElement).value);
         for (const f of bgons.features) {
-          const pct = f.properties[`canopy_pct_v9_${year}`];
+          const pct = f.properties[`canopy_pct_model_${year}`];
           f.properties._bfill = colorForPct(pct);
           f.properties._bpct = pct;
           const name = f.properties.barangay_name;

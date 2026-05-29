@@ -1,0 +1,82 @@
+{
+  "model": "CLIP ViT-Large + GBR (multi-epoch training, clf_v9)",
+  "target": "Meta v2 >5m canopy fraction per 240m tile (0..1)",
+  "n_v6": 21460,
+  "n_v9": 16800,
+  "n_total": 38260,
+  "cv_method": "Grouped 5-fold CV on the full v6+v9 union. Groups built from the 2024 grid so a location's v6 tile, its v9 tile, and its 8 yearly epochs share one fold. Headline cv5 is location-grouped (matches site MODEL_R2); spatial-block variants also separate adjacent 240m tiles. The earlier non-grouped shuffled split (r2 0.879) leaked and is superseded.",
+  "cv5": {
+    "mae": 0.052606530487537384,
+    "rmse": 0.09012407809495926,
+    "r2": 0.8575732695555187,
+    "cv": "GroupKFold(5) groups=grid tile index (location-grouped)"
+  },
+  "cv5_spatialblock_5x5": {
+    "mae": 0.05747749283909798,
+    "rmse": 0.0995347797870636,
+    "r2": 0.8262761064366971,
+    "cv": "GroupKFold(5) groups=5x5 spatial block (separates adjacent 240m tiles)"
+  },
+  "cv5_spatialblock_8x8": {
+    "mae": 0.05582517385482788,
+    "rmse": 0.09660772234201431,
+    "r2": 0.8363433762616554,
+    "cv": "GroupKFold(5) groups=8x8 spatial block"
+  },
+  "cv5_shuffled_superseded": {
+    "mae": 0.04811546951532364,
+    "rmse": 0.08313384652137756,
+    "r2": 0.8788103380213734,
+    "cv": "KFold(shuffle=True) NON-grouped (leaky; superseded)"
+  },
+  "per_year_cv": {
+    "2019": {
+      "n": 2100,
+      "mae": 0.05924607440829277,
+      "r2": 0.8919123130675609
+    },
+    "2020": {
+      "n": 2100,
+      "mae": 0.06269291788339615,
+      "r2": 0.8805745224568111
+    },
+    "2021": {
+      "n": 2100,
+      "mae": 0.06531304866075516,
+      "r2": 0.8675882467063225
+    },
+    "2022": {
+      "n": 2100,
+      "mae": 0.06825572997331619,
+      "r2": 0.8587118036644276
+    },
+    "2023": {
+      "n": 2100,
+      "mae": 0.0652974471449852,
+      "r2": 0.8721922645300926
+    },
+    "2024": {
+      "n": 23560,
+      "mae": 0.042917948216199875,
+      "r2": 0.8082928179605634
+    },
+    "2025": {
+      "n": 2100,
+      "mae": 0.0743778795003891,
+      "r2": 0.8392825327409875
+    },
+    "2026": {
+      "n": 2100,
+      "mae": 0.0817592591047287,
+      "r2": 0.8064707725057579
+    }
+  },
+  "hyperparams": {
+    "learning_rate": 0.05,
+    "max_iter": 400,
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 20,
+    "l2_regularization": 1.0,
+    "random_state": 42
+  }
+}

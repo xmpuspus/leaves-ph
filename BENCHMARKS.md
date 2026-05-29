@@ -10,59 +10,77 @@ Three stages produce the published numbers and the detection model:
 
 2. **Detection model (in optimization).** CLIP ViT-Large/14 image embeddings per Sentinel-2 RGB tile, with a gradient-boosted regression head (HistGradientBoostingRegressor) onto Meta's 1m canopy fraction (continuous, 0..1). This is the model under active optimization toward a first release.
 
-3. **Held-out evaluation.** 5-fold cross-validation grouped by location (train and test locations disjoint, leakage-free), n = 16,800 tiles across 2019-2026, scored against Meta AI Global Canopy Height v2 (1m, canopy > 5m).
+3. **Held-out evaluation.** 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026, scored against Meta AI Global Canopy Height v2 (1m, canopy > 5m).
 
 ## Best-model benchmark
 
-| Metric | Value |
-|---|---|
-| R² (held-out location) | 0.87 |
-| MAE | 0.069 |
+Full v6+v9 union (n = 38,260), same estimator and hyperparameters as the shipped model. Numbers reproducible from `detection/train/clf_v9_metrics_honest.json`:
 
-The model is evaluated with location-grouped cross-validation: a location used in training never appears in test, so the R² measures generalization to unseen places, not memorization. The target is Meta v2 canopy fraction (canopy > 5m) per tile.
-
-## NCR area-weighted canopy series
-
-Annual epochs 2019-2026, NDVI baseline pipeline (NDVI > 0.62, calibrated to Meta v2).
-
-| Year | NCR canopy % | Canopy hectares | Notes |
+| Split | MAE | RMSE | R² |
 |---|---|---|---|
-| 2019 | 8.08 | 6,325 | first full-NCR year of S2 L2A PH coverage |
-| 2020 | 9.88 | 7,737 | |
-| 2021 | 9.79 | 7,665 | ESA WorldCover v200 cross-check: 13.38% area-weighted |
-| 2022 | 9.99 | 7,818 | |
-| 2023 | 10.24 | 8,013 | 8-year peak |
-| 2024 | 7.76 | 6,076 | |
-| 2025 | 9.88 | 7,733 | |
-| 2026 | 7.46 | 5,840 | most recent measurement, provisional (imagery Jan-May 2026) |
+| Location-grouped CV (a location's tiles all in one fold) | 0.053 | 0.090 | 0.86 |
+| 8×8 spatial-block CV (neighbouring tiles in one fold) | 0.056 | 0.097 | 0.84 |
+| 5×5 spatial-block CV (coarser blocks) | 0.057 | 0.100 | 0.83 |
+| (superseded) non-grouped shuffled split | 0.048 | 0.083 | 0.879 |
 
-2018 has only ~24% NCR coverage (S2 L2A PH coverage was thin that early) and is excluded from the published series. Source-image counts per year are recorded in the Sentinel-2 fetch manifest under `data/composites/`.
+The honest headline is **R² 0.83–0.86 under grouped cross-validation** (0.86 location-grouped, 0.83 under coarse 5×5 spatial blocks where neighbouring 240m tiles and a location's 8 yearly epochs share a fold). `clf_v9_metrics.json` now reports these grouped numbers directly: headline `cv5` is location-grouped (R² 0.858), with `cv5_spatialblock_5x5` (0.826), `cv5_spatialblock_8x8` (0.836), and the old non-grouped shuffled split kept as `cv5_shuffled_superseded` (0.879). The shuffled split ([train_v9_multiepoch.py](detection/train/train_v9_multiepoch.py)) leaked adjacent tiles and repeated-location epochs across folds; it is superseded. Leakage inflation on the union is −0.02 (location) to −0.05 (spatial-block).
 
-The 8-year shift from 2019 to 2026 is -0.62 pp. The 2026 value is provisional because the year's imagery only covers January through May.
+**This R² measures reproduction of Meta v2 canopy fraction (the calibration target), not accuracy against independent ground truth.** Independent check: against ESA WorldCover v200 (separate 10m product, 2021) the NDVI baseline agrees on 93% of pixels (IoU 0.52, F1 0.69). Independent satellite products span 3% (Dynamic World) to 13% (ESA) for the same NCR/year — our estimate is bracketed inside that envelope. See "Adjacent published estimates" below.
 
-## Per-LGU 2026 baseline ranking (NDVI)
+### Published canopy model vs NDVI baseline — accuracy against manual high-resolution labels
 
-| Rank | LGU | 2026 canopy % | 2019→2026 Δ (pp) | ESA 2021 % |
+The published canopy product is no longer the bare NDVI > 0.62 rule. It is a **human-calibrated classifier** (gradient-boosted over NDVI, Dynamic-World tree probability, Meta v2 1m canopy height, and the ESA tree class) trained on **656 manually labeled high-resolution pixels**. Labels were drawn by active learning (round 1 stratified-random over 6 disjoint regions of the 17-LGU 2021 grid, rounds 2–4 oversampling the NDVI decision boundary [0.55, 0.66] and grass-vs-tree confusion zones) plus a **500-pixel uniform-random round** that tightened the confidence intervals. Each 30m target cell was marked on a 0.5–1m Esri World Imagery chip and labeled canopy = ≥25% woody tree canopy.
+
+Scored against those labels under **region-grouped out-of-fold CV with post-stratified (NDVI-band × ESA-tree) population weighting** — unbiased despite the active-learning sampling — the model beats the baseline on every metric:
+
+| Classifier (vs human labels, n=656) | Precision | Recall | F1 | IoU |
 |---|---|---|---|---|
-| 1 | Quezon City | 18.93 | −0.38 | 28.77 |
-| 2 | Mandaluyong | 11.19 | −0.28 | 14.40 |
-| 3 | Makati | 8.92 | +1.69 | 16.01 |
-| 4 | Caloocan | 8.80 | −0.96 | 23.62 |
-| 5 | Marikina | 6.87 | −0.01 | 17.10 |
-| 6 | Taguig | 6.47 | −2.76 | 7.58 |
-| 7 | Valenzuela | 5.81 | −1.39 | 14.56 |
-| 8 | Pasig | 5.23 | −0.17 | 12.01 |
-| 9 | Las Pinas | 5.20 | −1.47 | 11.92 |
-| 10 | Pateros | 4.96 | +1.26 | 9.96 |
-| 11 | Paranaque | 4.35 | +0.57 | 9.55 |
-| 12 | Muntinlupa | 3.77 | −0.74 | 7.55 |
-| 13 | Malabon | 3.68 | −1.54 | 7.24 |
-| 14 | San Juan | 2.41 | +0.76 | 7.09 |
-| 15 | Pasay | 2.08 | −0.93 | 5.07 |
-| 16 | Manila | 0.89 | +0.21 | 2.42 |
-| 17 | Navotas | 0.47 | −0.40 | 0.92 |
+| **Published human-calibrated model (10 feat)** | **0.77** | **0.79** | **0.78** | **0.64** |
+| NDVI > 0.62 baseline (comparison) | 0.69 | 0.67 | 0.68 | 0.52 |
+| Meta height ≥ 5m (CLIP-model ceiling) | 0.96 | 0.46 | — | 0.45 |
 
-ESA WorldCover v200 numbers run consistently higher than the NDVI mask because ESA class-10 includes mixed shrub-tree pixels while the NDVI 0.62 threshold (calibrated against Meta v2 canopy > 5m) is stricter.
+The model's 10 features are NDVI, Dynamic-World tree prob, Meta 1m height, ESA-tree, and the raw Sentinel-2 spectral bands (red/nir/green/blue + GNDVI). It recovers diluted urban-fringe canopy the fixed threshold missed and uses the green/blue bands to reject high-NDVI grass/scrub the threshold over-called (precision 0.67 → 0.77); F1 +0.10, IoU +0.12 over the baseline. The NDVI baseline's own accuracy converged at F1 0.68 / IoU 0.52 (precision 95% CI 0.61–0.76 at n=656; implied canopy 10.1% vs its published 9.79%). **Feature ablation (region-grouped OOF, post-stratified):** the four base features score F1 0.75; adding the raw spectral bands lifts it to **0.78** (the win); ESA-neighbourhood fractions and NDVI texture give small gains; throwing all 21 features in overfits (0.74). **CLIP did not help, honestly reported:** the CLIP detection density as a scalar (F1 0.77, no gain) and a full CLIP ViT-L/14 embedding PCA-reduced (F1 0.73, a slight loss — the 240m S2 crop is too coarse for CLIP texture, and 656 samples overfit 768 dims). A learning curve on the 656 labels shows F1 plateaued by n≈300, so more labels tighten CIs but do not raise F1 — the feature set, not label count, is the ceiling. Single labeler — defensible, not definitive. Method, chips, scripts, per-round + ablation results: `tmp/labeling-20260529T073613Z/` (`RESULTS.md`, `master_labels.csv`, `model_comparison.json`, `rich_feature_result.json`, `clip_feature_result.json`, `learning_curve.json`).
+
+## NCR area-weighted canopy — annual cross-sectional snapshots (not a change series)
+
+Published series = the human-calibrated canopy model (above). The old NDVI baseline is shown alongside for comparison: the model **removes the threshold-crossing sawtooth** that plagued the NDVI series.
+
+| Year | Published model % | NDVI baseline % | Notes |
+|---|---|---|---|
+| 2019 | 8.81 | 8.08 | first full-NCR year of S2 L2A PH coverage |
+| 2020 | 9.74 | 9.88 | |
+| 2021 | 10.11 | 9.79 | calibrated to 10.1% human-truth; ESA cross-check 13.38% |
+| 2022 | 10.00 | 9.99 | |
+| 2023 | 10.02 | 10.24 | |
+| 2024 | 9.15 | 7.76 | baseline dips hard (greenness artifact); model holds |
+| 2025 | 9.99 | 9.88 | |
+| 2026 | 8.82 | 7.46 | provisional (imagery Jan-May 2026, 104 vs ~190 source scenes) |
+
+**Read these as a per-year cross-sectional snapshot, not a trend.** The published model holds a steady **9–10% band** (swing 1.3 pp across 8 years; the threshold is calibrated so 2021 matches the 10.1% human-truth canopy). The NDVI baseline swung 2.78 pp, a **threshold-crossing artifact**: a small shift in each year's median-composite greenness moved a large near-threshold NDVI mass across the fixed 0.62 cut (in the dip years 2024/2026 the 90th-percentile NDVI fell from ~0.705 to ~0.63). The model's multi-feature decision (DW + Meta + ESA, not greenness alone) is far less sensitive to that, which is why its series is stable. Do not read any single year as a peak or decline. 2018 is excluded (~24% NCR coverage). The greenness-normalized baseline series is in `tmp/defensibility-20260529T043825Z/claim2_*.csv`; the model-vs-baseline per-year series is in `data/canopy_model/ncr_series_model_vs_ndvi.csv`.
+
+## Per-LGU 2026 ranking (published model)
+
+| Rank | LGU | 2026 canopy % | 2019→2026 Δ (pp) |
+|---|---|---|---|
+| 1 | Quezon City | 22.10 | -0.22 |
+| 2 | Caloocan | 14.36 | -1.42 |
+| 3 | Makati | 12.22 | +1.77 |
+| 4 | Mandaluyong | 10.36 | +0.73 |
+| 5 | Marikina | 7.96 | -0.32 |
+| 6 | Pateros | 7.40 | +1.73 |
+| 7 | Las Pinas | 7.12 | -0.20 |
+| 8 | Pasig | 6.63 | +0.53 |
+| 9 | Paranaque | 6.26 | +0.93 |
+| 10 | Muntinlupa | 5.06 | -0.15 |
+| 11 | Taguig | 4.80 | +0.60 |
+| 12 | Valenzuela | 4.46 | -0.68 |
+| 13 | San Juan | 4.45 | +0.24 |
+| 14 | Pasay | 2.97 | -0.07 |
+| 15 | Malabon | 2.53 | -0.20 |
+| 16 | Manila | 1.37 | +0.23 |
+| 17 | Navotas | 0.30 | -0.24 |
+
+The "2019→2026 Δ" column is the difference of two cross-sectional snapshots, not measured canopy change. Quezon City carries the largest absolute share (La Mesa / Diliman / Wack Wack); the largest snapshot differences sit in Caloocan, Valenzuela, and Marikina. For reference, against ESA WorldCover v200 (2021) the underlying NDVI mask agrees on 93% of pixels (IoU 0.52); ESA runs higher (13.38%) because its tree class includes mixed shrub-tree pixels.
 
 ## Adjacent published estimates
 

@@ -1,0 +1,657 @@
+uid,my_label,ambiguous,reason
+r1_0,not,1,riparian scrub/grass on gravel bar; meta 4.35m; no tree crowns (high-NDVI low veg)
+r1_1,canopy,0,dense tree canopy fills the cell
+r1_2,canopy,0,large tree crown + grass ~45% canopy
+r1_3,canopy,0,cluster of dense tree crowns between house and golf
+r1_4,canopy,0,dense dark-green tree canopy over whole cell
+r1_5,canopy,0,dense tree crowns around pale-crown center; meta 5.1m
+r1_6,not,0,uniform dense low veg / grass slope; meta 0; no crowns (high-NDVI grass)
+r1_7,canopy,0,dense tree crowns lining creek
+r1_8,canopy,0,forest edge; left ~half dense trees
+r1_9,canopy,0,closed forest canopy; meta 16m
+r1_10,not,0,grassy vacant lot; sparse small trees <25%
+r1_11,not,1,dry lawn center; tree crowns only at edges ~20%
+r1_12,not,0,dry grass field + structure; one edge tree <15% (high-NDVI from green edge)
+r1_13,canopy,0,dense tree crowns by construction; meta 11m (NDVI 0.619 just misses)
+r1_14,not,0,grassy cul-de-sac lot; small tree at edge
+r1_15,canopy,0,dense tree crowns among houses ~65%
+r1_16,canopy,0,large dark tree crown ~40% of cell
+r1_17,not,0,dense rooftops / road
+r1_18,not,0,road + grass median strip
+r1_19,not,0,road bend/clearing center; trees only at bottom edge
+r1_20,not,0,rooftops / built
+r1_21,not,0,bare dirt yard between houses
+r1_22,not,0,built / rooftops
+r1_23,not,0,dense rooftops
+r1_24,not,0,bare ground / road
+r1_25,not,0,dense rooftops; one small tree
+r1_26,not,0,industrial bare concrete + water
+r1_27,not,0,warehouse white roof
+r1_28,not,0,industrial roof / parking
+r1_29,not,0,construction bare ground
+r1_30,not,0,industrial container yard; bare
+r1_31,not,0,highway / paved median
+r1_32,canopy,1,trees among houses ~30%; meta 0 (best-guess canopy)
+r1_33,canopy,0,tree crowns among houses ~40%
+r1_34,not,1,grass/dirt lot; trees at right edge ~20%
+r1_35,canopy,1,diagonal tree/shrub line ~25-30%; meta 0.04m
+r1_36,not,0,dry grass / bare lot; sparse
+r1_37,canopy,0,tree crowns ring dirt center ~40%; meta 6.1m
+r1_38,not,0,open water
+r1_39,not,0,open water
+r1_40,not,0,dry grassland / hillside; no trees
+r1_41,not,0,open water (Manila Bay)
+r2_0,not,0,crop/grass field with sparse dots
+r2_1,not,0,bare lot; trees only outside box
+r2_2,not,0,rooftops + road
+r2_3,not,0,industrial paved yard
+r2_4,not,1,cemetery graves + grass; trees <25%
+r2_5,not,0,bare/paved; edge trees <25%
+r2_6,canopy,0,tree crowns among houses ~50%
+r2_7,canopy,1,driveway framed by tree crowns ~30%
+r2_8,canopy,0,tree/shrub cluster ~45%
+r2_9,not,1,grass/scrub; sparse bushes
+r2_10,not,0,paved industrial/marina
+r2_11,not,1,grass lot + rooftops
+r2_12,canopy,1,tree crown among roofs ~30%
+r2_13,not,1,bare lot; edge trees ~20%
+r2_14,canopy,1,trees ~30% around roof
+r2_15,not,0,grass/scrub; high NDVI no crowns
+r2_16,canopy,0,dense canopy; meta 10.5
+r2_17,canopy,0,closed canopy; meta 4.2
+r2_18,canopy,1,trees ~30%; meta 5.3
+r2_19,not,0,grass field; edge tree only
+r2_20,not,0,rooftops; green <25%
+r2_21,canopy,1,tree crown ~30% among roofs
+r2_22,canopy,0,forest canopy; meta 9.1
+r2_23,canopy,1,forest ring; meta 13.4 (brown center)
+r2_24,canopy,0,dense canopy; meta 11.4
+r2_25,not,0,grass/scrub field; high NDVI
+r2_26,not,1,dense scrub/bare slope edge
+r2_27,canopy,0,trees; meta 7.85
+r2_28,canopy,1,trees ~30% + structure
+r2_29,canopy,1,riparian tree crowns ~30%
+r2_30,not,0,industrial roofs/bare
+r2_31,not,0,grass/scrub by water
+r2_32,not,1,road/yard; edge trees ~20%
+r2_33,canopy,0,tree/shrub cluster ~50%
+r2_34,not,0,dry grass/reeds (salmon)
+r2_35,not,0,bright lawn/grass
+r2_36,canopy,1,tree canopy top ~30% + pond
+r2_37,not,0,structures/courts + grass
+r3_0,not,0,row of colorful house roofs
+r3_1,not,0,bare/sandy lot; sparse small bushes
+r3_2,canopy,0,dense tree canopy ~60%
+r3_3,not,0,plowed/bare dry field
+r3_4,canopy,0,dense tree canopy fills box
+r3_5,not,0,houses + grass + teal roof
+r3_6,not,0,blue-roof court + bare ground
+r3_7,canopy,0,tree canopy ~50% between buildings
+r3_8,canopy,1,trees left half ~40% + road
+r3_9,not,0,plowed/furrowed dry field
+r3_10,canopy,1,dense tree/shrub cluster ~50%
+r3_11,canopy,1,tree canopy ~40% + road
+r3_12,canopy,0,tree canopy ~50% among houses
+r3_13,not,0,dry grass/weeds; high NDVI
+r3_14,canopy,0,dense tree canopy fills box
+r3_15,canopy,1,tree/shrub cluster ~40%
+r3_16,not,0,bare/grass clearing; sparse
+r3_17,not,1,grass/dirt lot; sparse trees ~20%
+r3_18,canopy,0,tree canopy ~40% + roof
+r3_19,not,0,grey-roof house; built
+r3_20,not,0,dry grass field; high NDVI
+r3_21,not,0,bare dry field
+r3_22,canopy,0,dense tree canopy ~70%
+r3_23,canopy,1,forest ring; brown center
+r3_24,canopy,1,dense canopy/scrub fills box
+r3_25,canopy,0,tree canopy ~45% + path
+r3_26,canopy,0,dense forest canopy ~65%
+r3_27,canopy,0,dense tree canopy fills box
+r3_28,canopy,1,tree crown ~35% + dirt
+r3_29,canopy,0,tree canopy ~45%
+r3_30,canopy,0,large tree canopy ~60%
+r3_31,not,0,bare sand (reclamation)
+r3_32,canopy,0,large tree canopy ~55%
+r3_33,not,0,road intersection/pavement
+r3_34,not,0,dark water + grass spit
+r3_35,not,1,scrub/dry grass; bush clump ~20%
+r3_36,not,0,dark water + green bank
+r3_37,not,0,water + grass levee bank
+r4_0,canopy,0,dense tree canopy fills box
+r4_1,not,0,industrial paved/blue roofs
+r4_2,not,1,grey-roof house + dark ground
+r4_3,canopy,0,tree canopy ~45% among houses
+r4_4,not,0,water-treatment tanks/bare
+r4_5,not,0,golf green / manicured grass
+r4_6,canopy,1,green tree/shrub cluster ~40%
+r4_7,canopy,0,tree canopy ~40% + dirt road
+r4_8,canopy,1,trees ~40% + white roof
+r4_9,canopy,1,tree ~35% + flat roof
+r4_10,not,0,open water + vegetated shore
+r4_11,not,1,bare/reddish clearing; edge trees
+r4_12,canopy,0,tree canopy ~40% + bare
+r4_13,not,0,grass/dirt + road + roofs
+r4_14,not,0,dry/bare field; high NDVI
+r4_15,canopy,0,tree canopy ~40% + roof
+r4_16,not,1,grass/dirt lot; sparse trees ~25%
+r4_17,not,1,scrubland; tree clump ~25%
+r4_18,canopy,1,dark vegetation ~45% + building
+r4_19,not,1,scrub/grass; bush ~20%
+r4_20,canopy,1,tree crown ~30% + lawn
+r4_21,canopy,0,tree canopy ~45%
+r4_22,canopy,0,tree canopy ~55% + roof
+r4_23,not,1,dirt lot + cars; trees at edge ~25%
+r4_24,canopy,0,tree canopy ~55%
+r4_25,canopy,1,tree ~30% among roofs
+r4_26,canopy,0,dense tree canopy fills box
+r4_27,canopy,0,dense forest canopy
+r4_28,not,1,shadowed bare/built
+r4_29,canopy,0,large tree ~45% + yard
+r4_30,canopy,0,large tree canopy ~60%
+r4_31,not,0,dirt/grass lot; sparse trees
+r4_32,not,0,houses + bare yard + pool
+r4_33,not,1,red-roof house + pool; trees ~20%
+r4_34,not,0,bright green grass field
+r4_35,not,0,houses/built; bare
+r4_36,not,0,dike + pond + grey rows (built/water)
+r4_37,not,0,golf/lawn grass field
+r5_0,not,0,water
+r5_1,not,0,water
+r5_2,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_3,not,0,water
+r5_4,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_5,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_6,not,0,water
+r5_7,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_8,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_9,canopy,0,woody tree canopy
+r5_10,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_11,not,0,water
+r5_12,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_13,not,0,water
+r5_14,not,0,water
+r5_15,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_16,canopy,0,woody tree canopy
+r5_17,not,0,water
+r5_18,not,0,water
+r5_19,not,0,water
+r5_20,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_21,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_22,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_23,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_24,not,0,water
+r5_25,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_26,not,0,water
+r5_27,not,0,water
+r5_28,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_29,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_30,canopy,0,woody tree canopy
+r5_31,canopy,0,woody tree canopy
+r5_32,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_33,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_34,not,0,water
+r5_35,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_36,not,0,water
+r5_37,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_38,not,0,water
+r5_39,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_40,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_41,not,0,water
+r5_42,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_43,canopy,1,woody tree canopy
+r5_44,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_45,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_46,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_47,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_48,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_49,not,0,water
+r5_50,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_51,not,0,water
+r5_52,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_53,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_54,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_55,canopy,0,woody tree canopy
+r5_56,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_57,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_58,not,0,water
+r5_59,not,0,water
+r5_60,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_61,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_62,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_63,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_64,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_65,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_66,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_67,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_68,not,0,water
+r5_69,not,0,water
+r5_70,canopy,1,woody tree canopy
+r5_71,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_72,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_73,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_74,canopy,0,woody tree canopy
+r5_75,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_76,not,0,water
+r5_77,canopy,0,woody tree canopy
+r5_78,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_79,not,0,water
+r5_80,not,0,water
+r5_81,not,0,water
+r5_82,not,0,water
+r5_83,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_84,not,0,water
+r5_85,not,0,water
+r5_86,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_87,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_88,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_89,canopy,1,woody tree canopy
+r5_90,canopy,0,woody tree canopy
+r5_91,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_92,canopy,1,woody tree canopy
+r5_93,not,0,water
+r5_94,not,0,water
+r5_95,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_96,not,0,water
+r5_97,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_98,not,0,water
+r5_99,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_100,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_101,not,0,water
+r5_102,not,0,water
+r5_103,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_104,not,0,water
+r5_105,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_106,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_107,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_108,not,0,water
+r5_109,not,0,water
+r5_110,not,0,water
+r5_111,canopy,0,woody tree canopy
+r5_112,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_113,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_114,not,0,water
+r5_115,not,0,water
+r5_116,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_117,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_118,not,0,water
+r5_119,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_120,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_121,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_122,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_123,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_124,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_125,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_126,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_127,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_128,not,0,water
+r5_129,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_130,canopy,0,woody tree canopy
+r5_131,canopy,1,woody tree canopy
+r5_132,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_133,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_134,not,0,water
+r5_135,not,0,water
+r5_136,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_137,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_138,not,0,water
+r5_139,not,0,water
+r5_140,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_141,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_142,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_143,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_144,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_145,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_146,not,0,water
+r5_147,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_148,not,0,water
+r5_149,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_150,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_151,not,0,water
+r5_152,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_153,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_154,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_155,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_156,not,0,water
+r5_157,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_158,not,0,water
+r5_159,not,0,water
+r5_160,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_161,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_162,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_163,not,0,water
+r5_164,not,0,water
+r5_165,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_166,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_167,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_168,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_169,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_170,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_171,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_172,canopy,0,woody tree canopy
+r5_173,not,0,water
+r5_174,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_175,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_176,not,0,water
+r5_177,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_178,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_179,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_180,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_181,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_182,canopy,1,woody tree canopy
+r5_183,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_184,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_185,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_186,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_187,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_188,not,0,water
+r5_189,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_190,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_191,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_192,not,0,water
+r5_193,not,0,water
+r5_194,canopy,0,woody tree canopy
+r5_195,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_196,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_197,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_198,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_199,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_200,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_201,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_202,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_203,not,0,water
+r5_204,not,0,water
+r5_205,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_206,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_207,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_208,not,0,water
+r5_209,canopy,0,woody tree canopy
+r5_210,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_211,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_212,not,0,water
+r5_213,canopy,0,woody tree canopy
+r5_214,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_215,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_216,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_217,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_218,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_219,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_220,not,0,water
+r5_221,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_222,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_223,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_224,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_225,not,0,water
+r5_226,not,0,water
+r5_227,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_228,not,0,water
+r5_229,not,0,water
+r5_230,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_231,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_232,not,0,water
+r5_233,canopy,0,woody tree canopy
+r5_234,canopy,0,woody tree canopy
+r5_235,not,0,water
+r5_236,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_237,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_238,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_239,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_240,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_241,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_242,not,0,water
+r5_243,not,0,water
+r5_244,not,0,water
+r5_245,not,0,water
+r5_246,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_247,not,0,water
+r5_248,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_249,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_250,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_251,not,0,water
+r5_252,canopy,1,woody tree canopy
+r5_253,not,0,water
+r5_254,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_255,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_256,not,0,water
+r5_257,not,0,water
+r5_258,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_259,not,0,water
+r5_260,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_261,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_262,not,0,water
+r5_263,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_264,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_265,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_266,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_267,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_268,not,0,water
+r5_269,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_270,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_271,not,0,water
+r5_272,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_273,not,0,water
+r5_274,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_275,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_276,not,0,water
+r5_277,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_278,canopy,1,woody tree canopy
+r5_279,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_280,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_281,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_282,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_283,canopy,1,woody tree canopy
+r5_284,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_285,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_286,canopy,0,woody tree canopy
+r5_287,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_288,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_289,not,0,water
+r5_290,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_291,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_292,not,0,water
+r5_293,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_294,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_295,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_296,not,0,water
+r5_297,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_298,canopy,0,woody tree canopy
+r5_299,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_300,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_301,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_302,not,0,water
+r5_303,not,0,water
+r5_304,not,0,water
+r5_305,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_306,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_307,not,0,water
+r5_308,canopy,0,woody tree canopy
+r5_309,not,0,water
+r5_310,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_311,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_312,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_313,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_314,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_315,canopy,1,woody tree canopy
+r5_316,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_317,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_318,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_319,not,0,water
+r5_320,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_321,canopy,0,woody tree canopy
+r5_322,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_323,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_324,canopy,0,woody tree canopy
+r5_325,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_326,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_327,not,0,water
+r5_328,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_329,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_330,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_331,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_332,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_333,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_334,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_335,not,0,water
+r5_336,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_337,not,0,water
+r5_338,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_339,not,0,water
+r5_340,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_341,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_342,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_343,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_344,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_345,not,0,water
+r5_346,not,0,water
+r5_347,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_348,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_349,not,0,water
+r5_350,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_351,not,0,water
+r5_352,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_353,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_354,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_355,canopy,0,woody tree canopy
+r5_356,not,0,water
+r5_357,not,0,water
+r5_358,not,0,water
+r5_359,canopy,0,woody tree canopy
+r5_360,not,0,water
+r5_361,not,0,water
+r5_362,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_363,canopy,0,woody tree canopy
+r5_364,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_365,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_366,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_367,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_368,canopy,0,woody tree canopy
+r5_369,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_370,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_371,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_372,not,0,water
+r5_373,not,0,water
+r5_374,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_375,not,0,water
+r5_376,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_377,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_378,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_379,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_380,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_381,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_382,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_383,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_384,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_385,not,0,water
+r5_386,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_387,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_388,not,0,water
+r5_389,canopy,0,woody tree canopy
+r5_390,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_391,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_392,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_393,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_394,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_395,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_396,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_397,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_398,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_399,not,0,water
+r5_400,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_401,not,0,water
+r5_402,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_403,not,0,water
+r5_404,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_405,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_406,canopy,1,woody tree canopy
+r5_407,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_408,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_409,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_410,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_411,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_412,not,0,water
+r5_413,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_414,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_415,not,0,water
+r5_416,not,0,water
+r5_417,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_418,not,0,water
+r5_419,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_420,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_421,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_422,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_423,not,0,water
+r5_424,not,0,water
+r5_425,not,0,water
+r5_426,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_427,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_428,not,0,water
+r5_429,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_430,canopy,0,woody tree canopy
+r5_431,not,0,water
+r5_432,canopy,0,woody tree canopy
+r5_433,not,0,water
+r5_434,canopy,0,woody tree canopy
+r5_435,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_436,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_437,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_438,not,0,water
+r5_439,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_440,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_441,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_442,not,0,water
+r5_443,not,0,water
+r5_444,not,0,water
+r5_445,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_446,canopy,1,woody tree canopy
+r5_447,not,0,water
+r5_448,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_449,not,0,water
+r5_450,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_451,not,0,water
+r5_452,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_453,canopy,0,woody tree canopy
+r5_454,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_455,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_456,canopy,0,woody tree canopy
+r5_457,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_458,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_459,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_460,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_461,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_462,not,0,water
+r5_463,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_464,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_465,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_466,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_467,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_468,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_469,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_470,canopy,0,woody tree canopy
+r5_471,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_472,not,0,water
+r5_473,not,0,grass/scrub/built (high-NDVI non-tree)
+r5_474,not,0,water
+r5_475,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_476,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_477,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_478,not,0,water
+r5_479,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_480,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_481,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_482,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_483,not,0,water
+r5_484,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_485,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_486,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_487,not,0,water
+r5_488,not,1,grass/scrub/built (high-NDVI non-tree)
+r5_489,not,0,water
+r5_490,not,0,water
+r5_491,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_492,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_493,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_494,not,0,water
+r5_495,canopy,1,woody tree canopy
+r5_496,not,0,"deep-negative (water/roof/bare/low-veg), NDVI<0.45 bulk-labeled, spot-check 16/16 confirmed"
+r5_497,not,0,water
+r5_498,not,0,water
+r5_499,not,0,water

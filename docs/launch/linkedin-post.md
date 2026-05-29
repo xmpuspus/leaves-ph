@@ -8,9 +8,9 @@ DO NOT POST until leaves.ph, github.com/xmpuspus/leaves-ph, the Zenodo DOI, and 
 
 Leaves.PH is an open, reproducible measurement series of Metro Manila tree cover. Per-LGU annual values across the 17 NCR LGUs, computed from Sentinel-2 surface-reflectance imagery and calibrated against the Meta v2 1m canopy-height reference. NDVI threshold tuned to 0.62 (F1-maximised against canopy height > 5m, recall floor 0.85).
 
-A separate detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head onto Meta's 1m canopy fraction. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026). The deliverable includes a per-LGU validation gallery so anyone can inspect the model's tiles.
+A separate detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head onto Meta's 1m canopy fraction. On held-out locations it reaches R² 0.83–0.86 under grouped 5-fold cross-validation (0.86 location-grouped, 0.83 spatial-block, n = 38,260 tiles) — measuring how well it reproduces Meta's canopy fraction, its calibration target, not accuracy against independent ground truth. The deliverable includes a per-LGU validation gallery so anyone can inspect the model's tiles.
 
-Headline measurement for the latest annual epoch: NCR area-weighted canopy = 7.46%. Quezon City carries the largest absolute share (La Mesa watershed, UP Diliman, Wack Wack). Steepest year-over-year declines across the series: Taguig, Malabon, Las Pinas, Valenzuela.
+Headline measurement: NCR area-weighted canopy is ~8–10% (pooled cross-sectional estimate; 2026 reads 7.46% but is provisional, Jan-May imagery). Quezon City carries the largest absolute share (La Mesa watershed, UP Diliman, Wack Wack). The annual values are cross-sectional snapshots, not a change series — year-to-year swings are composite-greenness threshold-crossing noise, not measured canopy loss.
 
 Everything is open and reproducible. From a clean clone, `make hash-verify` reproduces the canonical CSV byte-for-byte.
 
@@ -25,9 +25,9 @@ MIT + CC-BY-4.0.
 
 Open-source pipeline: Sentinel-2 L2A median composites (cloud-masked at s2cloudless probability < 40, 30m exports), Hansen Global Forest Change v1.13 for loss history, ESA WorldCover v200 for an independent cross-check, Dynamic World v1 for fuzzy tree probability, Meta Canopy Height v2 (1m, 2018-2020 source imagery) as the calibration reference. Per-LGU aggregation against PSA admin boundaries for the 17 NCR LGUs.
 
-A CLIP ViT-Large/14 + gradient-boosted regression head, trained the same way SolarMap.PH was, is in optimization toward a first release. It predicts canopy fraction in [0, 1] from Meta's 1m canopy fraction and reaches R² = 0.87 (MAE 0.069) on held-out locations, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026. Per-LGU visual validation panels make the model inspectable.
+A CLIP ViT-Large/14 + gradient-boosted regression head, trained the same way SolarMap.PH was, is in optimization toward a first release. It predicts canopy fraction in [0, 1] from Meta's 1m canopy fraction and reaches R² 0.83–0.86 on held-out locations under grouped 5-fold cross-validation (0.86 location-grouped, 0.83 spatial-block, n = 38,260 tiles) — agreement with Meta (the calibration target), not accuracy against independent ground truth. Per-LGU visual validation panels make the model inspectable.
 
-Headline measurement: NCR area-weighted canopy = 7.46% in the latest annual epoch, from the NDVI baseline calibrated to Meta's 1m reference.
+Headline measurement: NCR area-weighted canopy is ~8–10% (pooled cross-sectional estimate from the NDVI baseline calibrated to Meta's 1m reference; per-year values are snapshots, not a change series).
 
 Per-LGU rankings, detection-model accuracy, Hansen cumulative loss, ESA cross-check in BENCHMARKS.md. Per-LGU validation gallery at /validation. Demo animations at docs/demo/.
 
@@ -44,11 +44,11 @@ A reproducible tree-cover measurement series for Metro Manila, built in the same
 
 Two layers in the deliverable:
 - Per-pixel NDVI baseline calibrated against Meta's 1m canopy-height reference (the published figures)
-- A detection model in optimization toward a first release: per-tile CLIP + gradient-boosted regression onto Meta's 1m canopy fraction, R² = 0.87 on held-out locations
+- A detection model in optimization toward a first release: per-tile CLIP + gradient-boosted regression onto Meta's 1m canopy fraction, R² 0.83–0.86 on held-out locations under grouped cross-validation (agreement with Meta, its calibration target, not ground truth)
 
 Inputs are all canonical public satellite. Outputs are hash-pinned CSVs and a per-LGU validation gallery you can inspect tile-by-tile.
 
-Headline measurement: NCR area-weighted canopy = 7.46% in the latest annual epoch. Quezon City carries the largest absolute share. Steepest year-over-year declines sit in the construction-heavy southern and northern fringes.
+Headline measurement: NCR area-weighted canopy is ~8–10% (pooled cross-sectional estimate; 2026 reads 7.46% but is provisional). Quezon City carries the largest absolute share. Per-year values are cross-sectional snapshots, not a change series.
 
 Code, data, methodology, validation gallery:
 https://github.com/xmpuspus/leaves-ph

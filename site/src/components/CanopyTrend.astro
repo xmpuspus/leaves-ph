@@ -1,12 +1,15 @@
 ---
 import {
   SERIES_YEARS,
-  SERIES_NCR_V0,
-  SERIES_NCR_V9,
+  SERIES_NCR_NDVI,
+  SERIES_NCR_PUBLISHED,
   SERIES_START,
   SERIES_END,
   LATEST_NCR_PCT,
   DELTA_START_TO_LATEST_PP,
+  CANOPY_MODEL_F1,
+  BASELINE_NDVI_F1,
+  GOLD_LABEL_N,
 } from "../lib/series";
 
 // Chart geometry. Wide viewBox; the SVG scales to fill its container width.
@@ -37,8 +40,9 @@ const mkPts = (vals: number[]): Pt[] =>
     provisional: years[i] === SERIES_END,
   }));
 
-const v0 = mkPts(SERIES_NCR_V0);
-const v9 = mkPts(SERIES_NCR_V9);
+// v0 slot = NDVI baseline (umber, comparison); v9 slot = published model (forest).
+const v0 = mkPts(SERIES_NCR_NDVI);
+const v9 = mkPts(SERIES_NCR_PUBLISHED);
 
 const line = (ps: Pt[]) =>
   ps.map((p, k) => `${k === 0 ? "M" : "L"}${p.cx.toFixed(1)},${p.cy.toFixed(1)}`).join(" ");
@@ -57,13 +61,15 @@ const provisionalX = x(n - 1);
   <figcaption class="mb-4">
     <p class="kicker text-ink-500 mb-2">FIG · NCR CANOPY · {SERIES_START}&ndash;{SERIES_END}</p>
     <p class="font-display text-2xl text-ink-900 leading-tight mb-2">
-      The NDVI pixel rule swings; the model holds steadier.
+      The NDVI baseline swings; the calibrated model holds steady.
     </p>
     <p class="text-sm text-ink-700 max-w-prose leading-relaxed">
-      Two readings of NCR canopy, same years. The <strong>NDVI pixel rule</strong> (the displayed
-      series) moves year to year with the imagery itself: cloud masks, sun angle, and seasonal
-      phenology shift the per-pixel threshold. The <strong>CLIP&nbsp;+&nbsp;HistGBR model</strong>
-      recovers a steadier signal from the same scenes. The {SERIES_END} epoch is provisional
+      Two readings of NCR canopy, same years. The old <strong>NDVI&nbsp;&gt;&nbsp;0.62 baseline</strong>
+      (faint) swings about 2.8&nbsp;pp year to year as cloud masks, sun angle, and seasonal phenology
+      push pixels across the fixed threshold. The published <strong>human-calibrated canopy model</strong>
+      (bold), trained on {GOLD_LABEL_N} manually labeled high-resolution pixels, holds a steady
+      cross-sectional snapshot and scores F1&nbsp;{CANOPY_MODEL_F1.toFixed(2)} against those labels
+      versus the baseline&rsquo;s {BASELINE_NDVI_F1.toFixed(2)}. The {SERIES_END} epoch is provisional
       (imagery January&ndash;May only) and shown dashed.
     </p>
   </figcaption>
@@ -76,13 +82,13 @@ const provisionalX = x(n - 1);
       aria-labelledby="ct-title ct-desc"
       preserveAspectRatio="xMidYMid meet"
     >
-      <title id="ct-title">NCR tree canopy percent per year, {SERIES_START} to {SERIES_END}</title>
+      <title id="ct-title">NCR tree canopy percent per year, {SERIES_START} to {SERIES_END} (human-calibrated canopy model)</title>
       <desc id="ct-desc">
-        Two lines on a shared scale of NCR canopy percent. The NDVI pixel rule swings between
-        {Math.min(...SERIES_NCR_V0).toFixed(2)} and {Math.max(...SERIES_NCR_V0).toFixed(2)} percent
-        across the series, ending at {LATEST_NCR_PCT.toFixed(2)} percent in {SERIES_END}. The
-        CLIP plus HistGBR model stays within a narrower band near 8 to 9 percent over the same years.
-        The {SERIES_END} value of each series is provisional because that year's imagery covers
+        Two lines on a shared scale of NCR canopy percent. The old NDVI baseline swings between
+        {Math.min(...SERIES_NCR_NDVI).toFixed(2)} and {Math.max(...SERIES_NCR_NDVI).toFixed(2)} percent
+        across the series. The published human-calibrated model holds a steadier band near 10 to 11
+        percent, ending at {LATEST_NCR_PCT.toFixed(2)} percent in {SERIES_END}. The
+        {SERIES_END} value of each series is provisional because that year's imagery covers
         January through May only.
       </desc>
 
@@ -156,7 +162,7 @@ const provisionalX = x(n - 1);
             </text>
             <circle cx={p.cx} cy={p.cy} r="14" fill="transparent" class="ct-hit">
               <title>
-                NDVI pixel rule · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
+                NDVI &gt; 0.62 baseline · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
               </title>
             </circle>
           </g>
@@ -180,7 +186,7 @@ const provisionalX = x(n - 1);
             </text>
             <circle cx={p.cx} cy={p.cy} r="14" fill="transparent" class="ct-hit">
               <title>
-                CLIP + HistGBR model · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
+                Human-calibrated model (published) · {p.year}{p.provisional ? " (provisional)" : ""}: {p.v.toFixed(2)}%
               </title>
             </circle>
           </g>
@@ -190,10 +196,10 @@ const provisionalX = x(n - 1);
 
     <!-- legend -->
     <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3 pt-3 border-t border-ink-300/60 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-500">
-      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#b65724"></span>NDVI pixel rule · displayed series</span>
-      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#1f3d2b"></span>CLIP + HistGBR model</span>
+      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#1f3d2b"></span>human-calibrated model · published</span>
+      <span class="flex items-center gap-2"><span class="inline-block w-5 h-[3px]" style="background:#b65724"></span>NDVI &gt; 0.62 baseline · comparison</span>
       <span class="flex items-center gap-2 normal-case tracking-normal text-ink-700"><span class="inline-block w-5 border-t border-dashed border-ink-500"></span>dashed = {SERIES_END} provisional</span>
-      <span class="ml-auto text-ink-700 normal-case tracking-normal">{SERIES_START}&rarr;{SERIES_END} shift, displayed series: {deltaStr}</span>
+      <span class="ml-auto text-ink-700 normal-case tracking-normal">{SERIES_START}&rarr;{SERIES_END} shift, published: {deltaStr}</span>
     </div>
   </div>
 </figure>

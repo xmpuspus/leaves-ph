@@ -18,9 +18,9 @@ Inputs are all open, all canonical:
 
 NDVI threshold tuned against Meta canopy height > 5m, recall floor 0.85.
 
-A separate detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained the same way SolarMap.PH was built onto Meta's 1m canopy fraction. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, n = 16,800 tiles across 2019-2026). The deliverable includes a per-LGU validation gallery so anyone can inspect the model.
+A separate detection model is in optimization toward a first release: CLIP ViT-Large/14 embeddings feeding a gradient-boosted regression head, trained the same way SolarMap.PH was built onto Meta's 1m canopy fraction. On held-out locations it reaches R² 0.83–0.86 under grouped 5-fold cross-validation (0.86 location-grouped, 0.83 spatial-block, n = 38,260 tiles) — agreement with Meta, its calibration target, not accuracy against independent ground truth. The deliverable includes a per-LGU validation gallery so anyone can inspect the model.
 
-Headline measurement for the latest annual epoch: NCR area-weighted canopy = 7.46%, from the NDVI baseline calibrated to Meta's 1m reference.
+Headline measurement: NCR area-weighted canopy is ~8–10% (pooled cross-sectional estimate from the NDVI baseline calibrated to Meta's 1m reference; 2026 reads 7.46% but is provisional).
 
 Per-LGU:
 * Quezon City: 18.93% (La Mesa watershed + UP Diliman + Wack Wack)
@@ -32,7 +32,7 @@ Per-LGU:
 * Manila: 0.89%
 * Navotas: 0.47% (reclamation-heavy)
 
-Steepest year-over-year declines across the series sit in Taguig, Malabon, Las Pinas, Valenzuela.
+Largest 2019-to-2026 snapshot differences sit in Taguig, Malabon, Las Pinas, Valenzuela (differences of cross-sectional snapshots, not measured canopy loss).
 
 Everything is open and reproducible. From a clean clone, `make hash-verify` reproduces the canonical CSV byte-for-byte:
 

@@ -12,23 +12,23 @@ Live site: [leaves.ph](https://leaves.ph).
 
 ## What it measures
 
-For each year, what fraction of each LGU's area is covered by tree canopy taller than 5 m. The published figures come from the NDVI baseline; a separate detection model is in optimization toward a first release.
+For each year, what fraction of each LGU's area reads as tree canopy. The published figures come from a **human-calibrated canopy model** trained on manual high-resolution labels (it still carries a known grass/scrub margin, so read it as a tree-canopy estimate, not a pixel-exact census).
 
-1. **NDVI baseline (published).** Per Sentinel-2 pixel: is the spectral signature green enough to be canopy? A single threshold (NDVI > 0.62) decides yes/no, calibrated against Meta v2's 1m canopy-height reference at heights above 5m. The map, the per-LGU and per-barangay series, and the headline number all come from this layer.
-2. **The detection model (in optimization).** A CLIP ViT-Large/14 embedding per 240m tile feeding a gradient-boosted regression head that predicts canopy fraction in [0, 1], trained on Meta's 1m canopy fraction the same way [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) was built. On held-out locations it reaches R² = 0.87 (MAE 0.069, 5-fold cross-validation grouped by location, against Meta AI Global Canopy Height v2 at canopy > 5m, n = 16,800 tiles across 2019-2026). It is being optimized toward a first release and is not yet the source of any published figure.
+1. **Human-calibrated canopy model (published).** A gradient-boosted classifier over ten per-pixel features (NDVI, Dynamic-World tree probability, Meta v2 1m canopy height, ESA tree class, and raw Sentinel-2 spectral bands), trained on **656 manually labeled high-resolution pixels** (active learning plus a 500-pixel random round). Its 10 features are NDVI, Dynamic-World tree probability, Meta v2 1m canopy height, the ESA tree class, and the raw Sentinel-2 spectral bands (red/nir/green/blue + GNDVI). Against those human labels it scores **F1 0.78 / IoU 0.64** (precision 0.77, recall 0.79), beating the old **NDVI > 0.62 baseline** (F1 0.68 / IoU 0.52), kept only for comparison. The map, the per-LGU and per-barangay series, and the headline number all come from this model. It holds a steady 9–10% NCR snapshot (threshold calibrated to the 10.1% human-truth canopy), removing the year-to-year sawtooth the NDVI threshold produced. The spectral bands lifted F1 from 0.75 (four-feature) to 0.78 by rejecting grass; a CLIP ViT-L/14 embedding was tested and did not help. Method and gold labels: [`BENCHMARKS.md`](BENCHMARKS.md), `tmp/labeling-20260529T073613Z/`; deployed by [`pipeline/compute_canopy_model.py`](pipeline/compute_canopy_model.py).
+2. **CLIP detection model (separate research track).** A CLIP ViT-Large/14 embedding per 240m tile feeding a gradient-boosted regression head that predicts canopy fraction in [0, 1], trained on Meta's 1m canopy fraction the same way [SolarMap.PH](https://github.com/xmpuspus/solar-map-ph) was built. On held-out locations it reaches R² 0.83–0.86 under grouped 5-fold cross-validation (0.86 location-grouped, 0.83 spatial-block; MAE 0.053, n = 38,260 tiles) against Meta AI Global Canopy Height v2 at canopy > 5m. That R² measures how well it reproduces Meta's 1m canopy fraction — its calibration target — not accuracy against independent ground truth. It is in optimization and is not the source of any published figure.
 
-Headline number: NCR area-weighted canopy = **7.46%** in 2026, from the published NDVI baseline. 2026 is provisional (imagery Jan-May).
+Headline number: NCR area-weighted canopy is **~9–10%** from the published model (2026 reads 8.82% but is provisional, Jan-May imagery only; the threshold is calibrated to the 10.1% human-truth canopy). Read the per-year values as annual cross-sectional snapshots, not a change series.
 
-| LGU | 2026 canopy % (NDVI baseline) | 2019 → 2026 Δ (pp) |
+| LGU | 2026 canopy % (model) | 2019 → 2026 Δ (pp) |
 |---|---|---|
-| Quezon City | 18.93 | −0.38 |
-| Mandaluyong | 11.19 | −0.28 |
-| Makati | 8.92 | +1.69 |
-| Caloocan | 8.80 | −0.96 |
-| Marikina | 6.87 | −0.01 |
+| Quezon City | 22.10 | −0.22 |
+| Caloocan | 14.36 | −1.42 |
+| Makati | 12.22 | +1.77 |
+| Mandaluyong | 10.36 | +0.73 |
+| Marikina | 7.96 | −0.32 |
 | ... | ... | ... |
-| Manila | 0.89 | +0.21 |
-| Navotas | 0.47 | −0.40 |
+| Manila | 1.37 | +0.23 |
+| Navotas | 0.30 | −0.24 |
 
 Full series, per-LGU table, detection-model accuracy, and adjacent published estimates: [`BENCHMARKS.md`](BENCHMARKS.md).
 

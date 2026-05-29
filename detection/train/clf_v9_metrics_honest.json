@@ -1,0 +1,41 @@
+{
+  "note": "clf_v9_metrics.json reports R2=0.8788 from NON-grouped shuffled KFold (train_v9_multiepoch.py:64), which leaks across a location's 8 identical-target yearly tiles and across adjacent 240m grid tiles. Numbers below re-run the same estimator with location- and spatial-block-grouped CV on the full v6+v9 union (n=38,260).",
+  "n_union": 38260,
+  "n_v6": 21460,
+  "n_v9": 16800,
+  "estimator": "HistGradientBoostingRegressor",
+  "hyperparams": {
+    "learning_rate": 0.05,
+    "max_iter": 400,
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 20,
+    "l2_regularization": 1.0,
+    "random_state": 42
+  },
+  "published_shuffled_union": {
+    "mae": 0.04811546951532364,
+    "rmse": 0.08313384652137756,
+    "r2": 0.8788103380213734,
+    "cv": "KFold(shuffle=True) NON-grouped (as shipped)"
+  },
+  "location_grouped_union": {
+    "mae": 0.052606530487537384,
+    "rmse": 0.09012407809495926,
+    "r2": 0.8575732695555187,
+    "cv": "GroupKFold(5) groups=grid tile index"
+  },
+  "spatialblock_union_5x5": {
+    "mae": 0.05747749283909798,
+    "rmse": 0.0995347797870636,
+    "r2": 0.8262761064366971,
+    "cv": "GroupKFold(5) groups=5x5 spatial block",
+    "blocks_populated": 25
+  },
+  "spatialblock_union_8x8": {
+    "mae": 0.05582517385482788,
+    "rmse": 0.09660772234201431,
+    "r2": 0.8363433762616554,
+    "cv": "GroupKFold(5) groups=8x8 spatial block",
+    "blocks_populated": 64
+  }
+}

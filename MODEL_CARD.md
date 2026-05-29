@@ -20,18 +20,23 @@ A single model:
 - **Embeddings:** CLIP ViT-Large/14 image embeddings computed per tile from Sentinel-2 RGB.
 - **Head:** gradient-boosted regression (HistGradientBoostingRegressor) onto Meta's 1m canopy fraction (continuous, 0..1).
 
-The published canopy figures (the map, per-LGU series, per-barangay series, and the headline NCR canopy percentage) come from the NDVI baseline (NDVI > 0.62) calibrated to Meta's 1m reference. The CLIP + gradient-boosted model is the detection model under optimization; the NDVI baseline is what backs the published numbers today.
+The published canopy figures (the map, per-LGU series, per-barangay series, and the headline NCR canopy percentage) come from the **human-calibrated classifier** described under Evaluation (10 features including Sentinel-2 spectral bands, trained on 656 manual high-resolution labels). The CLIP + gradient-boosted regression model below is a separate detection track under optimization; the NDVI > 0.62 rule is retained only as a comparison baseline.
 
 ## Evaluation
 
-Held-out-location accuracy:
+Held-out agreement with the Meta reference:
 
 | Metric | Value |
 |---|---|
-| R² (held-out location) | 0.87 |
-| MAE | 0.069 |
+| R² (location-grouped CV vs Meta) | 0.86 |
+| R² (5×5 spatial-block CV vs Meta) | 0.83 |
+| MAE | 0.053 |
 
-Protocol: 5-fold cross-validation grouped by location (leakage-free, train and test locations disjoint), n = 16,800 tiles across 2019-2026, evaluated against Meta AI Global Canopy Height v2 (1m, canopy > 5m). Grouping by location means a location seen in training is never scored in test, so the R² reflects generalization to unseen places rather than memorization.
+Protocol: 5-fold cross-validation grouped by location, full v6+v9 union (n = 38,260), scored against Meta AI Global Canopy Height v2 (1m, canopy > 5m). Under strict grouping — a location's tiles (and its 8 yearly epochs) all held in one fold so neighbours and repeated places never straddle train/test — R² is 0.86 (location-grouped) to 0.83 (coarse 5×5 spatial blocks). An earlier published 0.879 used a non-grouped shuffled split that leaked adjacent tiles and repeated-location epochs; it is superseded. Honest numbers: `detection/train/clf_v9_metrics_honest.json`.
+
+**What this number is and is not.** R² measures how well the model **reproduces Meta's 1m canopy fraction, which is its calibration target** — it is *not* accuracy against independent ground truth. For an independent check, the NDVI baseline was compared to ESA WorldCover v200 (a separate 10m land-cover product): 93% pixel agreement, IoU 0.52, F1 0.69 for 2021. Independent satellite products span 3% (Dynamic World) to 13% (ESA) for the same NCR/year; our estimate sits bracketed inside that envelope.
+
+**Published canopy source = a human-calibrated model (replaces the NDVI baseline).** The published per-pixel canopy product is a gradient-boosted classifier over NDVI, Dynamic-World tree probability, Meta v2 1m canopy height, and the ESA tree class, trained on **656 manually labeled high-resolution pixels** (active-learning plus a 500-pixel uniform-random round). Its 10 features are NDVI, Dynamic-World tree probability, Meta 1m height, ESA-tree, and the raw Sentinel-2 spectral bands (red/nir/green/blue + GNDVI). Scored against those human labels under region-grouped out-of-fold CV with post-stratified population weighting, it reaches **precision 0.77, recall 0.79, F1 0.78, IoU 0.64** — beating the old NDVI > 0.62 baseline (F1 0.68, IoU 0.52; precision 95% CI 0.61–0.76) by +0.10 F1 / +0.12 IoU. The spectral bands let it reject high-NDVI grass/scrub the threshold over-called (precision 0.67→0.77) and it recovers diluted urban-fringe canopy; it removes the year-to-year sawtooth (NDVI swung 2.8pp; model holds a 9–10% band, threshold calibrated to the 10.1% human-truth). The spectral bands lifted F1 from 0.75 (four-feature) to 0.78; a CLIP ViT-L/14 embedding was tested and did not help, so it was dropped. The NDVI baseline is retained only for comparison. The Meta ≥5m target (the CLIP regression model's ceiling) scores precision 0.96 / recall 0.46 on the same labels. Method, gold labels, scripts, and the per-round build: `tmp/labeling-20260529T073613Z/` (`RESULTS.md`, `master_labels.csv`, `model_comparison.json`); deployed product `pipeline/compute_canopy_model.py` + `data/canopy_model/`.
 
 ## Known biases and limitations
 

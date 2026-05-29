@@ -56,10 +56,14 @@ fetch:
 	$(PY) $(PIPELINE)/fetch_lgu_polygons.py
 	@echo "[make fetch] DONE."
 
-# ----- compute (per-LGU canopy 2016-2026) -----
-$(PER_LGU_CSV): $(PIPELINE)/compute_canopy.py $(PIPELINE)/aggregate_lgu.py
-	$(PY) $(PIPELINE)/compute_canopy.py
+# ----- compute (per-LGU canopy 2019-2026 from the published human-calibrated model) -----
+# compute_canopy_model.py writes the model canopy product to canopy_<year>.tif (the
+# NDVI baseline is backed up to canopy_ndvi_<year>.tif). aggregate_barangay_model.py
+# writes the per-barangay model geojson the map reads.
+$(PER_LGU_CSV): $(PIPELINE)/compute_canopy_model.py $(PIPELINE)/aggregate_lgu.py $(PIPELINE)/aggregate_barangay_model.py
+	$(PY) $(PIPELINE)/compute_canopy_model.py
 	$(PY) $(PIPELINE)/aggregate_lgu.py
+	$(PY) $(PIPELINE)/aggregate_barangay_model.py
 
 compute: $(PER_LGU_CSV)
 	@echo "[make compute] $(PER_LGU_CSV) ready"
@@ -97,7 +101,7 @@ verify:
 # ----- hash (per-LGU CSV is the deterministic-build canonical) -----
 # EXPECTED_HASH gets pinned once the per-LGU CSV stabilises.
 # Hash gets pinned once the per-LGU CSV stabilises.
-EXPECTED_HASH := bcacdbc73b0c06c8
+EXPECTED_HASH := 699f2c92f971fd45
 
 hash:
 	@$(PY) -c "import hashlib, os; \

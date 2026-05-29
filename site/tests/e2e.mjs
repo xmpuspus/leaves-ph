@@ -53,9 +53,9 @@ const noOverflow = async (page) => {
 };
 
 // ───────────── PAGE LOADS & STRUCTURE (1-7) ─────────────
-await run(1, "index loads with hero + R² 0.87 stat", async (page, errs) => {
+await run(1, "index loads with hero + R² 0.86 stat", async (page, errs) => {
   const h1 = (await page.locator("h1").first().innerText()).trim();
-  const hasR2 = await page.getByText("0.87", { exact: false }).first().isVisible();
+  const hasR2 = await page.getByText("0.86", { exact: false }).first().isVisible();
   return { pass: h1.length > 5 && hasR2 && errs.length === 0, detail: `h1="${h1.slice(0, 40)}" r2=${hasR2} errs=${errs.length}` };
 });
 await run(2, "map loads with MapLibre canvas + KPI strip", async (page) => {
@@ -182,9 +182,9 @@ await run(22, "map loading overlay is gone after load", async (page) => {
 }, mapOpts);
 
 // ───────────── CHARTS & DATA-VIZ (23-27) ─────────────
-await run(23, "methodology cites the detection model (R2 0.87, in optimization)", async (page) => {
+await run(23, "methodology cites the detection model (R2 0.83-0.86, in optimization)", async (page) => {
   const body = await page.locator("body").innerText();
-  return { pass: /0\.87/.test(body) && /optimi[sz]/i.test(body) && /detection model/i.test(body), detail: `r2=${/0\.87/.test(body)} optimizing=${/optimi[sz]/i.test(body)} model=${/detection model/i.test(body)}` };
+  return { pass: /0\.8[36]/.test(body) && /optimi[sz]/i.test(body) && /detection model/i.test(body), detail: `r2=${/0\.8[36]/.test(body)} optimizing=${/optimi[sz]/i.test(body)} model=${/detection model/i.test(body)}` };
 }, { path: "/methodology" });
 await run(24, "no model-evolution / deployed-version narrative on the site", async (page) => {
   const body = await page.locator("body").innerText();
@@ -197,9 +197,9 @@ await run(25, "CanopyTrend shows 2 series + 2026 provisional", async (page) => {
   const body = await page.locator("body").innerText();
   return { pass: svg && /provisional/i.test(body), detail: `trendSvg=${svg} provisional=${/provisional/i.test(body)}` };
 });
-await run(26, "CanopyTrend reconciles to 7.46% at 2026", async (page) => {
+await run(26, "CanopyTrend shows published model 8.82% vs NDVI baseline 7.46% at 2026", async (page) => {
   const body = await page.locator("body").innerText();
-  return { pass: body.includes("7.46") && body.includes("8.40"), detail: `v0=7.46:${body.includes("7.46")} v9=8.40:${body.includes("8.40")}` };
+  return { pass: body.includes("8.82") && body.includes("7.46"), detail: `model=8.82:${body.includes("8.82")} ndvi=7.46:${body.includes("7.46")}` };
 });
 await run(27, "LGU rankings table populated with values", async (page) => {
   const rows = await page.locator("#lgu-table-body tr, table tbody tr").count();
