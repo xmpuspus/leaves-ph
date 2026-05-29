@@ -15,11 +15,11 @@ Outputs:
           area_m2 (float)
           p50_height_m (int)
           p95_height_m (int)
-          lgu_name (str | null)  — the LGU containing the crown centroid
+          lgu_name (str | null)  : the LGU containing the crown centroid
     site/public/data/tree_crowns_ncr.geojson
         Mirror of the above, for direct fetch by the MapLibre layer.
 
-This is the analog to SolarMap.PH's per_building_solar_ncr.geojson —
+This is the analog to SolarMap.PH's per_building_solar_ncr.geojson:
 every tree canopy patch above 5 m is mapped.
 """
 

@@ -205,52 +205,63 @@ def render_frame(
     for xs, ys in lgu_outlines:
         ax.plot(xs, ys, color="#3a3a3a", linewidth=0.5, alpha=0.7, zorder=3)
 
-    ax.set_xlim(120.85, 121.18)
-    ax.set_ylim(14.38, 14.83)
+    # Frame coordinate system: satellite/density rasters occupy lat 14.4–14.8.
+    # Title block sits ABOVE that strip (lat 14.83–14.96), legend + attribution
+    # BELOW it (lat 14.30–14.39). Map area is never written over.
+    ax.set_xlim(120.86, 121.18)
+    ax.set_ylim(14.30, 14.96)
     ax.set_aspect("equal")
     ax.set_xticks([])
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
 
-    # ---- Editorial title block (top-left) ----
+    TXT_Z = 15
+
+    # ---- Editorial title block (ABOVE the map strip) ----
     ax.text(
-        120.86, 14.81, title,
-        fontsize=30, weight="bold", color="#1f3d2b",
-        family="serif", ha="left", va="top",
+        120.87, 14.945, title,
+        fontsize=26, weight="bold", color="#1f3d2b",
+        family="serif", ha="left", va="top", zorder=TXT_Z,
     )
     ax.text(
-        120.86, 14.78, subtitle,
-        fontsize=15, weight="medium", color="#1f3d2b",
-        family="serif", ha="left", va="top",
+        120.87, 14.905, subtitle,
+        fontsize=14, color="#1f3d2b",
+        family="serif", ha="left", va="top", zorder=TXT_Z,
     )
     ax.text(
-        120.86, 14.755, f"YEAR {year}",
-        fontsize=13, color="#5a4f3a",
-        family="monospace", ha="left", va="top",
+        120.87, 14.875, f"YEAR  {year}",
+        fontsize=12, color="#5a4f3a",
+        family="monospace", ha="left", va="top", zorder=TXT_Z,
+    )
+    ax.text(
+        121.17, 14.945,
+        f"NCR  CANOPY",
+        fontsize=9, color="#5a4f3a", family="monospace",
+        ha="right", va="top", zorder=TXT_Z,
+    )
+    ax.text(
+        121.17, 14.915,
+        f"{pct:.2f}%",
+        fontsize=22, color="#1f3d2b", family="serif", weight="bold",
+        ha="right", va="top", zorder=TXT_Z,
+    )
+    ax.text(
+        121.17, 14.875,
+        f"Hansen v1.13 + Sentinel-2 NDVI",
+        fontsize=7, color="#5a4f3a", family="monospace",
+        ha="right", va="top", zorder=TXT_Z,
     )
 
-    # ---- KPI strip (mid-left) ----
-    ax.text(
-        120.86, 14.715,
-        f"NCR CANOPY: {pct:.2f}%",
-        fontsize=11, color="#1a1a1a", family="monospace", ha="left", va="top", weight="bold",
-    )
-    ax.text(
-        120.86, 14.700,
-        "Source: Hansen GFC v1.13, density = treecover2000 minus lossyear<={0}".format(year - 2000),
-        fontsize=7, color="#5a4f3a", family="monospace", ha="left", va="top",
-    )
-
-    # ---- Color legend (bottom-left) ----
-    legend_x0, legend_y0 = 120.86, 14.46
-    legend_w, legend_h = 0.10, 0.008
+    # ---- Color legend (BELOW the map strip) ----
+    legend_x0, legend_y0 = 120.87, 14.355
+    legend_w, legend_h = 0.10, 0.010
     ax.text(
         legend_x0, legend_y0 + legend_h + 0.012,
-        "TREE COVER %",
-        fontsize=8, color="#1a1a1a", family="monospace", ha="left", va="bottom", weight="bold",
+        "TREE COVER  %",
+        fontsize=8, color="#1a1a1a", family="monospace",
+        ha="left", va="bottom", weight="bold", zorder=TXT_Z,
     )
-    # Render gradient as a small inset
     grad = np.linspace(0, 100, 256).reshape(1, -1)
     ax.imshow(
         grad,
@@ -259,30 +270,29 @@ def render_frame(
         vmin=0,
         vmax=100,
         aspect="auto",
-        zorder=4,
+        zorder=TXT_Z - 1,
     )
     for v, label in [(0, "0"), (50, "50"), (100, "100")]:
         ax.text(
             legend_x0 + (v / 100) * legend_w,
-            legend_y0 - 0.005,
+            legend_y0 - 0.006,
             label,
-            fontsize=7,
-            color="#5a4f3a",
-            family="monospace",
-            ha="center",
-            va="top",
+            fontsize=7, color="#5a4f3a", family="monospace",
+            ha="center", va="top", zorder=TXT_Z,
         )
 
-    # ---- Attribution (bottom) ----
+    # ---- Attribution (very bottom) ----
     ax.text(
-        121.17, 14.42,
-        "LEAVES.PH  ·  HTTPS://LEAVES.PH",
-        fontsize=7, color="#5a4f3a", family="monospace", ha="right", va="bottom",
+        121.17, 14.315,
+        "LEAVES.PH",
+        fontsize=8, color="#1a1a1a", family="monospace",
+        ha="right", va="bottom", weight="bold", zorder=TXT_Z,
     )
     ax.text(
-        120.86, 14.42,
-        "BASEMAP: Natural Earth + PSA admin boundaries. DATA: Hansen et al. 2013 (UMD GLAD).",
-        fontsize=7, color="#5a4f3a", family="monospace", ha="left", va="bottom",
+        120.87, 14.315,
+        "BASEMAP: Sentinel-2 RGB (ESA Copernicus).  DATA: Hansen GFC v1.13, Meta v2 calibration, PSA boundaries.",
+        fontsize=6.5, color="#5a4f3a", family="monospace",
+        ha="left", va="bottom", zorder=TXT_Z,
     )
 
     buf = io.BytesIO()

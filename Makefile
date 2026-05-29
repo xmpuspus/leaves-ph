@@ -20,7 +20,8 @@ LAMESA_GIF := docs/demo/la-mesa-watershed.gif
 QUIRINO_GIF := docs/demo/quirino-avenue.gif
 CHOROPLETH_GIF := docs/demo/lgu-choropleth.gif
 
-.PHONY: all fetch compute calibrate animate verify hash hash-verify status test clean help
+.PHONY: all fetch compute calibrate animate verify hash hash-verify status test clean help \
+        train scan release-build release-tag release-zenodo release-hf release release-smoke
 
 help:
 	@echo "Leaves.PH pipeline targets:"
@@ -35,6 +36,10 @@ help:
 	@echo "  make status       Print partial-state inventory (composites/per-LGU/GIFs timestamps)"
 	@echo "  make test         Run the pytest suite"
 	@echo "  make clean        Remove generated artifacts (keeps composites cache)"
+	@echo "  make train        Run v2->v3 SolarMap-pattern training (basic head)"
+	@echo "  make train-all    Run v2->v3->v4->v5->v6 full iteration chain (~30 min)"
+	@echo "  make scan         Run v6 multi-year scan across all 8 epochs (~80 min)"
+	@echo "  make release      Run the 7-step release pipeline (verify, build, tag, mint)"
 
 all: $(PER_LGU_CSV) $(HERO_GIF)
 	@echo
@@ -92,7 +97,7 @@ verify:
 # ----- hash (per-LGU CSV is the deterministic-build canonical) -----
 # EXPECTED_HASH gets pinned once the per-LGU CSV stabilises.
 # Hash gets pinned once the per-LGU CSV stabilises.
-EXPECTED_HASH := PENDING
+EXPECTED_HASH := bcacdbc73b0c06c8
 
 hash:
 	@$(PY) -c "import hashlib, os; \
@@ -131,3 +136,102 @@ clean:
 	rm -f $(PER_LGU_CSV) $(PER_LGU_GEOJSON)
 	rm -f $(HERO_GIF) $(SALEX_GIF) $(LAMESA_GIF) $(QUIRINO_GIF) $(CHOROPLETH_GIF)
 	rm -rf $(ANIM)/_scratch/
+
+# ====================================================================
+# Release pipeline (mirrors solar-map-ph release targets)
+# ====================================================================
+
+# ----- CLIP+LR + Ridge heads (SolarMap pattern, v2 -> v6) -----
+train: train-v3
+	@echo "[make train] clf_v3 ready (basic SolarMap-pattern head)"
+
+train-v3:
+	$(PY) detection/bootstrap/fetch_osm_tree_labels.py
+	$(PY) detection/buildings/fetch_tiles.py
+	$(PY) detection/train/build_dataset_v2.py
+	$(PY) detection/train/train_v2.py
+	$(PY) detection/train/build_dataset_v3.py
+	$(PY) detection/train/train_v3.py
+
+train-v4: train-v3 scan-v3
+	$(PY) detection/train/build_dataset_v4.py
+	$(PY) detection/train/train_v4.py
+
+train-v5: train-v4
+	$(PY) detection/train/train_v5_platt.py
+
+train-v6:
+	$(PY) detection/train/build_dataset_v6_regression.py
+	$(PY) detection/train/train_v6_regressor.py
+
+train-all: train-v3 scan-v3 train-v4 train-v5 train-v6
+	@echo "[make train-all] v2 -> v6 chain complete"
+
+scan: scan-v6 finalize-v6
+	@echo "[make scan] multi-year v5+v6 outputs ready + BENCHMARKS updated"
+
+finalize-v6:
+	$(PY) scripts/finalize_v6_series.py
+
+scan-v3:
+	$(PY) detection/scan/ncr_scan.py
+	@echo "[make scan-v3] detection/scan/validation_v3/ + clf_v3_probs_2024.tif ready"
+
+scan-v6:
+	$(PY) detection/scan/multi_year_scan.py
+	@echo "[make scan-v6] detection/scan/clf_v6_density_<year>.tif + clf_v6_ncr_series.csv ready"
+
+# ----- 7-step release playbook -----
+# 1. verify (release gate)
+# 2. hash-verify (canonical CSV deterministic)
+# 3. release-build (Astro static)
+# 4. release-tag (git tag, push)
+# 5. release-zenodo (DOI mint; manual; prints upload steps)
+# 6. release-hf (publish to HuggingFace)
+# 7. release-smoke (post-deploy fingerprint)
+
+VERSION := $(shell $(PY) -c "import re,pathlib; m=re.search(r'__version__\s*=\s*[\"\\']([\\d.]+)', pathlib.Path('leaves_ph/__init__.py').read_text()); print(m.group(1) if m else 'unknown')")
+
+release-build:
+	@echo "[release-build] version=$(VERSION)"
+	cd site && pnpm install --frozen-lockfile && pnpm build
+	@echo "[release-build] site/dist/ ready"
+
+release-tag:
+	@if [ -z "$$(git status --porcelain)" ]; then \
+	  git tag -a v$(VERSION) -m "Leaves.PH v$(VERSION)" 2>&1 || echo "[release-tag] tag v$(VERSION) exists; skipping"; \
+	  echo "[release-tag] To push: git push origin v$(VERSION)"; \
+	else \
+	  echo "[release-tag] FAIL: working tree dirty. Commit before tagging."; exit 1; \
+	fi
+
+release-zenodo:
+	@echo "[release-zenodo] DOI mint is manual; follow:"
+	@echo "  1. Zip data/per_lgu/, BENCHMARKS.md, MODEL_CARD.md, detection/train/clf_v3.joblib"
+	@echo "  2. Upload to https://zenodo.org/deposit"
+	@echo "  3. Tag the deposit v$(VERSION); update CITATION.cff with the DOI after mint"
+
+release-hf:
+	@if [ -z "$$HUGGINGFACE_HUB_TOKEN" ]; then \
+	  echo "[release-hf] FAIL: HUGGINGFACE_HUB_TOKEN not set"; exit 1; \
+	fi
+	$(PY) scripts/publish_to_huggingface.py --version $(VERSION)
+
+release-smoke:
+	@$(PY) -c "import urllib.request; \
+url='https://leaves.ph'; \
+print(f'[smoke] fetching {url}'); \
+r=urllib.request.urlopen(url, timeout=30); \
+b=r.read().decode('utf-8','replace'); \
+ok='Leaves.PH' in b and 'NDVI' in b; \
+print('[smoke] HTTP', r.getcode()); \
+print('[smoke] title check:', 'Leaves.PH' in b); \
+print('[smoke] method check (NDVI):', 'NDVI' in b); \
+import sys; sys.exit(0 if ok else 1)"
+
+release: verify hash-verify release-build release-tag release-zenodo
+	@echo
+	@echo "[release] v$(VERSION) reached step 5/7."
+	@echo "  Step 6 (release-hf) requires HUGGINGFACE_HUB_TOKEN"
+	@echo "  Step 7 (release-smoke) runs after the deploy is live"
+	@echo "  Push tag: git push origin v$(VERSION)"
