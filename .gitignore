@@ -91,3 +91,13 @@ site/.astro/
 # Tests
 .coverage
 htmlcov/
+site/public/data/tree_crowns_ncr_tagged.geojson
+
+# Crown vector source/intermediate artifacts (regenerable; the deployed map uses
+# only site/public/data/tree_crowns_ncr_tagged.pmtiles)
+data/per_crown/*.pmtiles
+site/public/data/tree_crowns_ncr.pmtiles
+
+# Local-only manual launch attachments (heavy redundant video formats)
+docs/demo/*.mp4
+docs/demo/*.webm
