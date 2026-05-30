@@ -528,9 +528,9 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       // landed on a real tree. SolarMap.PH does the same for solar-panel
       // detections; this is the canopy-version of that interaction.
       const STATUS_META: Record<string, { color: string; label: string }> = {
-        confirmed: { color: "#1f6634", label: "OSM-confirmed" },
-        new:       { color: "#d4a019", label: "tall canopy · ≥ 8 m (Meta-derived)" },
-        candidate: { color: "#9ca3af", label: "candidate · 5-8 m height" },
+        confirmed: { color: "#1f6634", label: "confirmed by street maps" },
+        new:       { color: "#d4a019", label: "not in street maps · tall canopy" },
+        candidate: { color: "#9ca3af", label: "not in street maps · likely tree" },
       };
       function crownPopupHTML(f: any): string {
         const g = f.geometry;

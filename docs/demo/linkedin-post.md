@@ -15,7 +15,7 @@ Leaves.PH is now a map you can explore. Open it and look at where the shade actu
 
 The pattern is hard to miss. The densest, most paved, hottest parts of Metro Manila are the ones with almost no canopy. Central Metro Manila already runs several degrees hotter than its greener edges, and tree cover is the cheapest cooling a city has.
 
-Under the hood: 242,810 individual tree crowns mapped from Sentinel-2 imagery and Meta's 1-metre canopy-height data, classified by a model trained on 656 hand-checked points. Open data, open code, reproducible from a clean clone.
+Under the hood: 242,810 individual tree crowns mapped from Sentinel-2 imagery and Meta's 1-metre canopy-height data, classified by a model trained on 656 hand-checked points. Street maps record only about 4% of those crowns; the rest are mapped from satellite, which is most of what you see. Open data, open code, reproducible from a clean clone.
 
 This is a measurement from public satellite data, not a verdict on any single site. Find your barangay and see how much shade you actually have.
 

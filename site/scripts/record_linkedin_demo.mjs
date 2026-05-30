@@ -45,7 +45,7 @@ const POPUP=`function(status, nearLng, nearLat){
   var bbox=[mnx-pl,mny-pa,mxx+pl,mxy+pa].join(','),W=420,H=420;
   var img='https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox='+bbox+'&size='+W+','+H+'&imageSR=4326&bboxSR=4326&format=jpg&f=image';
   var cx=(mnx+mxx)/2,cy=(mny+mxy)/2,p=feat.properties||{};
-  var META={confirmed:{color:'#1f6634',label:'confirmed by street maps'},'new':{color:'#d4a019',label:'tall canopy (8 m or more)'},candidate:{color:'#9ca3af',label:'likely tree (5 to 8 m)'}};
+  var META={confirmed:{color:'#1f6634',label:'confirmed by street maps'},'new':{color:'#d4a019',label:'not in street maps · tall canopy'},candidate:{color:'#9ca3af',label:'not in street maps · likely tree'}};
   var m=META[status]||{color:'#1f3d2b',label:status};
   var isN=function(v){return typeof v==='number'&&!isNaN(v);};
   var area=isN(p.area_m2)?Number(p.area_m2).toFixed(0)+' m²':'--', p95=isN(p.p95_height_m)?Number(p.p95_height_m).toFixed(1)+' m':'--';
@@ -89,11 +89,11 @@ const esc=()=>page.keyboard.press('Escape');
 await page.evaluate(()=>window.__map.jumpTo({center:[121.03,14.62],zoom:10.6})); await setYear(2026); await page.waitForTimeout(1500);
 // BEAT 2: Quezon City -> 22% (the green city)
 await page.evaluate(()=>window.__map.flyTo({center:[121.053,14.66],zoom:11.4,duration:1500,essential:true})); await page.waitForTimeout(1500);
-const n2=await openLGU('Quezon City'); await page.waitForTimeout(2000);
+const n2=await openLGU('Quezon City'); await page.waitForTimeout(1700);
 // BEAT 3: Pasay -> ~3% (by the airport that hit 43C) -- the contrast
 await esc(); await page.waitForTimeout(350);
 await page.evaluate(()=>window.__map.flyTo({center:[121.001,14.541],zoom:12.2,duration:1500,essential:true})); await page.waitForTimeout(1500);
-const n3=await openLGU('Pasay'); await page.waitForTimeout(2300);
+const n3=await openLGU('Pasay'); await page.waitForTimeout(1900);
 // BEAT 4: real tree from the sky (credibility)
 await esc(); await page.waitForTimeout(350);
 await page.evaluate(()=>window.__map.flyTo({center:[121.065,14.655],zoom:15.3,duration:1700,essential:true})); await page.waitForTimeout(1700);
@@ -102,7 +102,12 @@ const px0=await page.evaluate(()=>{const p=window.__map.project([121.065,14.655]
 await cur(px0.x,px0.y-20); await page.waitForTimeout(350); await page.evaluate(()=>window.__pulse());
 let out=await page.evaluate(()=>window.__popup('confirmed',121.065,14.655)); if(!out) out=await page.evaluate(()=>window.__popup('new',121.065,14.655));
 await page.waitForFunction(()=>{const i=document.querySelector('.maplibregl-popup-content img');return i&&i.complete&&i.naturalWidth>0;},{timeout:5000}).catch(()=>{});
-await page.waitForTimeout(2700);
+await page.waitForTimeout(2400);
+// BEAT 4b: a model-found (yellow) crown nearby -> predicted vs confirmed
+await page.evaluate(()=>document.querySelectorAll('.maplibregl-popup-close-button').forEach(x=>x.click())); await page.waitForTimeout(300);
+let outY=await page.evaluate(()=>window.__popup('new',121.065,14.655));
+await page.waitForFunction(()=>{const i=document.querySelector('.maplibregl-popup-content img');return i&&i.complete&&i.naturalWidth>0;},{timeout:5000}).catch(()=>{});
+await page.waitForTimeout(2600);
 // BEAT 5: find your barangay
 await page.evaluate(()=>document.querySelectorAll('.maplibregl-popup-close-button').forEach(x=>x.click())); await page.waitForTimeout(300);
 const srch=await page.locator('#barangay-search').boundingBox(); if(srch){ await cur(srch.x+srch.width*0.5, srch.y+srch.height/2);} await page.waitForTimeout(1000);
@@ -113,8 +118,8 @@ const beatsSec=((tEnd-tLoaded)/1000);
 const webm=WORK+'/video/'+fs.readdirSync(WORK+'/video').find(f=>f.endsWith('.webm')); const raw=OUT+'/linkedin-demo.webm'; fs.copyFileSync(webm,raw);
 const trim=WORK+'/trim.webm'; const tail=(beatsSec+0.4).toFixed(1);
 execSync(`ffmpeg -y -sseof -${tail} -i "${raw}" -c:v libvpx-vp9 -b:v 3M -an "${trim}"`,{stdio:'ignore'});
-const gif=OUT+'/linkedin-demo.gif', palette=WORK+'/palette.png', VF='fps=9,scale=640:-1:flags=lanczos';
-execSync(`ffmpeg -y -i "${trim}" -vf "${VF},palettegen=max_colors=112:stats_mode=diff" "${palette}"`,{stdio:'ignore'});
+const gif=OUT+'/linkedin-demo.gif', palette=WORK+'/palette.png', VF='fps=9,scale=600:-1:flags=lanczos';
+execSync(`ffmpeg -y -i "${trim}" -vf "${VF},palettegen=max_colors=108:stats_mode=diff" "${palette}"`,{stdio:'ignore'});
 execSync(`ffmpeg -y -i "${trim}" -i "${palette}" -lavfi "${VF}[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5" "${gif}"`,{stdio:'ignore'});
 execSync(`ffmpeg -y -i "${trim}" -c:v libx264 -pix_fmt yuv420p -crf 21 -vf "scale=1280:-2:flags=lanczos,format=yuv420p" -movflags +faststart "${OUT}/linkedin-demo.mp4"`,{stdio:'ignore'});
 console.log('beatsSec',beatsSec.toFixed(1),'QCrow',JSON.stringify(n2),'Pasayrow',JSON.stringify(n3),'climax',JSON.stringify(out));
