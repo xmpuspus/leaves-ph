@@ -132,7 +132,7 @@ def gate_geojson_features():
 
 
 def gate_pmtiles_artifact():
-    p = ROOT / "site" / "public" / "data" / "tree_crowns_ncr.pmtiles"
+    p = ROOT / "site" / "public" / "data" / "tree_crowns_ncr_tagged.pmtiles"
     if not p.exists():
         return ("pmtiles vector pyramid", False, "missing")
     size_mb = p.stat().st_size / 1_000_000
