@@ -1,6 +1,6 @@
-# LinkedIn post draft — Leaves.PH map relaunch
+# LinkedIn post draft: Leaves.PH map relaunch
 
-Pair with: `docs/demo/linkedin-demo.mp4` (upload the MP4, not the GIF — LinkedIn
+Pair with: `docs/demo/linkedin-demo.mp4` (upload the MP4, not the GIF. LinkedIn
 renders native video better; the GIF is the README/preview copy).
 
 ---
