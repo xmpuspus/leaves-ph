@@ -11,28 +11,28 @@ import Base from "../layouts/Base.astro";
     <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Why do canopy figures from different sources differ?</h2>
     <p class="mb-4 text-sm">Different definitions, different sensors, different vintages. A "canopy fraction" computed from NDVI at one resolution is not the same quantity as a "tree-cover" pixel class from Hansen GFC at a 30 percent threshold, or an "open-forest area" expressed in hectares. Leaves.PH publishes one specific quantity defined on the methodology page; adjacent published figures are listed as references with their respective definitions.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">How does this measurement relate to DENR or GFW figures?</h2>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">How does this measurement relate to DENR or GFW figures?</h2>
     <p class="mb-4 text-sm">It is a separate measurement using its own definition (a human-calibrated canopy model over Sentinel-2 NDVI and spectral bands, Dynamic World tree probability, Meta v2 1 m canopy height, and ESA land cover, validated against manual high-resolution labels at F1 0.78). It is not a replacement for, or a verdict on, any other source. The methodology cross-reference on the home page lists adjacent published estimates side by side so the definitional differences are visible.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">Does this prove a specific expressway or development clearing was illegal?</h2>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Does this prove a specific expressway or development clearing was illegal?</h2>
     <p class="mb-4 text-sm">No. Leaves.PH publishes per-LGU canopy fractions from satellite imagery; it does not adjudicate Environmental Compliance Certificates, permits, or whether ECC conditions were met. Before-and-after canopy strips of specific corridors are descriptive evidence of vegetation change, not legal evidence of permit compliance.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">Is there per-barangay data?</h2>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Is there per-barangay data?</h2>
     <p class="mb-4 text-sm">Yes. <code>data/per_barangay/per_barangay_canopy_2019_2026.csv</code> ships 892 OSM admin-level=10 polygons inside NCR, with canopy fractions per year per polygon. These are OSM subdivisions; mapping them onto the PSA barangay roster is the next data-engineering refinement.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">Why 30 m resolution and not 10 m?</h2>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Why 30 m resolution and not 10 m?</h2>
     <p class="mb-4 text-sm">GEE's synchronous URL export limit is 50 MB. At 10 m native, a 4-band NCR Sentinel-2 composite is ~190 MB. At 30 m it fits inside the limit. The choice trades off some urban-tree detail for build simplicity (no chunked exports + mosaic step). The next granularity push may move to 10 m chunked.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">What is the deal with the La Mesa watershed?</h2>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">What is the deal with the La Mesa watershed?</h2>
     <p class="mb-4 text-sm">It is the NCR canopy story most people miss. Estoque et al. 2018 (Forest Ecology and Management vol. 430) documents a net forest gain of 557 hectares in La Mesa from 2002 to 2016 thanks to MWSI / Bantay Kalikasan reforestation. The decline narrative for Metro Manila is real but not monotone: Quezon City and Marikina hold the NE green zone and have been climbing while Manila and Caloocan continue to lose canopy.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">Can I cite Leaves.PH in a paper?</h2>
-    <p class="mb-4 text-sm">Yes. See <a href="https://github.com/xmpuspus/leaves-ph/blob/main/CITATION.cff" class="no-underline text-accent-steel">CITATION.cff</a>. A versioned Zenodo DOI is minted at each tagged release.</p>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">Can I cite Leaves.PH in a paper?</h2>
+    <p class="mb-4 text-sm">Yes. See <a href="https://github.com/xmpuspus/leaves-ph/blob/main/CITATION.cff" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">CITATION.cff</a>. A versioned Zenodo DOI is minted at each tagged release.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">How do I submit a correction?</h2>
-    <p class="mb-4 text-sm">Open an issue at <a href="https://github.com/xmpuspus/leaves-ph/issues/new?template=lgu_correction.md" class="no-underline text-accent-steel">github.com/xmpuspus/leaves-ph</a> using the LGU correction template. Include the LGU name, the year, the alternative value you propose, and a citable source. Per-barangay corrections are welcome.</p>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">How do I submit a correction?</h2>
+    <p class="mb-4 text-sm">Open an issue at <a href="https://github.com/xmpuspus/leaves-ph/issues/new?template=lgu_correction.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">github.com/xmpuspus/leaves-ph</a> using the LGU correction template. Include the LGU name, the year, the alternative value you propose, and a citable source. Per-barangay corrections are welcome.</p>
 
-    <h2 class="text-lg text-ink-900 mt-8 mb-2">What if I find what looks like a private residence in the data?</h2>
-    <p class="mb-4 text-sm">Leaves.PH publishes canopy polygons (per-LGU, per-barangay, and per-crown) derived from satellite imagery and a 1 m canopy-height mask. Crown polygons outline vegetation, not buildings, and carry no household-level inference or individual identification. Vegetation is not personal data under RA 10173. If you still spot something concerning, file a private security advisory: <a href="https://github.com/xmpuspus/leaves-ph/security/advisories/new" class="no-underline text-accent-steel">github.com/xmpuspus/leaves-ph/security</a>. Acknowledged within 5 working days.</p>
+    <h2 class="font-display text-xl text-ink-900 mt-8 mb-2">What if I find what looks like a private residence in the data?</h2>
+    <p class="mb-4 text-sm">Leaves.PH publishes canopy polygons (per-LGU, per-barangay, and per-crown) derived from satellite imagery and a 1 m canopy-height mask. Crown polygons outline vegetation, not buildings, and carry no household-level inference or individual identification. Vegetation is not personal data under RA 10173. If you still spot something concerning, file a private security advisory: <a href="https://github.com/xmpuspus/leaves-ph/security/advisories/new" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">github.com/xmpuspus/leaves-ph/security</a>. Acknowledged within 5 working days.</p>
   </article>
 </Base>

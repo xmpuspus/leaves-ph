@@ -8,9 +8,10 @@
    - DM Sans (Indian Type Foundry / Colophon; regional warmth, less seen
      than Inter / Plus Jakarta Sans / Geist)
    - JetBrains Mono (functional; common but does its job).
+   The font stylesheet is linked from Base.astro <head> with preconnect, so it
+   is not render-blocking and does not trip the CSS "@import must precede" rule.
    Hanging punctuation, oldstyle figures, optical kerning are turned on
    below in the body rule. */
-@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap");
 
 @layer base {
   html {
@@ -63,6 +64,30 @@
 }
 
 @layer components {
+  /* Skip link: hidden until keyboard focus, then drops in at the top-left so
+     keyboard users can jump past the masthead + nav to the main content. */
+  .skip-link {
+    position: fixed;
+    left: 0.5rem;
+    top: 0.5rem;
+    z-index: 100;
+    transform: translateY(-160%);
+    background: #1f3d2b;
+    color: #f7f3e9;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    padding: 0.5rem 0.9rem;
+    text-decoration: none;
+    transition: transform 0.15s ease-out;
+  }
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    transform: translateY(0);
+    color: #f7f3e9;
+    outline: 2px solid #f7f3e9;
+    outline-offset: 2px;
+  }
   /* Kicker: small caps, mono, NO uppercase transform (real small-caps via
      OpenType, not faked-with-uppercase). Slight indent so it reads like a
      dateline marker. */

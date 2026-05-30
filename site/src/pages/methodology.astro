@@ -28,15 +28,15 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       <li><strong>Meta Canopy Height v2</strong> from <code>s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/chm/</code>. 1 m height truth (source imagery 2018-2020), Bing-style quadkey tiles, downloaded for the 4 zoom-9 tiles overlapping NCR, mosaicked, reprojected EPSG:3857 to EPSG:4326.</li>
     </ul>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">NDVI threshold</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">NDVI threshold</h2>
     <p class="mb-3">For each year, we compute NDVI = (NIR - RED) / (NIR + RED) per pixel from the Sentinel-2 composite. A binary canopy mask is derived by thresholding NDVI &ge; T, where T is calibrated against Meta canopy height v2.</p>
     <p class="mb-3">Calibration is F1-maximising over a 0.40 to 0.70 sweep, with a recall floor of 0.85 against Meta height &gt; 5 m. The sweep table lives at <code>data/calibration_report.json</code>. The result is documented in <code>BENCHMARKS.md</code>.</p>
     <p class="mb-3"><strong>Honesty caveat:</strong> Meta v2's source imagery is 80 percent from 2018-2020, so the calibration layer is closer to a 2019 truth than a current-epoch truth. We treat NDVI-vs-Meta agreement as a constant offset and apply the same threshold to every epoch. A future revision can introduce a per-epoch calibration once GEDI L2A monthly RH98 spot-truth is integrated.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Per-LGU aggregation</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Per-LGU aggregation</h2>
     <p class="mb-3">LGU polygons come from OpenStreetMap admin-level=6 relations for the 17 NCR LGUs (16 cities + Pateros). Each year's canopy mask is masked by each LGU polygon; canopy hectares are computed by multiplying pixel count by the latitude-corrected pixel area (cos(14.6 deg)) and dividing by 100 (km^2 -&gt; ha). The result is the per-LGU CSV <code>data/per_lgu/per_lgu_canopy_2019_2026.csv</code>, the hash-verified canonical artifact.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Adjacent published estimates</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Adjacent published estimates</h2>
     <p class="mb-3">Other publicly available estimates of Metro Manila tree cover use different definitions, sensors, and vintages. They are listed here for methodology context, not as a ranking:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li><strong>DENR FMB</strong> (cited in news and EJN, 2024+): 6 percent canopy fraction. Source document not in public 2024+ reports we have located at the time of this release.</li>
@@ -47,15 +47,15 @@ import { SERIES_START, SERIES_END } from "../lib/series";
     </ul>
     <p class="mb-3">Leaves.PH publishes a reproducible measurement series with the full pipeline committed. The intent is to add a separately-defined, fully reproducible measurement to the public record; not to rank against any of the above.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Detection model (in optimization)</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Detection model (in optimization)</h2>
     <p class="mb-3">Alongside the NDVI baseline, a detection model estimates continuous canopy density per tile. It follows the SolarMap.PH playbook: per-tile CLIP ViT-Large/14 embeddings regressed onto Meta v2's &gt;5 m canopy fraction (0..1) with gradient boosting, deterministic hyper-parameters, Meta canopy height as the reference signal.</p>
-    <p class="mb-3">On held-out locations the model never saw in training (5-fold cross-validation grouped by location, 16,800 tiles across 2019-2026), it reaches R&sup2; 0.83&ndash;0.86 under grouped cross-validation (0.86 location-grouped, 0.83 spatial-block; MAE 0.053) against Meta's 1 m reference. That figure measures how well the model reproduces Meta's canopy fraction &mdash; its calibration target &mdash; not accuracy against independent ground truth; against ESA WorldCover v200 the underlying NDVI mask agrees on 93&percnt; of pixels (IoU 0.52). This CLIP detection model is a separate research track; the published per-LGU and per-barangay canopy figures on this site come from the human-calibrated canopy model described next.</p>
+    <p class="mb-3">On held-out locations the model never saw in training (5-fold cross-validation grouped by location, 16,800 tiles across 2019-2026), it reaches R&sup2; 0.83&ndash;0.86 under grouped cross-validation (0.86 location-grouped, 0.83 spatial-block; MAE 0.053) against Meta's 1 m reference. That figure measures how well the model reproduces Meta's canopy fraction, its calibration target, not accuracy against independent ground truth; against ESA WorldCover v200 the underlying NDVI mask agrees on 93&percnt; of pixels (IoU 0.52). This CLIP detection model is a separate research track; the published per-LGU and per-barangay canopy figures on this site come from the human-calibrated canopy model described next.</p>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Published canopy model (human-calibrated)</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Published canopy model (human-calibrated)</h2>
     <p class="mb-3">The published canopy product is a gradient-boosted classifier over ten per-pixel features available every year: NDVI, Dynamic-World tree probability, Meta v2 one-metre canopy height, the ESA WorldCover tree class, and the raw Sentinel-2 spectral bands (red, NIR, green, blue, GNDVI). It was trained on 656 30-metre pixels labelled by hand against 0.5&ndash;1 m Esri World Imagery: an active-learning pass concentrating on the NDVI decision boundary and grass-vs-tree confusion zones, plus a 500-pixel uniform-random round to tighten the confidence intervals.</p>
-    <p class="mb-3">Scored against those manual labels under region-grouped out-of-fold cross-validation with post-stratified population weighting, the model reaches <strong>F1 0.78, IoU 0.64</strong> (precision 0.77, recall 0.79). The old NDVI&nbsp;&gt;&nbsp;0.62 rule scores F1 0.68, IoU 0.52 on the same labels (precision 95&percnt; CI 0.61&ndash;0.76 at n=656); the model recovers diluted urban-fringe canopy the threshold missed and uses the green/blue bands to reject high-NDVI grass and scrub the threshold over-called (precision 0.67&rarr;0.77). It also removes the year-to-year sawtooth of the NDVI series (a fixed-threshold artefact), holding a steady 9&ndash;10&percnt; cross-sectional snapshot. The spectral bands lifted F1 from 0.75 (four-feature model) to 0.78; a CLIP ViT-L/14 embedding was tested and did not help, so it was dropped. The NDVI baseline is retained only for comparison. Full numbers in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="no-underline text-accent-steel">BENCHMARKS.md</a>.</p>
+    <p class="mb-3">Scored against those manual labels under region-grouped out-of-fold cross-validation with post-stratified population weighting, the model reaches <strong>F1 0.78, IoU 0.64</strong> (precision 0.77, recall 0.79). The old NDVI&nbsp;&gt;&nbsp;0.62 rule scores F1 0.68, IoU 0.52 on the same labels (precision 95&percnt; CI 0.61&ndash;0.76 at n=656); the model recovers diluted urban-fringe canopy the threshold missed and uses the green/blue bands to reject high-NDVI grass and scrub the threshold over-called (precision 0.67&rarr;0.77). It also removes the year-to-year sawtooth of the NDVI series (a fixed-threshold artefact), holding a steady 9&ndash;10&percnt; cross-sectional snapshot. The spectral bands lifted F1 from 0.75 (four-feature model) to 0.78; a CLIP ViT-L/14 embedding was tested and did not help, so it was dropped. The NDVI baseline is retained only for comparison. Full numbers in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">BENCHMARKS.md</a>.</p>
 
-    <p class="mb-6 text-sm text-ink-500">Per-LGU validation panels, one PNG per LGU, are browsable at <a href="/validation" class="no-underline text-umber-700">/validation</a> and stored at <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan/validation_v3" class="no-underline text-accent-steel">detection/scan/validation_v3/</a>. Each panel shows S-2 RGB, NDVI v0 baseline (orange), clf shared/confirmed (green), and clf NEW additions (yellow). Full benchmark table in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="no-underline text-accent-steel">BENCHMARKS.md</a>.</p>
+    <p class="mb-6 text-sm text-ink-500">Per-LGU validation panels, one PNG per LGU, are browsable at <a href="/validation" class="no-underline text-umber-700">/validation</a> and stored at <a href="https://github.com/xmpuspus/leaves-ph/tree/main/detection/scan/validation_v3" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">detection/scan/validation_v3/</a>. Each panel shows S-2 RGB, NDVI v0 baseline (orange), clf shared/confirmed (green), and clf NEW additions (yellow). Full benchmark table in <a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">BENCHMARKS.md</a>.</p>
 
     <figure class="my-6">
       <img src="/validation/validation_Quezon_City_t60.png"
@@ -66,7 +66,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       </figcaption>
     </figure>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Known limitations</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Known limitations</h2>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li>30 m output resolution (matched to Hansen; trades off some urban-tree detail).</li>
       <li>Calibration epoch is ~2019 (Meta source imagery); the same threshold is applied to every epoch in the {SERIES_START}–{SERIES_END} series.</li>
@@ -75,8 +75,8 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       <li>Per-LGU and per-barangay (892 OSM admin-level=10 polygons) ship in this release; 10 m chunked exports for finer urban-tree detail are the next granularity push.</li>
     </ul>
 
-    <h2 class="text-xl text-ink-900 mt-8 mb-3">Reproduce locally</h2>
-    <pre class="bg-paper-alt p-4 rounded text-sm overflow-x-auto">git clone https://github.com/xmpuspus/leaves-ph
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Reproduce locally</h2>
+    <pre class="bg-paper-tint p-4 rounded text-sm overflow-x-auto">git clone https://github.com/xmpuspus/leaves-ph
 cd leaves-ph
 python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install -r requirements.txt
@@ -86,6 +86,6 @@ make calibrate             # tunes the NDVI threshold against Meta
 make compute               # per-year canopy mask + per-LGU CSV
 make verify                # release gate</pre>
 
-    <p class="text-sm text-ink-500 mt-6">Full prior-work review and dataset attribution: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/docs/research/prior-work.md" class="no-underline text-accent-steel">docs/research/prior-work.md</a>. License: code MIT, data CC-BY-4.0.</p>
+    <p class="text-sm text-ink-500 mt-6">Full prior-work review and dataset attribution: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/docs/research/prior-work.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">docs/research/prior-work.md</a>. License: code MIT, data CC-BY-4.0.</p>
   </article>
 </Base>

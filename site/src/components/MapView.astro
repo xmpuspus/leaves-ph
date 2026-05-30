@@ -29,23 +29,23 @@ import { SERIES_START, SERIES_END } from "../lib/series";
   </div>
 
   <!-- Headline strip: four KPIs in editorial-table layout (no card grid) -->
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 divide-x divide-ink-300">
-    <div class="pl-0">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 md:divide-x md:divide-ink-300">
+    <div class="md:pl-0">
       <p class="kicker text-ink-500 mb-1.5">CANOPY COVER</p>
       <p id="strip-total-pct" class="stat-medium leading-none">--</p>
       <p id="strip-total-ha" class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">--</p>
     </div>
-    <div class="pl-6">
+    <div class="md:pl-6">
       <p class="kicker text-ink-500 mb-1.5">SHIFT, {SERIES_START}&ndash;{SERIES_END}</p>
       <p id="strip-delta" class="stat-medium leading-none">--</p>
       <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">8-year change</p>
     </div>
-    <div class="pl-6">
+    <div class="md:pl-6">
       <p class="kicker text-ink-500 mb-1.5">TREES MAPPED</p>
       <p class="stat-medium leading-none">242,810</p>
       <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">individual crown polygons</p>
     </div>
-    <div class="pl-6">
+    <div class="md:pl-6">
       <p class="kicker text-ink-500 mb-1.5">CANOPY REFERENCE</p>
       <p class="stat-medium leading-none">Meta v2</p>
       <p class="font-mono text-[11px] mt-2 text-ink-500 leading-relaxed">1 m canopy height &middot; &gt;5 m</p>
@@ -76,10 +76,17 @@ import { SERIES_START, SERIES_END } from "../lib/series";
         placeholder="type a barangay name…"
         autocomplete="off"
         aria-label="Search for a barangay by name and zoom to it"
-        class="map-focusable !cursor-text border border-ink-300 bg-paper px-2 py-1 text-[11px] font-mono lowercase tracking-normal text-ink-900 placeholder:text-ink-300 w-56 disabled:opacity-40 disabled:!cursor-not-allowed"
+        class="map-focusable !cursor-text border border-ink-300 bg-paper px-2 py-1 text-[11px] font-mono lowercase tracking-normal text-ink-900 placeholder:text-ink-500 w-56 disabled:opacity-40 disabled:!cursor-not-allowed"
       />
       <datalist id="barangay-list"></datalist>
       <span id="barangay-search-msg" class="text-ink-500/70 normal-case tracking-normal" aria-live="polite"></span>
+    </div>
+    <div class="flex flex-wrap gap-x-3 gap-y-1 items-center font-mono text-[10px] uppercase tracking-[0.12em] text-sepia-500 mt-2">
+      <span>LGU CANOPY %:</span>
+      <span class="text-ink-500 tabular-nums">0</span>
+      <span class="inline-block h-2.5 w-32 border border-ink-300" style="background:linear-gradient(to right,#ffffe5,#d9f0a3,#78c679,#238443,#004529)" role="img" aria-label="LGU choropleth fill scale, light for low canopy through dark green for 22 percent or more"></span>
+      <span class="text-ink-500 tabular-nums">22%+</span>
+      <span class="normal-case tracking-normal">choropleth fill</span>
     </div>
     <div class="flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[10px] uppercase tracking-[0.12em] text-ink-500 mt-2">
       <span>CROWN COLOR:</span>
@@ -141,8 +148,11 @@ import { SERIES_START, SERIES_END } from "../lib/series";
   </aside>
 </section>
 
+<!-- Dismiss scrim behind the slide-over: click anywhere to close. -->
+<div id="lgu-scrim" class="fixed inset-0 bg-ink-900/30 z-40 opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true"></div>
+
 <!-- SLIDE-OVER LGU DETAIL SHEET (right-anchored) -->
-<aside id="lgu-sheet" class="fixed inset-y-0 right-0 w-full max-w-md bg-paper border-l border-ink-900 transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto shadow-xl">
+<aside id="lgu-sheet" role="dialog" aria-modal="true" aria-labelledby="lgu-name" tabindex="-1" class="fixed inset-y-0 right-0 w-full max-w-md bg-paper border-l border-ink-900 transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto shadow-xl">
   <div class="border-b border-ink-900 px-5 py-3 flex items-baseline justify-between sticky top-0 bg-paper">
     <p class="kicker text-ink-500">LGU DOSSIER</p>
     <button id="lgu-sheet-close" class="font-mono text-sm text-ink-700 hover:text-forest-700">close &times;</button>
@@ -214,7 +224,6 @@ import { SERIES_START, SERIES_END } from "../lib/series";
   const YEARS = Array.from({ length: 8 }, (_, i) => 2019 + i);
   const MAX_PCT_FOR_COLOR = 22;
   const FOREST_GREEN = "#1f3d2b";
-  // const UMBER = "#b65724";
   const INK = "#1a1a1a";
 
   function colorForPct(pct: number | null | undefined): string {
@@ -321,7 +330,31 @@ import { SERIES_START, SERIES_END } from "../lib/series";
     const slider = document.getElementById("year-slider");
     const yearLabel = document.getElementById("year-label");
     const sheet = document.getElementById("lgu-sheet");
-    (document.getElementById("lgu-sheet-close") as HTMLButtonElement).onclick = () => sheet!.classList.add("translate-x-full");
+    const scrim = document.getElementById("lgu-scrim");
+    const sheetClose = document.getElementById("lgu-sheet-close") as HTMLButtonElement;
+    function openSheet() {
+      sheet!.classList.remove("translate-x-full");
+      if (scrim) {
+        scrim.classList.remove("opacity-0", "pointer-events-none");
+        scrim.classList.add("opacity-100");
+      }
+      sheetClose?.focus();
+    }
+    function closeSheet() {
+      sheet!.classList.add("translate-x-full");
+      if (scrim) {
+        scrim.classList.add("opacity-0", "pointer-events-none");
+        scrim.classList.remove("opacity-100");
+      }
+    }
+    function sheetIsOpen() {
+      return !sheet!.classList.contains("translate-x-full");
+    }
+    sheetClose.onclick = closeSheet;
+    scrim?.addEventListener("click", closeSheet);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && sheetIsOpen()) closeSheet();
+    });
 
     function applyYearStyle(year: number) {
       yearLabel!.textContent = String(year);
@@ -573,7 +606,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       document.getElementById("lgu-hansen")!.textContent = fmtHa(p.hansen_loss_ha_cumulative_2024);
       document.getElementById("lgu-esa")!.textContent = fmtPct(p.esa_tree_pct_2021);
       drawCurve(p);
-      sheet!.classList.remove("translate-x-full");
+      openSheet();
     }
     function drawCurve(p: any) {
       const svg = document.getElementById("lgu-curve")!;
@@ -739,8 +772,8 @@ import { SERIES_START, SERIES_END } from "../lib/series";
           if (!f) return;
           const p = f.properties || {};
           const yr = Number((slider as HTMLInputElement).value);
-          const pct = p[`canopy_pct_v9_${yr}`];
-          const ha = p[`canopy_ha_v9_${yr}`];
+          const pct = p[`canopy_pct_model_${yr}`];
+          const ha = p[`canopy_ha_model_${yr}`];
           new maplibregl.Popup({ maxWidth: "300px", closeButton: true })
             .setLngLat(e.lngLat)
             .setHTML(
@@ -749,7 +782,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
                 <div style="color:#5a4f3a;">${p.lgu_name ?? ""}</div>
                 <div style="margin-top:6px;">${yr}${yr === 2026 ? " (provisional)" : ""}: <b>${pct == null ? "n/a" : Number(pct).toFixed(2) + "%"}</b></div>
                 <div style="color:#5a4f3a;">${ha == null ? "" : Number(ha).toFixed(1) + " ha canopy of " + Number(p.total_ha).toFixed(0) + " ha"}</div>
-                <div style="color:#837d6a;font-size:10px;margin-top:6px;">Source: detection model (CLIP + gradient-boosted regression), in optimization.</div>
+                <div style="color:#675f4a;font-size:10px;margin-top:6px;">Source: human-calibrated canopy model (published).</div>
               </div>`,
             )
             .addTo(map);

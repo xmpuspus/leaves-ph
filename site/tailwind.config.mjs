@@ -30,7 +30,10 @@ export default {
         },
         sepia: {
           700: "#5a4f3a",
-          500: "#837d6a",
+          // 500 darkened from #837d6a to clear WCAG AA (4.5:1) on the paper
+          // backgrounds for the small label/kicker/caption text it carries,
+          // while staying clearly muted against ink-900.
+          500: "#6c6650",
           300: "#b0a890",
         },
         signal: {
