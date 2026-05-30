@@ -1,18 +1,4 @@
 ---
-import Base from "../layouts/Base.astro";
-import MapView from "../components/MapView.astro";
+// The map is now the landing page. Keep /map working for any shared links.
+return Astro.redirect("/", 301);
 ---
-<Base title="Leaves.PH · the map" pathname="/map">
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 pb-6">
-    <p class="kicker mb-3">FEATURE &middot; INTERACTIVE</p>
-    <div class="grid md:grid-cols-editorial gap-x-12 gap-y-4 items-end">
-      <h1 class="font-display font-medium tracking-tight text-ink-900 leading-[0.95]" style="font-size: clamp(2rem, 5vw, 3.5rem);">
-        Every canopy patch above 5 m, mapped per LGU, year by year.
-      </h1>
-      <p class="text-sm text-ink-700 leading-[1.7] max-w-prose">
-        Slide the year. The choropleth retunes. The Meta canopy 1 m raster sits underneath. Click any LGU to open its dossier: 8-year curve, Hansen cumulative loss, ESA 2021 cross-check. Crown polygons (242,810 individual canopy patches) load at street zoom when the .pmtiles file ships.
-      </p>
-    </div>
-  </section>
-  <MapView />
-</Base>

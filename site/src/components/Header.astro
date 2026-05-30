@@ -5,58 +5,38 @@ interface Props {
 const { pathname } = Astro.props;
 
 const links = [
-  { href: "/", label: "the report" },
-  { href: "/map", label: "the map" },
-  { href: "/validation", label: "validation" },
+  { href: "/", label: "the map" },
+  { href: "/report", label: "the report" },
   { href: "/methodology", label: "methodology" },
+  { href: "/validation", label: "validation" },
   { href: "/data", label: "data" },
   { href: "/faq", label: "faq" },
   { href: "/privacy", label: "privacy" },
 ];
 ---
-<header>
-  <div class="border-b border-ink-900/30 bg-paper">
-    <div class="max-w-[1280px] mx-auto px-6 sm:px-10 py-1.5 flex items-baseline justify-between text-[10px] font-mono uppercase tracking-[0.14em] text-sepia-700">
-      <span>METRO MANILA · NATIONAL CAPITAL REGION</span>
-      <span class="hidden sm:inline">OPEN DATA · MIT · CC-BY-4.0</span>
-      <a href="https://github.com/xmpuspus/leaves-ph" class="no-underline text-sepia-700 hover:text-forest-700">REPOSITORY · GITHUB</a>
-    </div>
-  </div>
-
-  <div class="border-b border-ink-900 bg-paper">
-    <div class="max-w-[1280px] mx-auto px-6 sm:px-10 py-5 sm:py-8 grid grid-cols-[1fr_auto] gap-6 items-end">
-      <a href="/" class="no-underline block group">
-        <p class="font-display text-ink-900 leading-[0.85] tracking-[-0.04em]"
-            style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
-          Leaves<span class="text-umber-500">.</span>PH
-        </p>
-        <p class="kicker mt-3 text-sepia-500 hidden sm:block">An open Sentinel-2 tree-cover measurement series for Metro Manila</p>
-      </a>
-      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-sepia-700 leading-[1.6] text-right hidden md:block">
-        <p>Editor &amp; Setter</p>
-        <p class="text-ink-900">Xavier Puspus</p>
-        <p class="mt-2">License</p>
-        <p class="text-ink-900">MIT · CC-BY-4.0</p>
-      </div>
-    </div>
-    <!-- Navigation bar: thin separator + small caps + horizontal rule between
-         tabs. Reads as a print contents list, not a SaaS nav. -->
-    <nav class="border-t border-ink-900/30">
-      <ul class="max-w-[1280px] mx-auto px-6 sm:px-10 flex flex-wrap items-center text-[12px] font-mono uppercase tracking-[0.18em] text-sepia-700">
-        {links.map((link, i) => {
-          const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
-          return (
-            <li class="flex items-center">
-              <a
-                href={link.href}
-                class={`block py-3 sm:py-3.5 ${i === 0 ? "pl-0" : "pl-4 sm:pl-6"} pr-4 sm:pr-6 no-underline transition-colors ${active ? "text-umber-700" : "hover:text-ink-900"}`}
-              >
-                <span class={active ? "underline underline-offset-4 decoration-umber-500 decoration-2" : ""}>{link.label}</span>
-              </a>
-              {i < links.length - 1 && <span class="text-ink-300/40">·</span>}
-            </li>
-          );
-        })}
+<header class="sticky top-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-ink-900">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-8 h-[52px] flex items-center justify-between gap-4">
+    <a href="/" class="no-underline shrink-0 font-display text-ink-900 leading-none tracking-[-0.035em]" style="font-size: 1.55rem;" aria-label="Leaves.PH home">
+      Leaves<span class="text-umber-500">.</span>PH
+    </a>
+    <nav aria-label="Primary" class="min-w-0">
+      <ul class="flex items-center gap-x-3 sm:gap-x-5 overflow-x-auto no-scrollbar whitespace-nowrap text-[11px] font-mono uppercase tracking-[0.16em] text-sepia-700">
+        {
+          links.map((link) => {
+            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <li class="shrink-0">
+                <a
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  class={`no-underline py-2 transition-colors ${active ? "text-umber-700" : "hover:text-ink-900"}`}
+                >
+                  <span class={active ? "underline underline-offset-4 decoration-umber-500 decoration-2" : ""}>{link.label}</span>
+                </a>
+              </li>
+            );
+          })
+        }
       </ul>
     </nav>
   </div>
