@@ -59,8 +59,11 @@ const POPUP=`function(status, nearLng, nearLat){
   var sheet=document.getElementById('lgu-sheet'); if(sheet) sheet.classList.add('translate-x-full');
   var H2=map.getCanvas().getBoundingClientRect().height;
   map.flyTo({center:[cx,cy],zoom:Math.max(map.getZoom(),16),offset:[0,-H2*0.40],duration:600});
-  setTimeout(function(){ new window.maplibregl.Popup({maxWidth:'460px',closeButton:true,anchor:'top',offset:6}).setLngLat([cx,cy]).setHTML(html).addTo(map); },680);
-  return {status:status,lgu:lgu,lng:cx,lat:cy};
+  return new Promise(function(resolve){
+    var im=new Image(), done=false;
+    var open=function(){ if(done) return; done=true; setTimeout(function(){ new window.maplibregl.Popup({maxWidth:'460px',closeButton:true,anchor:'top',offset:6}).setLngLat([cx,cy]).setHTML(html).addTo(map); resolve({status:status,lgu:lgu,lng:cx,lat:cy}); },640); };
+    im.onload=open; im.onerror=open; im.src=img; setTimeout(open,8000);
+  });
 }`;
 
 const b=await chromium.launch({headless:true});
@@ -98,8 +101,8 @@ await page.evaluate(()=>{const r=document.getElementById('basemap-sat');r.checke
 const px0=await page.evaluate(()=>{const p=window.__map.project([121.065,14.655]);return {x:p.x,y:p.y};});
 await cur(px0.x,px0.y-20); await page.waitForTimeout(350); await page.evaluate(()=>window.__pulse());
 let out=await page.evaluate(()=>window.__popup('confirmed',121.065,14.655)); if(!out) out=await page.evaluate(()=>window.__popup('new',121.065,14.655));
-await page.waitForFunction(()=>{const i=document.querySelector('.maplibregl-popup-content img');return i&&i.complete&&i.naturalWidth>0;},{timeout:2800}).catch(()=>{});
-await page.waitForTimeout(1900);
+await page.waitForFunction(()=>{const i=document.querySelector('.maplibregl-popup-content img');return i&&i.complete&&i.naturalWidth>0;},{timeout:5000}).catch(()=>{});
+await page.waitForTimeout(2700);
 // BEAT 5: find your barangay
 await page.evaluate(()=>document.querySelectorAll('.maplibregl-popup-close-button').forEach(x=>x.click())); await page.waitForTimeout(300);
 const srch=await page.locator('#barangay-search').boundingBox(); if(srch){ await cur(srch.x+srch.width*0.5, srch.y+srch.height/2);} await page.waitForTimeout(1000);
