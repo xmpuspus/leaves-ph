@@ -12,7 +12,6 @@ from __future__ import annotations
 import math
 import urllib.request
 from pathlib import Path
-from typing import Tuple
 
 import numpy as np
 from PIL import Image
@@ -23,16 +22,16 @@ CACHE.mkdir(exist_ok=True)
 USER_AGENT = "leaves-ph/0.1.0 (https://github.com/xmpuspus/leaves-ph)"
 
 
-def lonlat_to_tile(lon: float, lat: float, zoom: int) -> Tuple[float, float]:
+def lonlat_to_tile(lon: float, lat: float, zoom: int) -> tuple[float, float]:
     lat_rad = math.radians(lat)
-    n = 2 ** zoom
+    n = 2**zoom
     x = (lon + 180) / 360 * n
     y = (1 - math.log(math.tan(lat_rad) + 1 / math.cos(lat_rad)) / math.pi) / 2 * n
     return x, y
 
 
-def tile_to_lonlat(x: float, y: float, zoom: int) -> Tuple[float, float]:
-    n = 2 ** zoom
+def tile_to_lonlat(x: float, y: float, zoom: int) -> tuple[float, float]:
+    n = 2**zoom
     lon = x / n * 360 - 180
     lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * y / n)))
     return lon, math.degrees(lat_rad)
@@ -49,7 +48,9 @@ def fetch_tile(z: int, x: int, y: int) -> Image.Image:
     return Image.open(cached).convert("RGB")
 
 
-def basemap_for_bbox(bbox: Tuple[float, float, float, float], zoom: int) -> tuple[np.ndarray, tuple[float, float, float, float]]:
+def basemap_for_bbox(
+    bbox: tuple[float, float, float, float], zoom: int
+) -> tuple[np.ndarray, tuple[float, float, float, float]]:
     """Returns (image, actual_bbox).
 
     bbox is (min_lon, min_lat, max_lon, max_lat). Output image covers at
@@ -58,8 +59,8 @@ def basemap_for_bbox(bbox: Tuple[float, float, float, float], zoom: int) -> tupl
     min_lon, min_lat, max_lon, max_lat = bbox
     x1, y1 = lonlat_to_tile(min_lon, max_lat, zoom)
     x2, y2 = lonlat_to_tile(max_lon, min_lat, zoom)
-    tx1, ty1 = int(math.floor(x1)), int(math.floor(y1))
-    tx2, ty2 = int(math.ceil(x2)), int(math.ceil(y2))
+    tx1, ty1 = math.floor(x1), math.floor(y1)
+    tx2, ty2 = math.ceil(x2), math.ceil(y2)
 
     cols = tx2 - tx1
     rows = ty2 - ty1

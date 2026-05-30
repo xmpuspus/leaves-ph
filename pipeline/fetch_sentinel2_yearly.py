@@ -43,8 +43,8 @@ def main() -> int:
     args = parser.parse_args()
 
     init()
-    import ee  # noqa: PLC0415
-    import geemap  # noqa: PLC0415
+    import ee
+    import geemap
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     geom = ncr_geometry()
@@ -69,9 +69,7 @@ def main() -> int:
             .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 80))
         )
         s2_cloud_prob = (
-            ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY")
-            .filterBounds(geom)
-            .filterDate(start, end)
+            ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY").filterBounds(geom).filterDate(start, end)
         )
 
         joined = ee.Join.saveFirst("cloud_prob").apply(

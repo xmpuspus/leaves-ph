@@ -93,9 +93,7 @@ def hansen_loss_cumulative(lgus: gpd.GeoDataFrame, through_year: int) -> dict[st
         geom = row.geometry
         if geom is None or geom.is_empty:
             continue
-        mask = geometry_mask(
-            [geom.__geo_interface__], out_shape=(h, w), transform=transform, invert=True
-        )
+        mask = geometry_mask([geom.__geo_interface__], out_shape=(h, w), transform=transform, invert=True)
         in_poly = loss[mask]
         cumulative_pixels = int(np.sum((in_poly > 0) & (in_poly <= threshold_code)))
         out[row["lgu_name"]] = round(cumulative_pixels * pa_ha, 2)
@@ -178,7 +176,10 @@ def main() -> int:
         print(f"[aggregate_lgu] {year}: {len(per_lgu)} LGUs aggregated")
 
     if not rows:
-        print("[aggregate_lgu] FAIL: no rows produced; check that data/composites/canopy_*.tif exists", file=sys.stderr)
+        print(
+            "[aggregate_lgu] FAIL: no rows produced; check that data/composites/canopy_*.tif exists",
+            file=sys.stderr,
+        )
         return 1
 
     rows.sort(key=lambda r: (r["lgu_name"], r["year"]))

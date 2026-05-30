@@ -32,12 +32,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch Sentinel-2 RGB yearly composites for NCR")
     parser.add_argument("--years", nargs="+", type=int, default=list(NCR_YEARS))
     parser.add_argument("--force", action="store_true")
-    parser.add_argument("--cloud-prob", type=int, default=30, help="s2cloudless cutoff (stricter than NDVI fetch)")
+    parser.add_argument(
+        "--cloud-prob", type=int, default=30, help="s2cloudless cutoff (stricter than NDVI fetch)"
+    )
     args = parser.parse_args()
 
     init()
-    import ee  # noqa: PLC0415
-    import geemap  # noqa: PLC0415
+    import ee
+    import geemap
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     geom = ncr_geometry()
@@ -62,9 +64,7 @@ def main() -> int:
             .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 60))
         )
         s2_cloud_prob = (
-            ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY")
-            .filterBounds(geom)
-            .filterDate(start, end)
+            ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY").filterBounds(geom).filterDate(start, end)
         )
         joined = ee.Join.saveFirst("cloud_prob").apply(
             primary=s2,

@@ -36,14 +36,15 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import rasterio  # noqa: E402
-from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
-from rasterio.windows import Window  # noqa: E402
-from rasterio.windows import bounds as win_bounds  # noqa: E402
-from rasterio.windows import from_bounds as win_from_bounds  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
+import rasterio
+from matplotlib.colors import LinearSegmentedColormap
+from rasterio.windows import Window
+from rasterio.windows import bounds as win_bounds
+from rasterio.windows import from_bounds as win_from_bounds
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMP_DIR = REPO_ROOT / "data" / "composites"
@@ -150,14 +151,18 @@ def read_meta_window(bbox, max_px: int = 700) -> tuple[np.ndarray, tuple]:
     with rasterio.open(META_TIF) as src:
         win = win_from_bounds(*bbox, src.transform)
         win = Window(
-            int(win.col_off), int(win.row_off),
-            max(1, int(win.width)), max(1, int(win.height)),
+            int(win.col_off),
+            int(win.row_off),
+            max(1, int(win.width)),
+            max(1, int(win.height)),
         )
         scale = max(1, int(max(win.width, win.height) / max_px))
         out_h = max(1, int(win.height // scale))
         out_w = max(1, int(win.width // scale))
         data = src.read(
-            1, window=win, out_shape=(out_h, out_w),
+            1,
+            window=win,
+            out_shape=(out_h, out_w),
             resampling=rasterio.enums.Resampling.nearest,
         )
         actual = win_bounds(win, src.transform)
@@ -210,14 +215,21 @@ def _panel_caption(fig, ax, num, title, sub):
     """Caption placed in the dedicated band ABOVE the panels (fig coords)."""
     pos = ax.get_position()
     cx = (pos.x0 + pos.x1) / 2
-    fig.text(cx, 0.838, f"{num}  {title}", ha="center", va="bottom",
-             fontsize=12.5, weight="bold", color=INK, family="monospace")
-    fig.text(cx, 0.812, sub, ha="center", va="bottom",
-             fontsize=8.2, color=MUTE, family="monospace")
+    fig.text(
+        cx,
+        0.838,
+        f"{num}  {title}",
+        ha="center",
+        va="bottom",
+        fontsize=12.5,
+        weight="bold",
+        color=INK,
+        family="monospace",
+    )
+    fig.text(cx, 0.812, sub, ha="center", va="bottom", fontsize=8.2, color=MUTE, family="monospace")
 
 
-def render_frame(aoi, year, rgb_stretch, rgb_bbox, density, dens_bbox,
-                 meta, meta_bbox, crowns) -> np.ndarray:
+def render_frame(aoi, year, rgb_stretch, rgb_bbox, density, dens_bbox, meta, meta_bbox, crowns) -> np.ndarray:
     bbox = aoi["bbox"]
     conf_lon, conf_lat, new_lon, new_lat, n_conf, n_new = crowns
 
@@ -228,37 +240,67 @@ def render_frame(aoi, year, rgb_stretch, rgb_bbox, density, dens_bbox,
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=110)
     fig.patch.set_facecolor(PAPER)
     gs = fig.add_gridspec(
-        1, 3, left=0.012, right=0.988, top=PANEL_TOP, bottom=PANEL_BOTTOM,
+        1,
+        3,
+        left=0.012,
+        right=0.988,
+        top=PANEL_TOP,
+        bottom=PANEL_BOTTOM,
         wspace=0.045,
     )
     ax1, ax2, ax3 = (fig.add_subplot(gs[0, i]) for i in range(3))
 
     # Panel 1 - Sentinel-2 RGB input
-    ax1.imshow(rgb_stretch, extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
-               origin="upper", interpolation="bilinear", zorder=1)
+    ax1.imshow(
+        rgb_stretch,
+        extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
+        origin="upper",
+        interpolation="bilinear",
+        zorder=1,
+    )
     _panel_base(ax1, bbox)
 
     # Panel 2 - KNOWN reference (Meta > 5m + OSM-confirmed crowns)
-    ax2.imshow(desaturate(rgb_stretch), extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
-               origin="upper", interpolation="bilinear", zorder=1)
+    ax2.imshow(
+        desaturate(rgb_stretch),
+        extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
+        origin="upper",
+        interpolation="bilinear",
+        zorder=1,
+    )
     meta_mask = np.ma.masked_array((meta > 5).astype(np.uint8), mask=~(meta > 5))
-    ax2.imshow(meta_mask, extent=(meta_bbox[0], meta_bbox[2], meta_bbox[1], meta_bbox[3]),
-               origin="upper", interpolation="nearest",
-               cmap=matplotlib.colors.ListedColormap([META_FILL]), zorder=2)
+    ax2.imshow(
+        meta_mask,
+        extent=(meta_bbox[0], meta_bbox[2], meta_bbox[1], meta_bbox[3]),
+        origin="upper",
+        interpolation="nearest",
+        cmap=matplotlib.colors.ListedColormap([META_FILL]),
+        zorder=2,
+    )
     if n_conf:
-        ax2.scatter(conf_lon, conf_lat, s=9, c=CONFIRMED_DOT, edgecolors="none",
-                    alpha=0.95, zorder=3)
+        ax2.scatter(conf_lon, conf_lat, s=9, c=CONFIRMED_DOT, edgecolors="none", alpha=0.95, zorder=3)
     _panel_base(ax2, bbox)
 
     # Panel 3 - PREDICTED model density (+ Meta-derived crowns absent from OSM)
-    ax3.imshow(desaturate(rgb_stretch), extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
-               origin="upper", interpolation="bilinear", zorder=1)
-    ax3.imshow(density, extent=(dens_bbox[0], dens_bbox[2], dens_bbox[1], dens_bbox[3]),
-               origin="upper", interpolation="bilinear",
-               cmap=MODEL_CMAP, vmin=0.0, vmax=0.6, zorder=2)
+    ax3.imshow(
+        desaturate(rgb_stretch),
+        extent=(rgb_bbox[0], rgb_bbox[2], rgb_bbox[1], rgb_bbox[3]),
+        origin="upper",
+        interpolation="bilinear",
+        zorder=1,
+    )
+    ax3.imshow(
+        density,
+        extent=(dens_bbox[0], dens_bbox[2], dens_bbox[1], dens_bbox[3]),
+        origin="upper",
+        interpolation="bilinear",
+        cmap=MODEL_CMAP,
+        vmin=0.0,
+        vmax=0.6,
+        zorder=2,
+    )
     if n_new:
-        ax3.scatter(new_lon, new_lat, s=5, c=NEW_DOT, edgecolors="none",
-                    alpha=0.85, zorder=3)
+        ax3.scatter(new_lon, new_lat, s=5, c=NEW_DOT, edgecolors="none", alpha=0.85, zorder=3)
     _panel_base(ax3, bbox)
 
     # Panel captions (own band, no collision with the title row)
@@ -268,44 +310,161 @@ def render_frame(aoi, year, rgb_stretch, rgb_bbox, density, dens_bbox,
 
     # ---- Title row (full-width band at the very top) ----
     # Left: brand + demo name.
-    fig.text(0.012, 0.965, "LEAVES.PH", fontsize=17, weight="bold",
-             color=GREEN, family="serif", ha="left", va="top")
-    fig.text(0.012, 0.918, "KNOWN vs PREDICTED CANOPY", fontsize=10.5,
-             color=GREEN, family="serif", ha="left", va="top")
+    fig.text(
+        0.012,
+        0.965,
+        "LEAVES.PH",
+        fontsize=17,
+        weight="bold",
+        color=GREEN,
+        family="serif",
+        ha="left",
+        va="top",
+    )
+    fig.text(
+        0.012,
+        0.918,
+        "KNOWN vs PREDICTED CANOPY",
+        fontsize=10.5,
+        color=GREEN,
+        family="serif",
+        ha="left",
+        va="top",
+    )
     # Center: the animating element (big year) + model credential.
-    fig.text(0.50, 0.972, f"{year}", fontsize=27, weight="bold", color=INK,
-             family="monospace", ha="center", va="top")
-    fig.text(0.50, 0.912, "detection model in optimization  -  held-out R2 0.87 vs Meta 1m",
-             fontsize=8, color=MUTE, family="monospace", ha="center", va="top")
+    fig.text(
+        0.50,
+        0.972,
+        f"{year}",
+        fontsize=27,
+        weight="bold",
+        color=INK,
+        family="monospace",
+        ha="center",
+        va="top",
+    )
+    fig.text(
+        0.50,
+        0.912,
+        "detection model in optimization  -  held-out R2 0.87 vs Meta 1m",
+        fontsize=8,
+        color=MUTE,
+        family="monospace",
+        ha="center",
+        va="top",
+    )
     # Right: location.
-    fig.text(0.988, 0.965, f"{aoi['name']}", fontsize=14, weight="bold",
-             color=INK, family="monospace", ha="right", va="top")
-    fig.text(0.988, 0.918, f"{aoi['sub']}", fontsize=8.5, color=MUTE,
-             family="monospace", ha="right", va="top")
+    fig.text(
+        0.988,
+        0.965,
+        f"{aoi['name']}",
+        fontsize=14,
+        weight="bold",
+        color=INK,
+        family="monospace",
+        ha="right",
+        va="top",
+    )
+    fig.text(
+        0.988, 0.918, f"{aoi['sub']}", fontsize=8.5, color=MUTE, family="monospace", ha="right", va="top"
+    )
 
     # ---- Footer: the delta story ----
-    fig.patches.append(plt.Rectangle(
-        (0.012, 0.040), 0.976, 0.078, transform=fig.transFigure,
-        facecolor="#f1ede1", edgecolor="#d8d2c2", linewidth=1.0, zorder=0,
-    ))
-    fig.text(0.024, 0.092, f"MODEL canopy in view  {pred_pct:4.1f}%", fontsize=12.5,
-             weight="bold", color="#13402a", family="monospace", ha="left", va="center")
-    fig.text(0.024, 0.060, f"reference (Meta >5m)  {meta_pct:4.1f}%", fontsize=10.5,
-             color="#7a6a2a", family="monospace", ha="left", va="center")
-    fig.text(0.40, 0.092, f"OSM-confirmed crowns   {n_conf:,}", fontsize=11,
-             color="#0e7d8c", family="monospace", ha="left", va="center")
-    fig.text(0.40, 0.060, f"tall canopy, no OSM tag  {n_new:,}", fontsize=11,
-             color="#c25a1c", family="monospace", ha="left", va="center")
-    fig.text(0.988, 0.092, "Same place, three views.", fontsize=10.5, style="italic",
-             color=INK, family="serif", ha="right", va="center")
-    fig.text(0.988, 0.061, "Crowns are Meta-derived; OSM records only a fraction.",
-             fontsize=9, color=MUTE, family="serif", ha="right", va="center")
-    fig.text(0.012, 0.014,
-             "Estimates from public satellite data (Sentinel-2, Meta v2, OSM). "
-             "CLIP detection model, in optimization; published canopy % uses the human-calibrated model.",
-             fontsize=6.6, color="#8a8270", family="monospace", ha="left", va="bottom")
-    fig.text(0.988, 0.014, "https://leaves.ph", fontsize=7,
-             color="#8a8270", family="monospace", ha="right", va="bottom")
+    fig.patches.append(
+        plt.Rectangle(
+            (0.012, 0.040),
+            0.976,
+            0.078,
+            transform=fig.transFigure,
+            facecolor="#f1ede1",
+            edgecolor="#d8d2c2",
+            linewidth=1.0,
+            zorder=0,
+        )
+    )
+    fig.text(
+        0.024,
+        0.092,
+        f"MODEL canopy in view  {pred_pct:4.1f}%",
+        fontsize=12.5,
+        weight="bold",
+        color="#13402a",
+        family="monospace",
+        ha="left",
+        va="center",
+    )
+    fig.text(
+        0.024,
+        0.060,
+        f"reference (Meta >5m)  {meta_pct:4.1f}%",
+        fontsize=10.5,
+        color="#7a6a2a",
+        family="monospace",
+        ha="left",
+        va="center",
+    )
+    fig.text(
+        0.40,
+        0.092,
+        f"OSM-confirmed crowns   {n_conf:,}",
+        fontsize=11,
+        color="#0e7d8c",
+        family="monospace",
+        ha="left",
+        va="center",
+    )
+    fig.text(
+        0.40,
+        0.060,
+        f"tall canopy, no OSM tag  {n_new:,}",
+        fontsize=11,
+        color="#c25a1c",
+        family="monospace",
+        ha="left",
+        va="center",
+    )
+    fig.text(
+        0.988,
+        0.092,
+        "Same place, three views.",
+        fontsize=10.5,
+        style="italic",
+        color=INK,
+        family="serif",
+        ha="right",
+        va="center",
+    )
+    fig.text(
+        0.988,
+        0.061,
+        "Crowns are Meta-derived; OSM records only a fraction.",
+        fontsize=9,
+        color=MUTE,
+        family="serif",
+        ha="right",
+        va="center",
+    )
+    fig.text(
+        0.012,
+        0.014,
+        "Estimates from public satellite data (Sentinel-2, Meta v2, OSM). "
+        "CLIP detection model, in optimization; published canopy % uses the human-calibrated model.",
+        fontsize=6.6,
+        color="#8a8270",
+        family="monospace",
+        ha="left",
+        va="bottom",
+    )
+    fig.text(
+        0.988,
+        0.014,
+        "https://leaves.ph",
+        fontsize=7,
+        color="#8a8270",
+        family="monospace",
+        ha="right",
+        va="bottom",
+    )
 
     buf = io.BytesIO()
     fig.savefig(buf, format="png", facecolor=fig.get_facecolor(), dpi=100)
@@ -347,11 +506,20 @@ def main() -> int:
         for year in YEARS:
             rgb_s = apply_stretch(rgb_by_year[year], p2, p98)
             density, dens_bbox = crop_shared_grid(SCAN_DIR / f"clf_v9_density_{year}.tif", bbox)
-            print(f"[kvp]   {year}: model {density.mean()*100:4.1f}%  rgb {rgb_s.shape[:2]}")
-            frames.append(render_frame(
-                aoi, year, rgb_s, rgb_bbox, density, dens_bbox,
-                meta, meta_bbox, crowns,
-            ))
+            print(f"[kvp]   {year}: model {density.mean() * 100:4.1f}%  rgb {rgb_s.shape[:2]}")
+            frames.append(
+                render_frame(
+                    aoi,
+                    year,
+                    rgb_s,
+                    rgb_bbox,
+                    density,
+                    dens_bbox,
+                    meta,
+                    meta_bbox,
+                    crowns,
+                )
+            )
 
     print(f"[kvp] writing {OUT_GIF.relative_to(REPO_ROOT)}  ({len(frames)} frames)")
     imageio.mimsave(str(OUT_GIF), frames, loop=0)

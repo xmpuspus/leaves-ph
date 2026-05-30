@@ -8,7 +8,6 @@ N PASS / 0 FAIL before any tag, push, or deploy.
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 import re
 import subprocess
@@ -28,10 +27,16 @@ BANNED_AI_WORDS = re.compile(
 EM_DASH = "—"
 
 MD_FILES = [
-    "README.md", "MODEL_CARD.md", "BENCHMARKS.md", "CONTRIBUTING.md",
-    "SECURITY.md", "CODE_OF_CONDUCT.md",
-    "docs/methodology.md", "docs/setup-gee.md",
-    "docs/privacy-impact-assessment.md", "docs/research/prior-work.md",
+    "README.md",
+    "MODEL_CARD.md",
+    "BENCHMARKS.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "docs/methodology.md",
+    "docs/setup-gee.md",
+    "docs/privacy-impact-assessment.md",
+    "docs/research/prior-work.md",
 ]
 SITE_GLOBS = (
     "site/src/pages/**/*.astro",
@@ -53,14 +58,18 @@ def _all_text_files() -> list[Path]:
 
 # ---- Gates ---------------------------------------------------------------
 
+
 def gate_em_dash():
     hits: list[str] = []
     for p in _all_text_files():
         for lineno, line in enumerate(p.read_text(encoding="utf-8").splitlines(), start=1):
             if EM_DASH in line:
                 hits.append(f"{p.relative_to(ROOT)}:{lineno}: {line.strip()}")
-    return ("em-dash sweep", not hits,
-            f"{len(hits)} hit(s)" if hits else f"clean ({len(_all_text_files())} files)")
+    return (
+        "em-dash sweep",
+        not hits,
+        f"{len(hits)} hit(s)" if hits else f"clean ({len(_all_text_files())} files)",
+    )
 
 
 def gate_ai_jargon():
@@ -69,8 +78,11 @@ def gate_ai_jargon():
         for lineno, line in enumerate(p.read_text(encoding="utf-8").splitlines(), start=1):
             if BANNED_AI_WORDS.search(line):
                 hits.append(f"{p.relative_to(ROOT)}:{lineno}: {line.strip()[:80]}")
-    return ("AI-jargon sweep", not hits,
-            f"{len(hits)} hit(s)" if hits else f"clean ({len(_all_text_files())} files)")
+    return (
+        "AI-jargon sweep",
+        not hits,
+        f"{len(hits)} hit(s)" if hits else f"clean ({len(_all_text_files())} files)",
+    )
 
 
 def gate_requirements_pinned():
@@ -84,8 +96,7 @@ def gate_requirements_pinned():
             continue
         if any(op in line for op in (">=", "<=", "~=", "^")):
             bad.append(f"{lineno}: {line}")
-    return ("requirements pinned", not bad,
-            "loose pins: " + "; ".join(bad[:3]) if bad else "all ==")
+    return ("requirements pinned", not bad, "loose pins: " + "; ".join(bad[:3]) if bad else "all ==")
 
 
 def gate_package_version():
@@ -93,8 +104,7 @@ def gate_package_version():
     if not init.exists():
         return ("package version", False, "leaves_ph/__init__.py missing")
     m = re.search(r'__version__\s*=\s*["\'](\d+\.\d+\.\d+)["\']', init.read_text())
-    return ("package version", bool(m),
-            f"v{m.group(1)}" if m else "no __version__")
+    return ("package version", bool(m), f"v{m.group(1)}" if m else "no __version__")
 
 
 def gate_site_root_boundary():
@@ -104,8 +114,7 @@ def gate_site_root_boundary():
         for lineno, line in enumerate(f.read_text().splitlines(), start=1):
             if pat.search(line):
                 hits.append(f"{f.relative_to(ROOT)}:{lineno}")
-    return ("site/ root boundary", not hits,
-            f"{len(hits)} escape(s)" if hits else "no imports escape site/")
+    return ("site/ root boundary", not hits, f"{len(hits)} escape(s)" if hits else "no imports escape site/")
 
 
 def gate_per_lgu_csv_shape():
@@ -118,8 +127,7 @@ def gate_per_lgu_csv_shape():
     years = {r["year"] for r in rows}
     expected = 17 * 8
     ok = len(lgus) == 17 and len(years) == 8 and len(rows) == expected
-    return ("per-LGU CSV shape", ok,
-            f"{len(rows)} rows / {len(lgus)} LGUs / {len(years)} years")
+    return ("per-LGU CSV shape", ok, f"{len(rows)} rows / {len(lgus)} LGUs / {len(years)} years")
 
 
 def gate_geojson_features():
@@ -172,8 +180,7 @@ def gate_clf_v5():
     if not bins:
         return ("clf_v5 head (Platt-calibrated)", False, "no populated bins")
     worst = max(abs(b["mean_pred"] - b["empirical_pos"]) for b in bins)
-    return ("clf_v5 head (Platt-calibrated)", worst < 0.10,
-            f"max bin |pred-empirical| = {worst:.3f}")
+    return ("clf_v5 head (Platt-calibrated)", worst < 0.10, f"max bin |pred-empirical| = {worst:.3f}")
 
 
 def gate_clf_v6():
@@ -184,8 +191,7 @@ def gate_clf_v6():
     m = json.loads(metrics.read_text())
     r2 = (m.get("cv5") or {}).get("r2") or 0
     mae = (m.get("cv5") or {}).get("mae") or 1.0
-    return ("clf_v6 Ridge regressor", r2 >= 0.50 and mae < 0.10,
-            f"R^2={r2:.3f}  MAE={mae:.3f}")
+    return ("clf_v6 Ridge regressor", r2 >= 0.50 and mae < 0.10, f"R^2={r2:.3f}  MAE={mae:.3f}")
 
 
 def gate_clf_v7():
@@ -196,19 +202,16 @@ def gate_clf_v7():
     m = json.loads(metrics.read_text())
     r2 = (m.get("cv5") or {}).get("r2") or 0
     mae = (m.get("cv5") or {}).get("mae") or 1.0
-    return ("clf_v7 GBR regressor", r2 >= 0.70 and mae < 0.06,
-            f"R^2={r2:.3f}  MAE={mae:.3f}")
+    return ("clf_v7 GBR regressor", r2 >= 0.70 and mae < 0.06, f"R^2={r2:.3f}  MAE={mae:.3f}")
 
 
 def gate_clf_v8():
-    out_dir = ROOT / "detection" / "train" / "clf_v8_per_lgu"
     manifest = ROOT / "detection" / "train" / "clf_v8_per_lgu_manifest.json"
     if not manifest.exists():
         return ("clf_v8 per-LGU Platt", False, "manifest missing")
     m = json.loads(manifest.read_text())
     n_per_lgu = sum(1 for v in m.values() if v.get("strategy") == "platt_per_lgu")
-    return ("clf_v8 per-LGU Platt", n_per_lgu >= 8,
-            f"{n_per_lgu}/{len(m)} LGUs got per-LGU calibrator")
+    return ("clf_v8 per-LGU Platt", n_per_lgu >= 8, f"{n_per_lgu}/{len(m)} LGUs got per-LGU calibrator")
 
 
 def gate_clf_v9():
@@ -220,8 +223,11 @@ def gate_clf_v9():
     r2 = (m.get("cv5") or {}).get("r2") or 0
     per_year = m.get("per_year_cv") or {}
     min_r2 = min((v["r2"] for v in per_year.values()), default=0)
-    return ("clf_v9 multi-epoch GBR", r2 >= 0.80 and min_r2 >= 0.70,
-            f"overall R^2={r2:.3f}, min per-year R^2={min_r2:.3f}")
+    return (
+        "clf_v9 multi-epoch GBR",
+        r2 >= 0.80 and min_r2 >= 0.70,
+        f"overall R^2={r2:.3f}, min per-year R^2={min_r2:.3f}",
+    )
 
 
 def gate_per_barangay():
@@ -231,8 +237,7 @@ def gate_per_barangay():
         return ("per-barangay aggregation", False, "missing")
     with csv_p.open() as f:
         rows = list(csv.DictReader(f))
-    return ("per-barangay aggregation", len(rows) >= 800,
-            f"{len(rows)} barangays")
+    return ("per-barangay aggregation", len(rows) >= 800, f"{len(rows)} barangays")
 
 
 def gate_validation_panels():
@@ -240,8 +245,7 @@ def gate_validation_panels():
     if not d.exists():
         return ("validation panels", False, "validation_v3/ missing")
     pngs = list(d.glob("validation_*_t*.png"))
-    return ("validation panels", len(pngs) >= 17,
-            f"{len(pngs)} panels in validation_v3/")
+    return ("validation panels", len(pngs) >= 17, f"{len(pngs)} panels in validation_v3/")
 
 
 def gate_demo_gifs():
@@ -250,8 +254,7 @@ def gate_demo_gifs():
         "site/public/demo/remaining-canopy-timeline.gif",
     ]
     missing = [n for n in needed if not (ROOT / n).exists()]
-    return ("demo GIFs", not missing,
-            f"all present" if not missing else f"missing: {missing}")
+    return ("demo GIFs", not missing, "all present" if not missing else f"missing: {missing}")
 
 
 def gate_series_constants():
@@ -261,8 +264,7 @@ def gate_series_constants():
     text = p.read_text()
     needed = ["SERIES_START", "SERIES_END", "LATEST_NCR_PCT", "NCR_LGU_COUNT"]
     missing = [c for c in needed if c not in text]
-    return ("series constants", not missing,
-            "all present" if not missing else f"missing: {missing}")
+    return ("series constants", not missing, "all present" if not missing else f"missing: {missing}")
 
 
 def gate_calendar_text_in_masthead():
@@ -272,8 +274,7 @@ def gate_calendar_text_in_masthead():
     text = p.read_text()
     forbidden = ["MMXXVI", "VOLUME ONE", "ISSUE ZERO", "TUE · MAY"]
     hits = [w for w in forbidden if w in text]
-    return ("masthead is timeless", not hits,
-            "clean" if not hits else f"contains {hits}")
+    return ("masthead is timeless", not hits, "clean" if not hits else f"contains {hits}")
 
 
 def gate_seo_description_length():
@@ -285,8 +286,7 @@ def gate_seo_description_length():
     if not m:
         return ("SEO description length", False, "no description default")
     length = len(m.group(1))
-    return ("SEO description length", 50 <= length <= 220,
-            f"{length} chars")
+    return ("SEO description length", 50 <= length <= 220, f"{length} chars")
 
 
 def gate_ncr_canopy_sanity():
@@ -304,14 +304,20 @@ def gate_ncr_canopy_sanity():
         by_year[y] = (prev[0] + canopy, prev[1] + total)
     pcts = {y: 100 * c / t for y, (c, t) in by_year.items() if t}
     sane = all(2.0 < p < 25.0 for p in pcts.values())
-    return ("NCR canopy bounded", sane,
-            f"years: " + ", ".join(f"{y}={p:.1f}%" for y, p in sorted(pcts.items())))
+    return (
+        "NCR canopy bounded",
+        sane,
+        "years: " + ", ".join(f"{y}={p:.1f}%" for y, p in sorted(pcts.items())),
+    )
 
 
 def gate_clf_v3_scan_probs():
     p = ROOT / "detection" / "scan" / "clf_v3_probs_2024.tif"
-    return ("clf_v3 scan probs raster", p.exists(),
-            f"{p.stat().st_size/1_000_000:.1f} MB" if p.exists() else "missing")
+    return (
+        "clf_v3 scan probs raster",
+        p.exists(),
+        f"{p.stat().st_size / 1_000_000:.1f} MB" if p.exists() else "missing",
+    )
 
 
 def gate_threshold_sweep_exists():
@@ -330,8 +336,7 @@ def gate_benchmarks_has_v3():
     text = p.read_text()
     needed = ["v3 CLIP+LR", "clf_v3", "shared", "NEW"]
     missing = [w for w in needed if w not in text]
-    return ("BENCHMARKS has v3", not missing,
-            "v3 section present" if not missing else f"missing: {missing}")
+    return ("BENCHMARKS has v3", not missing, "v3 section present" if not missing else f"missing: {missing}")
 
 
 def gate_site_typecheck():
@@ -339,8 +344,11 @@ def gate_site_typecheck():
     if not site.exists():
         return ("Astro typecheck", False, "site/ missing")
     res = subprocess.run(
-        ["pnpm", "typecheck"], cwd=site,
-        capture_output=True, text=True, timeout=120,
+        ["pnpm", "typecheck"],
+        cwd=site,
+        capture_output=True,
+        text=True,
+        timeout=120,
     )
     ok = res.returncode == 0 and "0 errors" in (res.stdout + res.stderr)
     tail = (res.stdout + res.stderr).strip().splitlines()[-3:]
@@ -352,8 +360,12 @@ def gate_no_hardcoded_year_in_user_copy():
     pages, or layouts, except via {SERIES_END}/{LATEST}/etc interpolation."""
     rx = re.compile(r"(?<![\w_])2026(?![\w_])")
     allowed_substrings = [
-        "canopy_2026_pct", "canopy_delta_2019_2026", "/data/",
-        "leaves_ph_2026", "puspus_leaves_ph_", "year   = ",
+        "canopy_2026_pct",
+        "canopy_delta_2019_2026",
+        "/data/",
+        "leaves_ph_2026",
+        "puspus_leaves_ph_",
+        "year   = ",
     ]
     hits: list[str] = []
     for pattern in SITE_GLOBS:
@@ -364,8 +376,11 @@ def gate_no_hardcoded_year_in_user_copy():
                 if any(a in line for a in allowed_substrings):
                     continue
                 hits.append(f"{f.relative_to(ROOT)}:{lineno}: {line.strip()[:80]}")
-    return ("no hardcoded year in user copy", not hits,
-            "clean" if not hits else f"{len(hits)} hit(s): " + " | ".join(hits[:2]))
+    return (
+        "no hardcoded year in user copy",
+        not hits,
+        "clean" if not hits else f"{len(hits)} hit(s): " + " | ".join(hits[:2]),
+    )
 
 
 def main() -> int:

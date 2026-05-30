@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _zoomed import REPO_ROOT, make_timeline  # noqa: E402
+from _zoomed import REPO_ROOT, make_timeline
 
 # Quirino Avenue corridor: roughly from Manila City Hall area south-west to
 # the San Marcelino / Roxas Blvd intersection.

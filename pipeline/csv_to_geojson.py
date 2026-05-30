@@ -59,9 +59,7 @@ def main() -> int:
                 "hansen_loss_ha_cumulative": (
                     float(row["hansen_loss_ha_cumulative"]) if row["hansen_loss_ha_cumulative"] else None
                 ),
-                "esa_tree_pct_2021": (
-                    float(row["esa_tree_pct_2021"]) if row["esa_tree_pct_2021"] else None
-                ),
+                "esa_tree_pct_2021": (float(row["esa_tree_pct_2021"]) if row["esa_tree_pct_2021"] else None),
             }
 
     for feature in lgu_fc.get("features", []):

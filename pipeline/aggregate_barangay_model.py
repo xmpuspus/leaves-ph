@@ -6,10 +6,15 @@ Outputs:
   data/per_barangay/per_barangay_canopy_2019_2026_model.csv
   site/public/data/per_barangay_canopy_model.geojson
 """
+
 from __future__ import annotations
-import csv, json, sys
+
+import csv
+import json
+import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
 import numpy as np
 import rasterio
 from rasterio.features import geometry_mask
@@ -84,25 +89,42 @@ def main() -> int:
     lat_c = (bounds.bottom + bounds.top) / 2
     pix_area = abs(transform.a) * abs(transform.e) * 111_320 * 111_320 * np.cos(np.radians(lat_c))
 
-    args = [(f["properties"].get("barangay_name", f["properties"].get("name", "?")),
-             f["properties"].get("lgu_name", "?"), f["geometry"], rasters, transform, H, W, pix_area)
-            for f in ncr]
+    args = [
+        (
+            f["properties"].get("barangay_name", f["properties"].get("name", "?")),
+            f["properties"].get("lgu_name", "?"),
+            f["geometry"],
+            rasters,
+            transform,
+            H,
+            W,
+            pix_area,
+        )
+        for f in ncr
+    ]
     with ThreadPoolExecutor(max_workers=N_THREADS) as ex:
         rows = [r for r in ex.map(stats, args) if r is not None]
     rows.sort(key=lambda r: (r["lgu_name"], r["barangay_name"]))
 
-    headers = (["barangay_name", "lgu_name", "total_ha"]
-               + [f"canopy_pct_model_{y}" for y in YEARS] + [f"canopy_ha_model_{y}" for y in YEARS])
+    headers = (
+        ["barangay_name", "lgu_name", "total_ha"]
+        + [f"canopy_pct_model_{y}" for y in YEARS]
+        + [f"canopy_ha_model_{y}" for y in YEARS]
+    )
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     with OUT_CSV.open("w") as fh:
-        w = csv.DictWriter(fh, fieldnames=headers); w.writeheader(); w.writerows(rows)
+        w = csv.DictWriter(fh, fieldnames=headers)
+        w.writeheader()
+        w.writerows(rows)
     print(f"[barangay-model] wrote {OUT_CSV.relative_to(ROOT)} ({len(rows)} barangays)")
 
     by = {(r["barangay_name"], r["lgu_name"]): r for r in rows}
     feats = []
     for f in ncr:
-        key = (f["properties"].get("barangay_name", f["properties"].get("name", "?")),
-               f["properties"].get("lgu_name", "?"))
+        key = (
+            f["properties"].get("barangay_name", f["properties"].get("name", "?")),
+            f["properties"].get("lgu_name", "?"),
+        )
         if key in by:
             feats.append({"type": "Feature", "geometry": f["geometry"], "properties": dict(by[key])})
     OUT_GEOJSON.parent.mkdir(parents=True, exist_ok=True)

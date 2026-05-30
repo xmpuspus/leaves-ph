@@ -14,15 +14,16 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import rasterio  # noqa: E402
-from rasterio.features import geometry_mask  # noqa: E402
-from rasterio.transform import from_bounds  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
+import rasterio
+from rasterio.features import geometry_mask
+from rasterio.transform import from_bounds
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _basemap import basemap_for_bbox, desaturate  # noqa: E402
+from _basemap import basemap_for_bbox, desaturate
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMP_DIR = REPO_ROOT / "data" / "composites"
@@ -43,7 +44,9 @@ def load_lgu_mask(canopy_bbox, shape: tuple[int, int]) -> np.ndarray:
     return geometry_mask(geoms, out_shape=shape, transform=transform, invert=True)
 
 
-def crop_canopy_to_bbox(canopy: np.ndarray, canopy_bbox, target_bbox) -> tuple[np.ndarray, tuple[float, float, float, float]]:
+def crop_canopy_to_bbox(
+    canopy: np.ndarray, canopy_bbox, target_bbox
+) -> tuple[np.ndarray, tuple[float, float, float, float]]:
     """Crop a canopy raster to target_bbox (subset of canopy_bbox).
 
     Returns (cropped_array, actual_cropped_bbox).
@@ -84,8 +87,17 @@ def canopy_pct_in_bbox(canopy: np.ndarray, canopy_bbox, lgu_mask: np.ndarray, ta
 
 
 def render_frame(
-    basemap, base_bbox, canopy, canopy_bbox, lgu_mask,
-    target_bbox, year: int, label: str, sub_label: str, pct: float, fig_size=(9, 8),
+    basemap,
+    base_bbox,
+    canopy,
+    canopy_bbox,
+    lgu_mask,
+    target_bbox,
+    year: int,
+    label: str,
+    sub_label: str,
+    pct: float,
+    fig_size=(9, 8),
 ):
     fig, ax = plt.subplots(figsize=fig_size, dpi=110)
     fig.patch.set_facecolor("#fbfaf6")
@@ -95,7 +107,9 @@ def render_frame(
     ax.imshow(
         desat,
         extent=(base_bbox[0], base_bbox[2], base_bbox[1], base_bbox[3]),
-        origin="upper", interpolation="bilinear", zorder=1,
+        origin="upper",
+        interpolation="bilinear",
+        zorder=1,
     )
 
     # Apply LGU mask
@@ -106,7 +120,11 @@ def render_frame(
     ax.imshow(
         overlay,
         extent=(canopy_bbox[0], canopy_bbox[2], canopy_bbox[1], canopy_bbox[3]),
-        origin="upper", interpolation="nearest", cmap=cmap, alpha=0.82, zorder=2,
+        origin="upper",
+        interpolation="nearest",
+        cmap=cmap,
+        alpha=0.82,
+        zorder=2,
     )
 
     ax.set_xlim(target_bbox[0], target_bbox[2])
@@ -119,23 +137,52 @@ def render_frame(
     # Headline
     span_x = target_bbox[2] - target_bbox[0]
     span_y = target_bbox[3] - target_bbox[1]
-    ax.text(target_bbox[0] + 0.02 * span_x, target_bbox[3] - 0.03 * span_y, f"{year}",
-            fontsize=42, weight="bold", color="#0b1220", family="monospace",
-            ha="left", va="top",
-            bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.88), ec="none"))
-    ax.text(target_bbox[0] + 0.02 * span_x, target_bbox[3] - 0.12 * span_y,
-            f"{label}\n{sub_label}\nCanopy in view: {pct:.2f}%",
-            fontsize=11, color="#0b1220", family="monospace", ha="left", va="top",
-            bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.88), ec="none"))
+    ax.text(
+        target_bbox[0] + 0.02 * span_x,
+        target_bbox[3] - 0.03 * span_y,
+        f"{year}",
+        fontsize=42,
+        weight="bold",
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="top",
+        bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.88), ec="none"),
+    )
+    ax.text(
+        target_bbox[0] + 0.02 * span_x,
+        target_bbox[3] - 0.12 * span_y,
+        f"{label}\n{sub_label}\nCanopy in view: {pct:.2f}%",
+        fontsize=11,
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="top",
+        bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.88), ec="none"),
+    )
 
-    ax.text(target_bbox[2] - 0.02 * span_x, target_bbox[1] + 0.02 * span_y,
-            "Leaves.PH  ·  S-2 NDVI >= 0.62  ·  basemap (c) OSM contributors",
-            fontsize=7, color="#0b1220", family="monospace", ha="right", va="bottom",
-            bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"))
-    ax.text(target_bbox[0] + 0.02 * span_x, target_bbox[1] + 0.02 * span_y,
-            "https://leaves.ph",
-            fontsize=7, color="#0b1220", family="monospace", ha="left", va="bottom",
-            bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"))
+    ax.text(
+        target_bbox[2] - 0.02 * span_x,
+        target_bbox[1] + 0.02 * span_y,
+        "Leaves.PH  ·  S-2 NDVI >= 0.62  ·  basemap (c) OSM contributors",
+        fontsize=7,
+        color="#0b1220",
+        family="monospace",
+        ha="right",
+        va="bottom",
+        bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"),
+    )
+    ax.text(
+        target_bbox[0] + 0.02 * span_x,
+        target_bbox[1] + 0.02 * span_y,
+        "https://leaves.ph",
+        fontsize=7,
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="bottom",
+        bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"),
+    )
 
     buf = io.BytesIO()
     fig.savefig(buf, format="png", facecolor=fig.get_facecolor(), bbox_inches="tight", dpi=100)
@@ -147,7 +194,9 @@ def render_frame(
     return img
 
 
-def make_timeline(out_path: Path, target_bbox, zoom: int, label: str, sub_label: str, years: list[int], fig_size=(9, 8)) -> int:
+def make_timeline(
+    out_path: Path, target_bbox, zoom: int, label: str, sub_label: str, years: list[int], fig_size=(9, 8)
+) -> int:
     """Generate a zoomed canopy timeline GIF for the given bbox + label."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"[zoomed] fetching OSM basemap for {target_bbox} at zoom {zoom}")
@@ -165,8 +214,17 @@ def make_timeline(out_path: Path, target_bbox, zoom: int, label: str, sub_label:
         print(f"[zoomed] {year}: canopy_in_bbox {pct:.2f}%, rendering frame")
         frames.append(
             render_frame(
-                basemap, base_bbox, canopy, canopy_bbox, lgu_mask_full,
-                target_bbox, year, label, sub_label, pct, fig_size=fig_size,
+                basemap,
+                base_bbox,
+                canopy,
+                canopy_bbox,
+                lgu_mask_full,
+                target_bbox,
+                year,
+                label,
+                sub_label,
+                pct,
+                fig_size=fig_size,
             )
         )
     frames.extend([frames[-1]] * 4)

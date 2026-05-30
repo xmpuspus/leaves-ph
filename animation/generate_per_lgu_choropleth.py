@@ -17,9 +17,10 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
+
 matplotlib.use("Agg")  # headless backend; the macOS FigureCanvasMac dropped tostring_rgb
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LGU_PATH = REPO_ROOT / "data" / "lgu" / "ncr_lgu.geojson"
@@ -46,8 +47,10 @@ def load_per_lgu() -> tuple[dict[str, dict[int, float]], dict[int, float]]:
             per_lgu.setdefault(lgu, {})[year] = pct
             by_year_canopy_ha[year] = by_year_canopy_ha.get(year, 0.0) + ha
             by_year_total_ha[year] = by_year_total_ha.get(year, 0.0) + tot
-    ncr = {y: (100.0 * by_year_canopy_ha[y] / by_year_total_ha[y]) if by_year_total_ha[y] else 0.0
-           for y in by_year_canopy_ha}
+    ncr = {
+        y: (100.0 * by_year_canopy_ha[y] / by_year_total_ha[y]) if by_year_total_ha[y] else 0.0
+        for y in by_year_canopy_ha
+    }
     return per_lgu, ncr
 
 
@@ -88,7 +91,16 @@ def render_year(features, per_lgu, ncr, year, cmap) -> np.ndarray:
         plot_feature(ax, feat, color)
 
     # Centroids + labels for the big LGUs
-    label_lgus = {"Quezon City", "Manila", "Caloocan", "Taguig", "Pasig", "Marikina", "Muntinlupa", "Las Pinas"}
+    label_lgus = {
+        "Quezon City",
+        "Manila",
+        "Caloocan",
+        "Taguig",
+        "Pasig",
+        "Marikina",
+        "Muntinlupa",
+        "Las Pinas",
+    }
     for feat in features:
         lgu = feat["properties"]["lgu_name"]
         if lgu not in label_lgus:
@@ -98,8 +110,16 @@ def render_year(features, per_lgu, ncr, year, cmap) -> np.ndarray:
         # use largest outer ring as the label anchor
         biggest = max((np.array(p[0]) for p in polys), key=lambda r: r.shape[0])
         cx, cy = biggest.mean(axis=0)
-        ax.text(cx, cy, lgu, ha="center", va="center", fontsize=7, color="#0b1220",
-                bbox=dict(boxstyle="round,pad=0.2", fc=(1, 1, 1, 0.7), ec="none"))
+        ax.text(
+            cx,
+            cy,
+            lgu,
+            ha="center",
+            va="center",
+            fontsize=7,
+            color="#0b1220",
+            bbox=dict(boxstyle="round,pad=0.2", fc=(1, 1, 1, 0.7), ec="none"),
+        )
 
     ax.set_xlim(120.88, 121.18)
     ax.set_ylim(14.38, 14.82)
@@ -111,21 +131,53 @@ def render_year(features, per_lgu, ncr, year, cmap) -> np.ndarray:
 
     # Year + area-weighted NCR headline
     ncr_pct = ncr.get(year, 0.0)
-    ax.text(120.89, 14.815, f"{year}", fontsize=42, weight="bold", color="#0b1220",
-            family="monospace", ha="left", va="top")
-    ax.text(120.89, 14.785, f"NCR canopy: {ncr_pct:.2f}% (area-weighted across 17 LGUs)",
-            fontsize=10, color="#445170", family="monospace", ha="left", va="top")
-    ax.text(120.89, 14.40, "Leaves.PH  ·  Sentinel-2 NDVI >= 0.62  ·  CC-BY-4.0",
-            fontsize=7, color="#8e98ac", family="monospace", ha="left", va="bottom")
-    ax.text(121.17, 14.40, "https://leaves.ph",
-            fontsize=7, color="#8e98ac", family="monospace", ha="right", va="bottom")
+    ax.text(
+        120.89,
+        14.815,
+        f"{year}",
+        fontsize=42,
+        weight="bold",
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="top",
+    )
+    ax.text(
+        120.89,
+        14.785,
+        f"NCR canopy: {ncr_pct:.2f}% (area-weighted across 17 LGUs)",
+        fontsize=10,
+        color="#445170",
+        family="monospace",
+        ha="left",
+        va="top",
+    )
+    ax.text(
+        120.89,
+        14.40,
+        "Leaves.PH  ·  Sentinel-2 NDVI >= 0.62  ·  CC-BY-4.0",
+        fontsize=7,
+        color="#8e98ac",
+        family="monospace",
+        ha="left",
+        va="bottom",
+    )
+    ax.text(
+        121.17,
+        14.40,
+        "https://leaves.ph",
+        fontsize=7,
+        color="#8e98ac",
+        family="monospace",
+        ha="right",
+        va="bottom",
+    )
 
     # Color legend strip
     ax2 = fig.add_axes([0.13, 0.07, 0.4, 0.015])
     grad = np.linspace(0, 1, 256)
     grad_colors = [cmap(0.15 + 0.85 * t) for t in grad]
-    ax2.imshow(np.array(grad_colors)[np.newaxis, :, :3], aspect="auto",
-               extent=[0, MAX_PCT, 0, 1])
+    ax2.imshow(np.array(grad_colors)[np.newaxis, :, :3], aspect="auto", extent=[0, MAX_PCT, 0, 1])
     ax2.set_yticks([])
     ax2.set_xticks([0, 5, 10, 15, 20, 25])
     ax2.set_xticklabels(["0%", "5", "10", "15", "20", "25%+"], fontsize=7, color="#445170")

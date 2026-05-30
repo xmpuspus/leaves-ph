@@ -106,16 +106,18 @@ def main() -> int:
         action="store_true",
         help="Keep the downloaded full tiles (default: delete after mosaic)",
     )
-    parser.add_argument(
-        "--max-parallel", type=int, default=4, help="Parallel tile downloads (default 4)"
-    )
+    parser.add_argument("--max-parallel", type=int, default=4, help="Parallel tile downloads (default 4)")
     args = parser.parse_args()
 
-    import numpy as np  # noqa: PLC0415
-    import rasterio  # noqa: PLC0415
-    from rasterio.merge import merge  # noqa: PLC0415
-    from rasterio.warp import Resampling, calculate_default_transform, reproject  # noqa: PLC0415
-    from rasterio.warp import transform_bounds  # noqa: PLC0415
+    import numpy as np
+    import rasterio
+    from rasterio.merge import merge
+    from rasterio.warp import (
+        Resampling,
+        calculate_default_transform,
+        reproject,
+        transform_bounds,
+    )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     merged_path = OUT_DIR / "canopy_height_ncr.tif"
@@ -144,7 +146,7 @@ def main() -> int:
                     downloaded.append(
                         {"quadkey": qk_done, "size_mb": round(mb, 1), "download_s": round(secs, 1)}
                     )
-                except Exception as e:  # noqa: BLE001
+                except Exception as e:
                     print(f"[fetch_meta]   tile {qk}: FAILED {e}", file=sys.stderr)
 
         if not downloaded:
@@ -210,8 +212,7 @@ def main() -> int:
             out.write(dst, 1)
         size_mb = merged_path.stat().st_size / 1_000_000
         print(
-            f"[fetch_meta] wrote {merged_path.name}  {dst_w}x{dst_h} {dst.dtype} "
-            f"EPSG:4326 ({size_mb:.1f} MB)"
+            f"[fetch_meta] wrote {merged_path.name}  {dst_w}x{dst_h} {dst.dtype} EPSG:4326 ({size_mb:.1f} MB)"
         )
     finally:
         if not args.keep_tiles:

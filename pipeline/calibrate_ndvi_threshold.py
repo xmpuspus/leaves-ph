@@ -127,11 +127,16 @@ def sweep_thresholds(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Tune NDVI threshold vs Meta canopy height truth")
-    parser.add_argument("--year", type=int, default=DEFAULT_YEAR,
-                        help=f"reference year for NDVI (default {DEFAULT_YEAR})")
+    parser.add_argument(
+        "--year", type=int, default=DEFAULT_YEAR, help=f"reference year for NDVI (default {DEFAULT_YEAR})"
+    )
     parser.add_argument("--height-threshold", type=float, default=DEFAULT_HEIGHT_THRESHOLD)
-    parser.add_argument("--n-samples", type=int, default=DEFAULT_N_SAMPLES,
-                        help="random sample size for the sweep (0 = use all valid pixels)")
+    parser.add_argument(
+        "--n-samples",
+        type=int,
+        default=DEFAULT_N_SAMPLES,
+        help="random sample size for the sweep (0 = use all valid pixels)",
+    )
     parser.add_argument("--recall-floor", type=float, default=DEFAULT_RECALL_FLOOR)
     parser.add_argument("--seed", type=int, default=4242)
     args = parser.parse_args()

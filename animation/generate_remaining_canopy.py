@@ -29,14 +29,15 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import rasterio  # noqa: E402
-from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
-from rasterio.features import geometry_mask  # noqa: E402
-from rasterio.transform import from_bounds  # noqa: E402
-from rasterio.warp import Resampling, reproject  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
+import rasterio
+from matplotlib.colors import LinearSegmentedColormap
+from rasterio.features import geometry_mask
+from rasterio.transform import from_bounds
+from rasterio.warp import Resampling, reproject
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HANSEN_DIR = REPO_ROOT / "data" / "hansen"
@@ -101,22 +102,34 @@ def density_for_year(tc: np.ndarray, ly: np.ndarray, year: int) -> np.ndarray:
         # Resample our canopy mask onto the Hansen grid if shapes differ.
         if our.shape != tc.shape:
             from rasterio.transform import from_bounds as _fb
-            from rasterio.warp import Resampling as _R, reproject as _rep
+            from rasterio.warp import Resampling as _R
+            from rasterio.warp import reproject as _rep
+
             with rasterio.open(canopy_path) as src:
                 src_t = src.transform
                 src_crs = src.crs
             dst = np.zeros(tc.shape, dtype=np.uint8)
             _rep(
-                source=our, destination=dst,
-                src_transform=src_t, src_crs=src_crs,
-                dst_transform=_fb(120.9, 14.399897556473057, 121.15022770141589, 14.800097015548303, tc.shape[1], tc.shape[0]),
+                source=our,
+                destination=dst,
+                src_transform=src_t,
+                src_crs=src_crs,
+                dst_transform=_fb(
+                    120.9,
+                    14.399897556473057,
+                    121.15022770141589,
+                    14.800097015548303,
+                    tc.shape[1],
+                    tc.shape[0],
+                ),
                 dst_crs="EPSG:4326",
                 resampling=_R.nearest,
             )
             our = dst
         # 3x3 mean filter -> density 0..100
         from scipy.ndimage import uniform_filter
-        mask01 = ((our == 1).astype(np.float32))
+
+        mask01 = (our == 1).astype(np.float32)
         density = uniform_filter(mask01, size=3, mode="constant", cval=0) * 100
     else:
         # Fallback: pure Hansen-derived if NDVI canopy missing
@@ -206,9 +219,9 @@ def render_frame(
     for xs, ys in lgu_outlines:
         ax.plot(xs, ys, color="#3a3a3a", linewidth=0.5, alpha=0.7, zorder=3)
 
-    # Frame coordinate system: satellite/density rasters occupy lat 14.4–14.8.
-    # Title block sits ABOVE that strip (lat 14.83–14.96), legend + attribution
-    # BELOW it (lat 14.30–14.39). Map area is never written over.
+    # Frame coordinate system: satellite/density rasters occupy lat 14.4-14.8.
+    # Title block sits ABOVE that strip (lat 14.83-14.96), legend + attribution
+    # BELOW it (lat 14.30-14.39). Map area is never written over.
     ax.set_xlim(120.86, 121.18)
     ax.set_ylim(14.30, 14.96)
     ax.set_aspect("equal")
@@ -221,47 +234,88 @@ def render_frame(
 
     # ---- Editorial title block (ABOVE the map strip) ----
     ax.text(
-        120.87, 14.945, title,
-        fontsize=26, weight="bold", color="#1f3d2b",
-        family="serif", ha="left", va="top", zorder=TXT_Z,
+        120.87,
+        14.945,
+        title,
+        fontsize=26,
+        weight="bold",
+        color="#1f3d2b",
+        family="serif",
+        ha="left",
+        va="top",
+        zorder=TXT_Z,
     )
     ax.text(
-        120.87, 14.905, subtitle,
-        fontsize=14, color="#1f3d2b",
-        family="serif", ha="left", va="top", zorder=TXT_Z,
+        120.87,
+        14.905,
+        subtitle,
+        fontsize=14,
+        color="#1f3d2b",
+        family="serif",
+        ha="left",
+        va="top",
+        zorder=TXT_Z,
     )
     ax.text(
-        120.87, 14.875, f"YEAR  {year}",
-        fontsize=12, color="#5a4f3a",
-        family="monospace", ha="left", va="top", zorder=TXT_Z,
+        120.87,
+        14.875,
+        f"YEAR  {year}",
+        fontsize=12,
+        color="#5a4f3a",
+        family="monospace",
+        ha="left",
+        va="top",
+        zorder=TXT_Z,
     )
     ax.text(
-        121.17, 14.945,
-        f"NCR  CANOPY",
-        fontsize=9, color="#5a4f3a", family="monospace",
-        ha="right", va="top", zorder=TXT_Z,
+        121.17,
+        14.945,
+        "NCR  CANOPY",
+        fontsize=9,
+        color="#5a4f3a",
+        family="monospace",
+        ha="right",
+        va="top",
+        zorder=TXT_Z,
     )
     ax.text(
-        121.17, 14.915,
+        121.17,
+        14.915,
         f"{pct:.2f}%",
-        fontsize=22, color="#1f3d2b", family="serif", weight="bold",
-        ha="right", va="top", zorder=TXT_Z,
+        fontsize=22,
+        color="#1f3d2b",
+        family="serif",
+        weight="bold",
+        ha="right",
+        va="top",
+        zorder=TXT_Z,
     )
     ax.text(
-        121.17, 14.875,
-        f"Hansen v1.13 + Sentinel-2 NDVI",
-        fontsize=7, color="#5a4f3a", family="monospace",
-        ha="right", va="top", zorder=TXT_Z,
+        121.17,
+        14.875,
+        "Hansen v1.13 + Sentinel-2 NDVI",
+        fontsize=7,
+        color="#5a4f3a",
+        family="monospace",
+        ha="right",
+        va="top",
+        zorder=TXT_Z,
     )
 
     # ---- Color legend (BELOW the map strip) ----
     legend_x0, legend_y0 = 120.87, 14.355
     legend_w, legend_h = 0.10, 0.010
     ax.text(
-        legend_x0, legend_y0 + legend_h + 0.012,
+        legend_x0,
+        legend_y0 + legend_h + 0.012,
         "TREE COVER  %",
-        fontsize=8, color="#1a1a1a", family="monospace",
-        ha="left", va="bottom", weight="bold", zorder=TXT_Z,
+        fontsize=8,
+        color="#1a1a1a",
+        family="monospace",
+        ha="left",
+        va="bottom",
+        weight="bold",
+        zorder=TXT_Z,
     )
     grad = np.linspace(0, 100, 256).reshape(1, -1)
     ax.imshow(
@@ -278,22 +332,37 @@ def render_frame(
             legend_x0 + (v / 100) * legend_w,
             legend_y0 - 0.006,
             label,
-            fontsize=7, color="#5a4f3a", family="monospace",
-            ha="center", va="top", zorder=TXT_Z,
+            fontsize=7,
+            color="#5a4f3a",
+            family="monospace",
+            ha="center",
+            va="top",
+            zorder=TXT_Z,
         )
 
     # ---- Attribution (very bottom) ----
     ax.text(
-        121.17, 14.315,
+        121.17,
+        14.315,
         "LEAVES.PH",
-        fontsize=8, color="#1a1a1a", family="monospace",
-        ha="right", va="bottom", weight="bold", zorder=TXT_Z,
+        fontsize=8,
+        color="#1a1a1a",
+        family="monospace",
+        ha="right",
+        va="bottom",
+        weight="bold",
+        zorder=TXT_Z,
     )
     ax.text(
-        120.87, 14.315,
+        120.87,
+        14.315,
         "BASEMAP: Sentinel-2 RGB (ESA Copernicus).  DATA: Hansen GFC v1.13, Meta v2 calibration, PSA boundaries.",
-        fontsize=6.5, color="#5a4f3a", family="monospace",
-        ha="left", va="bottom", zorder=TXT_Z,
+        fontsize=6.5,
+        color="#5a4f3a",
+        family="monospace",
+        ha="left",
+        va="bottom",
+        zorder=TXT_Z,
     )
 
     buf = io.BytesIO()
@@ -350,10 +419,19 @@ def _retime_gif(path: Path, year_cs: int = 100, end_cs: int = 250) -> None:
         return
     try:
         subprocess.run(
-            ["gifsicle", "-O3", str(path),
-             f"-d{year_cs}", f"#0-{n - 2}", f"-d{end_cs}", f"#{n - 1}",
-             "-o", str(path)],
-            check=True, capture_output=True,
+            [
+                "gifsicle",
+                "-O3",
+                str(path),
+                f"-d{year_cs}",
+                f"#0-{n - 2}",
+                f"-d{end_cs}",
+                f"#{n - 1}",
+                "-o",
+                str(path),
+            ],
+            check=True,
+            capture_output=True,
         )
     except (FileNotFoundError, subprocess.CalledProcessError) as e:
         print(f"[remaining] gifsicle retime skipped ({e}); frames keep default delay")

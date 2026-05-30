@@ -43,17 +43,19 @@ def canopy_mask_for_year(in_path: Path, threshold: float) -> tuple[np.ndarray, d
     ndvi = compute_ndvi(red, nir)
     canopy = (ndvi >= threshold).astype(np.uint8)
     canopy[np.isnan(ndvi)] = 255  # nodata sentinel
-    profile.update(
-        {"count": 1, "dtype": "uint8", "nodata": 255, "compress": "deflate", "predictor": 2}
-    )
+    profile.update({"count": 1, "dtype": "uint8", "nodata": 255, "compress": "deflate", "predictor": 2})
     return canopy, profile
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compute per-year canopy mask from S2 composites")
     parser.add_argument("--years", nargs="+", type=int, default=list(range(2019, 2027)))
-    parser.add_argument("--threshold", type=float, default=None,
-                        help="NDVI threshold; default reads from data/calibration_report.json or falls back to 0.50")
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help="NDVI threshold; default reads from data/calibration_report.json or falls back to 0.50",
+    )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 

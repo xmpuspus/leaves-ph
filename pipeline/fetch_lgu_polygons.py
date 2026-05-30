@@ -98,7 +98,7 @@ def osm_relation_to_geojson(rel: dict, lgu_name: str, full_response: dict) -> di
     `osm2geojson` library, which implements the OSM-standard ring chaining.
     """
     try:
-        import osm2geojson  # noqa: PLC0415
+        import osm2geojson
     except ImportError as e:
         raise RuntimeError(
             "osm2geojson is required (pip install osm2geojson). "
@@ -192,7 +192,9 @@ def main() -> int:
         )
     )
     if len(features) != len(NCR_LGUS):
-        print("[fetch_lgu] WARNING: matched count != canonical count; investigate before running the compute step")
+        print(
+            "[fetch_lgu] WARNING: matched count != canonical count; investigate before running the compute step"
+        )
         return 1
     return 0
 

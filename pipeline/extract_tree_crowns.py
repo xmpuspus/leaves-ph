@@ -68,7 +68,7 @@ def polygon_area_m2(poly_geom: dict) -> float:
         polys = list(p.geoms)
     total = 0.0
     for poly in polys:
-        minx, miny, maxx, maxy = poly.bounds
+        _minx, miny, _maxx, maxy = poly.bounds
         lat = (miny + maxy) / 2
         # shapely area is in deg^2; convert at this latitude
         deg2_to_m2 = (110_574.0) * (111_320.0 * float(np.cos(np.radians(lat))))
@@ -100,9 +100,11 @@ def main() -> int:
         crs = src.crs
     print(f"[crowns] raster {height.shape[1]}x{height.shape[0]}  crs={crs}")
     mask = (height >= args.min_height) & (height < 250)
-    print(f"[crowns] canopy pixels (height>={args.min_height} m): {mask.sum():,} ({100*mask.sum()/mask.size:.2f}% of NCR)")
+    print(
+        f"[crowns] canopy pixels (height>={args.min_height} m): {mask.sum():,} ({100 * mask.sum() / mask.size:.2f}% of NCR)"
+    )
 
-    print(f"[crowns] vectorising connected components via rasterio.features.shapes")
+    print("[crowns] vectorising connected components via rasterio.features.shapes")
     # `shapes` with connectivity=8 unites diagonally-touching pixels into one
     # crown (canonical for canopy delineation; matches how a viewer would
     # interpret adjoining greens as one tree-cluster).

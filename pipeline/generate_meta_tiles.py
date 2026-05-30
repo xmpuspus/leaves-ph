@@ -35,7 +35,7 @@ RGBA_GREEN = (45, 90, 61, 220)  # #2d5a3d at ~86% alpha
 
 
 def tile_to_lonlat(x: int, y: int, z: int) -> tuple[float, float]:
-    n = 2 ** z
+    n = 2**z
     lon = x / n * 360 - 180
     lat = math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * y / n))))
     return lon, lat
@@ -49,7 +49,7 @@ def tile_bounds_lonlat(x: int, y: int, z: int) -> tuple[float, float, float, flo
 
 
 def lonlat_to_tile(lon: float, lat: float, z: int) -> tuple[int, int]:
-    n = 2 ** z
+    n = 2**z
     x = int((lon + 180.0) / 360.0 * n)
     lat_rad = math.radians(lat)
     y = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
@@ -86,7 +86,9 @@ def render_tile(
     from rasterio.transform import from_bounds
     from rasterio.warp import transform_bounds
 
-    dst_bounds_3857 = transform_bounds("EPSG:4326", "EPSG:3857", min_lon, min_lat, max_lon, max_lat, densify_pts=21)
+    dst_bounds_3857 = transform_bounds(
+        "EPSG:4326", "EPSG:3857", min_lon, min_lat, max_lon, max_lat, densify_pts=21
+    )
     dst_transform = from_bounds(*dst_bounds_3857, TILE_SIZE, TILE_SIZE)
     dst = np.zeros((TILE_SIZE, TILE_SIZE), dtype=src_data.dtype)
     reproject(
@@ -163,7 +165,9 @@ def main() -> int:
             else:
                 skipped += 1
             if (i + 1) % 200 == 0:
-                print(f"[meta-tiles] progress: {i + 1}/{len(all_tasks)}  written={written} skipped/empty={skipped}")
+                print(
+                    f"[meta-tiles] progress: {i + 1}/{len(all_tasks)}  written={written} skipped/empty={skipped}"
+                )
 
     # Disk usage report
     total_bytes = sum(p.stat().st_size for p in OUT_DIR.rglob("*.png"))

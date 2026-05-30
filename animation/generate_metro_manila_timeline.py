@@ -15,14 +15,15 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import rasterio  # noqa: E402
-from rasterio.features import geometry_mask  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
+import rasterio
+from rasterio.features import geometry_mask
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _basemap import basemap_for_bbox, desaturate  # noqa: E402
+from _basemap import basemap_for_bbox, desaturate
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMP_DIR = REPO_ROOT / "data" / "composites"
@@ -43,7 +44,8 @@ def ncr_pct_by_year() -> dict[int, float]:
     rather than the raster-pixel ratio (which would include ocean / non-LGU
     pixels and read higher).
     """
-    import csv  # noqa: PLC0415
+    import csv
+
     by_year_canopy: dict[int, float] = {}
     by_year_total: dict[int, float] = {}
     with CSV_PATH.open() as f:
@@ -64,8 +66,9 @@ def load_canopy(year: int) -> tuple[np.ndarray, tuple[float, float, float, float
 
 def load_lgu_mask(canopy_bbox, shape: tuple[int, int]) -> np.ndarray:
     """Boolean mask True where the pixel is INSIDE one of the 17 NCR LGUs."""
-    import json  # noqa: PLC0415
-    from rasterio.transform import from_bounds  # noqa: PLC0415
+    import json
+
+    from rasterio.transform import from_bounds
 
     fc = json.loads(LGU_GEOJSON.read_text())
     geoms = [f["geometry"] for f in fc["features"]]
@@ -73,7 +76,15 @@ def load_lgu_mask(canopy_bbox, shape: tuple[int, int]) -> np.ndarray:
     return geometry_mask(geoms, out_shape=shape, transform=transform, invert=True)
 
 
-def render(basemap: np.ndarray, base_bbox, canopy: np.ndarray, canopy_bbox, lgu_mask: np.ndarray, year: int, ncr_pct: float) -> np.ndarray:
+def render(
+    basemap: np.ndarray,
+    base_bbox,
+    canopy: np.ndarray,
+    canopy_bbox,
+    lgu_mask: np.ndarray,
+    year: int,
+    ncr_pct: float,
+) -> np.ndarray:
     # Mask out pixels outside any LGU polygon (ocean, non-NCR land).
     canopy = canopy.copy()
     canopy[~lgu_mask] = 255  # treat as nodata
@@ -85,8 +96,13 @@ def render(basemap: np.ndarray, base_bbox, canopy: np.ndarray, canopy_bbox, lgu_
     # matplotlib extent for imshow is (left, right, bottom, top). When the
     # data array is row-major top-to-bottom (origin="upper"), the bottom/top
     # in extent control where the rows MAP TO, not the array order.
-    ax.imshow(desat, extent=(base_bbox[0], base_bbox[2], base_bbox[1], base_bbox[3]),
-              origin="upper", interpolation="bilinear", zorder=1)
+    ax.imshow(
+        desat,
+        extent=(base_bbox[0], base_bbox[2], base_bbox[1], base_bbox[3]),
+        origin="upper",
+        interpolation="bilinear",
+        zorder=1,
+    )
 
     # Canopy overlay as masked array so transparent pixels really pass through.
     overlay = np.ma.masked_array(
@@ -111,22 +127,52 @@ def render(basemap: np.ndarray, base_bbox, canopy: np.ndarray, canopy_bbox, lgu_
     for spine in ax.spines.values():
         spine.set_visible(False)
 
-    ax.text(NCR_BBOX[0] + 0.005, NCR_BBOX[3] - 0.005, f"{year}",
-            fontsize=44, weight="bold", color="#0b1220", family="monospace",
-            ha="left", va="top",
-            bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.85), ec="none"))
-    ax.text(NCR_BBOX[0] + 0.005, NCR_BBOX[3] - 0.035, f"NCR canopy: {ncr_pct:.2f}%",
-            fontsize=14, color="#0b1220", family="monospace",
-            ha="left", va="top",
-            bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.85), ec="none"))
+    ax.text(
+        NCR_BBOX[0] + 0.005,
+        NCR_BBOX[3] - 0.005,
+        f"{year}",
+        fontsize=44,
+        weight="bold",
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="top",
+        bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.85), ec="none"),
+    )
+    ax.text(
+        NCR_BBOX[0] + 0.005,
+        NCR_BBOX[3] - 0.035,
+        f"NCR canopy: {ncr_pct:.2f}%",
+        fontsize=14,
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="top",
+        bbox=dict(boxstyle="round,pad=0.3", fc=(1, 1, 1, 0.85), ec="none"),
+    )
 
-    ax.text(NCR_BBOX[2] - 0.005, NCR_BBOX[1] + 0.005,
-            "Leaves.PH  ·  Sentinel-2 NDVI >= 0.62  ·  basemap (c) OpenStreetMap contributors",
-            fontsize=7, color="#0b1220", family="monospace", ha="right", va="bottom",
-            bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"))
-    ax.text(NCR_BBOX[0] + 0.005, NCR_BBOX[1] + 0.005, "https://leaves.ph",
-            fontsize=7, color="#0b1220", family="monospace", ha="left", va="bottom",
-            bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"))
+    ax.text(
+        NCR_BBOX[2] - 0.005,
+        NCR_BBOX[1] + 0.005,
+        "Leaves.PH  ·  Sentinel-2 NDVI >= 0.62  ·  basemap (c) OpenStreetMap contributors",
+        fontsize=7,
+        color="#0b1220",
+        family="monospace",
+        ha="right",
+        va="bottom",
+        bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"),
+    )
+    ax.text(
+        NCR_BBOX[0] + 0.005,
+        NCR_BBOX[1] + 0.005,
+        "https://leaves.ph",
+        fontsize=7,
+        color="#0b1220",
+        family="monospace",
+        ha="left",
+        va="bottom",
+        bbox=dict(boxstyle="round,pad=0.25", fc=(1, 1, 1, 0.85), ec="none"),
+    )
 
     buf = io.BytesIO()
     fig.savefig(buf, format="png", facecolor=fig.get_facecolor(), bbox_inches="tight", dpi=100)

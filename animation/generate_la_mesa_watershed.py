@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _zoomed import REPO_ROOT, make_timeline  # noqa: E402
+from _zoomed import REPO_ROOT, make_timeline
 
 # La Mesa watershed + Marikina + UP Diliman: the NE green zone (largely QC).
 TARGET_BBOX = (121.03, 14.66, 121.13, 14.78)

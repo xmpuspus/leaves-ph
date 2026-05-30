@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _zoomed import REPO_ROOT, make_timeline  # noqa: E402
+from _zoomed import REPO_ROOT, make_timeline
 
 # Tight zoom on the most-photographed Quirino Avenue stretch.
 TARGET_BBOX = (120.985, 14.585, 120.998, 14.602)

@@ -67,7 +67,7 @@ def _init_service_account(key_path: str) -> None:
     ee.Initialize(credentials)
 
 
-def ncr_geometry() -> "ee.Geometry":
+def ncr_geometry() -> ee.Geometry:
     """NCR bounding box as an ee.Geometry.Rectangle."""
     init()
     return ee.Geometry.Rectangle(list(NCR_BBOX), proj="EPSG:4326", geodesic=False)
