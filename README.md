@@ -1,14 +1,14 @@
 # Leaves.PH
 
-Tree cover for Metro Manila, measured from satellite imagery. Annual per-LGU values from 2019 to 2026 for the 17 LGUs of the National Capital Region (16 cities plus the municipality of Pateros). Inputs, method, and outputs are open and reproducible from a clean clone.
+An interactive map of Metro Manila's tree canopy, measured from satellite imagery. Drag the year, search your barangay, and click any tree to see it from the sky. Annual per-LGU values from 2019 to 2026 for the 17 LGUs of the National Capital Region (16 cities plus the municipality of Pateros). Inputs, method, and outputs are open and reproducible from a clean clone.
 
 [![License: MIT (code) / CC-BY-4.0 (data)](https://img.shields.io/badge/license-MIT%20%2F%20CC--BY--4.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](README.md)
 
-![Sentinel-2 RGB basemap with canopy density overlay 2019 to 2026](docs/demo/remaining-canopy-satellite.gif)
+[![Exploring the Leaves.PH interactive map: the Metro Manila tree-canopy choropleth swept across 2019 to 2026, a fly-in to Quezon City on satellite imagery, and a detected tree shown from the sky](docs/demo/linkedin-demo.gif)](https://leaves.ph)
 
-Live site: [leaves.ph](https://leaves.ph).
+Explore the live map at **[leaves.ph](https://leaves.ph)**: drag the year, find your barangay, click any tree.
 
 ## What it measures
 
@@ -22,6 +22,10 @@ For each year, what fraction of each LGU's area reads as tree canopy. The publis
 The detection model across three contrasting areas: dense informal Tondo, the Pasay bay reclamation, and the La Mesa watershed edge. Each scene runs from 2019 to 2026 and is shown three ways. On the left is the raw Sentinel-2 image. In the middle is the Meta reference: a single roughly-2019 snapshot of canopy taller than 5m, with the tree crowns OpenStreetMap has confirmed. On the right is the detection model's estimate for each year, with the Meta-derived crowns OSM does not record. The reference never changes from year to year and OSM lists only a fraction of the crowns; the model gives a canopy reading for every year and every block. This is the research-track model described above, not the source of the published figures.
 
 Headline number: NCR area-weighted canopy is **~9–10%** from the published model (2026 reads 8.82% but is provisional, Jan-May imagery only; the threshold is calibrated to the 10.1% human-truth canopy). Read the per-year values as annual cross-sectional snapshots, not a change series.
+
+![Sentinel-2 RGB basemap with canopy density overlay 2019 to 2026](docs/demo/remaining-canopy-satellite.gif)
+
+Remaining tree cover across NCR, 2019 to 2026, on the Sentinel-2 basemap.
 
 | LGU | 2026 canopy % (model) | 2019 → 2026 Δ (pp) |
 |---|---|---|
