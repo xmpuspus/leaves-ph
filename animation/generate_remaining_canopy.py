@@ -2,7 +2,7 @@
 
 For each year 2019..2026:
 1. Per-pixel canopy density at 30 m, derived from Hansen v1.13:
-     density(year) = treecover2000(pixel) if lossyear == 0 OR lossyear > (year - 2000)
+     density(year) = canopy2000(pixel) if lossyear == 0 OR lossyear > (year - 2000)
                      else 0
    (i.e. start with year-2000 canopy and subtract pixels Hansen recorded as
     lost on or before the year of interest.)
@@ -64,8 +64,8 @@ SK_CMAP = LinearSegmentedColormap.from_list(
 
 
 def load_hansen() -> tuple[np.ndarray, np.ndarray, dict]:
-    """Returns (treecover2000_uint8_pct, lossyear_uint8_code, src_meta)."""
-    with rasterio.open(HANSEN_DIR / "treecover2000.tif") as src:
+    """Returns (canopy2000_uint8_pct, lossyear_uint8_code, src_meta)."""
+    with rasterio.open(HANSEN_DIR / "hansen_canopy2000.tif") as src:
         tc = src.read(1)
         meta = {
             "transform": src.transform,
@@ -85,7 +85,7 @@ def density_for_year(tc: np.ndarray, ly: np.ndarray, year: int) -> np.ndarray:
     Combines two signals:
     1. **Spatial gradient**: a 3x3 mean filter on our calibrated NDVI canopy
        mask for the year, scaled to 0..100. This produces a density-percent
-       per 90 m neighborhood (visually similar to Hansen treecover2000 but
+       per 90 m neighborhood (visually similar to the Hansen year-2000 canopy band but
        refreshed every year, so the time-animation shows real flux).
     2. **Hansen subtraction**: any pixel Hansen records as lost on or before
        the year is forced to 0 (matches the ScienceKonek source data).
@@ -361,7 +361,7 @@ def _retime_gif(path: Path, year_cs: int = 100, end_cs: int = 250) -> None:
 
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    print("[remaining] loading Hansen treecover2000 + lossyear")
+    print("[remaining] loading Hansen year-2000 canopy + lossyear")
     tc, ly, meta = load_hansen()
     bounds = meta["bounds"]
     print(f"[remaining] hansen grid {meta['width']}x{meta['height']}  bounds={bounds}")

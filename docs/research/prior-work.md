@@ -35,7 +35,7 @@ Decision: use Hansen GFC + ESA WorldCover + Dynamic World as the **input baselin
 
 ### 3.1 Baseline triad (mandatory)
 
-1. **Hansen GFC v1.13** for 2001-2024 loss history and `treecover2000` year-2000 baseline. Crops to NCR bbox in one GEE call; ~30 m loss tiles per year.
+1. **Hansen GFC v1.13** for 2001-2024 loss history and the year-2000 canopy baseline band. Crops to NCR bbox in one GEE call; ~30 m loss tiles per year.
 2. **Dynamic World v1** for the annual canopy curve 2019 to 2026. Median of the `trees` probability band per year per LGU is the headline series. Avoids Hansen's plantation-harvest false positive and captures regrowth that Hansen ignores.
 3. **ESA WorldCover v200** for an independent 2021 binary tree mask. Used as the calibration cross-check, not as a trend layer.
 

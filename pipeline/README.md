@@ -9,7 +9,7 @@ overwrites the same output deterministically when the cached inputs are unchange
 | Step | Script | Output |
 |---|---|---|
 | fetch | `fetch_sentinel2_yearly.py` | `data/composites/s2_ndvi_<year>.tif` for year in 2019..2026 |
-| 2 | `fetch_hansen.py` | `data/hansen/{treecover2000,lossyear,gain}.tif` |
+| 2 | `fetch_hansen.py` | `data/hansen/{hansen_canopy2000,lossyear,gain}.tif` |
 | 2 | `fetch_esa_worldcover.py` | `data/esa/worldcover_2021.tif` |
 | 2 | `fetch_dynamic_world.py` | `data/composites/dw_trees_<year>.tif` for year in 2019..2026 |
 | 2 | `fetch_meta_canopy_height.py` | `data/meta/canopy_height_ncr.tif` |

@@ -1,9 +1,9 @@
 """Fetch Hansen Global Forest Change layers cropped to the NCR bbox.
 
 Exports three bands as separate GeoTIFFs:
-    data/hansen/treecover2000.tif   year-2000 percent canopy
-    data/hansen/lossyear.tif         year of forest loss (1-24 = 2001-2024)
-    data/hansen/gain.tif             binary forest gain 2000-2012
+    data/hansen/hansen_canopy2000.tif   year-2000 percent canopy
+    data/hansen/lossyear.tif            year of forest loss (1-24 = 2001-2024)
+    data/hansen/gain.tif                binary forest gain 2000-2012
 
 Idempotent.
 
@@ -25,6 +25,9 @@ OUT_DIR = REPO_ROOT / "data" / "hansen"
 MANIFEST = OUT_DIR / "_fetch_manifest_hansen.json"
 DEFAULT_ASSET = "UMD/hansen/global_forest_change_2025_v1_13"
 BANDS = ("treecover2000", "lossyear", "gain")
+# GEE band id -> local output filename stem. "treecover2000" is Google's
+# immutable Hansen band name; the local file uses a neutral stem.
+OUT_NAMES = {"treecover2000": "hansen_canopy2000", "lossyear": "lossyear", "gain": "gain"}
 
 
 def main() -> int:
@@ -43,7 +46,7 @@ def main() -> int:
     gfc = ee.Image(args.asset).clip(geom)
 
     for band in BANDS:
-        out_path = OUT_DIR / f"{band}.tif"
+        out_path = OUT_DIR / f"{OUT_NAMES[band]}.tif"
         if out_path.exists() and not args.force:
             print(f"[fetch_hansen] {band}: {out_path.name} already exists; skip")
             continue

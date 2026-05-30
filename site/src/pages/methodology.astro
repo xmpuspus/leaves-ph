@@ -22,7 +22,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
     <p class="mb-3">Five canonical canopy / land-cover datasets, all pulled via Google Earth Engine or AWS Open Data, all bit-exact reproducible from the committed manifests:</p>
     <ul class="list-disc pl-6 space-y-1 text-sm">
       <li><strong>Sentinel-2 L2A</strong> via <code>COPERNICUS/S2_SR_HARMONIZED</code>. Annual median composites {SERIES_START} to {SERIES_END}, cloud-masked at s2cloudless probability &lt; 40, exported at 30 m to match Hansen's grid.</li>
-      <li><strong>Hansen Global Forest Change v1.13</strong> via <code>UMD/hansen/global_forest_change_2025_v1_13</code>. Year-2000 baseline (treecover2000), 2001-2025 annual loss (lossyear), 2000-2012 binary gain. 30 m native.</li>
+      <li><strong>Hansen Global Forest Change v1.13</strong> via <code>UMD/hansen/global_forest_change_2025_v1_13</code>. Year-2000 canopy baseline, 2001-2025 annual loss (lossyear), 2000-2012 binary gain. 30 m native.</li>
       <li><strong>ESA WorldCover v200</strong> via <code>ESA/WorldCover/v200</code>. 2021 single-epoch, 10 m class-10 = trees. Independent cross-check.</li>
       <li><strong>Dynamic World v1</strong> via <code>GOOGLE/DYNAMICWORLD/V1</code>. Annual median <code>trees</code> probability {SERIES_START} to {SERIES_END}, downsampled to 30 m for the shared GEE 50 MB sync-URL limit.</li>
       <li><strong>Meta Canopy Height v2</strong> from <code>s3://dataforgood-fb-data/forests/v1/alsgedi_global_v6_float/chm/</code>. 1 m height truth (source imagery 2018-2020), Bing-style quadkey tiles, downloaded for the 4 zoom-9 tiles overlapping NCR, mosaicked, reprojected EPSG:3857 to EPSG:4326.</li>
