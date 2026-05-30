@@ -6,7 +6,7 @@ An interactive map of Metro Manila's tree canopy, measured from satellite imager
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](README.md)
 
-[![Exploring the Leaves.PH interactive map: the Metro Manila tree-canopy choropleth swept across 2019 to 2026, a fly-in to Quezon City on satellite imagery, and a detected tree shown from the sky](docs/demo/linkedin-demo.gif)](https://leaves.ph)
+[![Exploring the Leaves.PH interactive map: the Metro Manila tree-canopy map, the contrast between Quezon City at 22% canopy and Pasay near the airport at about 3%, and a detected tree shown from the sky](docs/demo/linkedin-demo.gif)](https://leaves.ph)
 
 Explore the live map at **[leaves.ph](https://leaves.ph)**: drag the year, find your barangay, click any tree.
 
