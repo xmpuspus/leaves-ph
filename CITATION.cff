@@ -7,9 +7,16 @@ authors:
     family-names: Puspus
 repository-code: "https://github.com/xmpuspus/leaves-ph"
 url: "https://leaves.ph"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20470306"
+    description: "Concept DOI (resolves to the latest version)"
+  - type: doi
+    value: "10.5281/zenodo.20470307"
+    description: "Version DOI for v0.7.0"
 license: MIT
 version: "0.7.0"
-date-released: "2026-05-26"
+date-released: "2026-05-31"
 keywords:
   - tree cover
   - urban canopy
@@ -33,4 +40,6 @@ preferred-citation:
     - given-names: Xavier
       family-names: Puspus
   year: 2026
+  version: "0.7.0"
+  doi: "10.5281/zenodo.20470306"
   url: "https://github.com/xmpuspus/leaves-ph"
