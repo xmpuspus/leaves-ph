@@ -1,0 +1,433 @@
+---
+import Base from "../layouts/Base.astro";
+import {
+  SERIES_START,
+  SERIES_END,
+  CANOPY_MODEL_F1,
+  GOLD_LABEL_N,
+  NCR_BARANGAY_COUNT,
+} from "../lib/series";
+
+const link = "text-umber-700 underline decoration-umber-500/50 underline-offset-2";
+---
+<Base
+  title="Leaves.PH · accountability"
+  pathname="/accountability"
+  description="A method for reading, at a chosen Metro Manila barangay, whether canopy lost to development has returned, against the DENR tree-replacement rule. Built from public satellite records. Not a compliance verdict."
+>
+  <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
+    <p class="kicker mb-4">METHOD &middot; ACCOUNTABILITY</p>
+    <h1 class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">Canopy change and the tree-replacement rule.</h1>
+    <p class="text-sm text-ink-500 mb-6 max-w-narrow">
+      A way to read, at a chosen site, whether canopy lost to development has come back, using the same public
+      satellite record the rest of this site is built on. This is a method, not a verdict: it points you at what
+      to check, it does not decide whether any rule was followed.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── The rule (method) ─────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">The replacement rule</h2>
+    <p class="mb-3">
+      When a permit allows a naturally-growing tree to be cut for a development project, DENR
+      <strong>Memorandum Order 2012-02</strong> sets a replacement-planting obligation. The ratio is tiered: up to
+      <strong>100 replacement trees</strong> for each naturally-growing tree cut for development, fewer for planted
+      trees, and none for timber-plantation stock. It is written in support of the National Greening Program.
+      Source: <a href={"https://forestry.denr.gov.ph/fmb_web/wp-content/uploads/2023/06/dmo-2012-02.pdf"} class={link}>DMO 2012-02 (DENR-FMB)</a>.
+    </p>
+    <p class="mb-3">
+      Whether those replacement trees are planted, and whether they survive, is a separate question. The
+      government's own auditor found it is largely not tracked: the Commission on Audit's
+      <a href={"https://www.coa.gov.ph/reports/performance-audit-reports/"} class={link}>2019 performance audit</a>
+      of the National Greening Program reported that "the actual progress / survival of trees planted on these
+      sites cannot be monitored," with no central database and only 5&ndash;10% field sampling. That gap, between a
+      replacement obligation on paper and an unmonitored outcome on the ground, is what this page lets you look at
+      from above.
+    </p>
+    <p class="mb-3 text-sm text-ink-500">
+      A note on scope: this is the same point the README makes plainly. Leaves.PH is not a permit-compliance tool.
+      It computes canopy fractions from public satellite imagery. It cannot see a permit, a tree count, or a
+      planting record. It can show you where canopy has and has not changed, and tell you how to request the rest.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── The per-site lens ─────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Check a site</h2>
+    <p class="mb-4">
+      Pick one of the {NCR_BARANGAY_COUNT} NCR barangays. You get two independent readings for that area: the
+      canopy trajectory from this site's published model ({SERIES_START}&ndash;{SERIES_END}), and the stand-replacement
+      canopy loss the Hansen Global Forest Change record flags there. Read them together, with the limits noted
+      under the chart.
+    </p>
+
+    <div class="border border-ink-900 bg-paper-tint/40 p-4 sm:p-5">
+      <label for="bgy-input" class="block kicker text-ink-500 mb-2">Barangay</label>
+      <input
+        id="bgy-input"
+        list="bgy-list"
+        type="text"
+        placeholder="Type a barangay, e.g. Bagong Pag-asa, Quezon City"
+        autocomplete="off"
+        class="w-full border border-ink-900 bg-paper px-3 py-2 font-mono text-sm text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-700/40"
+      />
+      <datalist id="bgy-list"></datalist>
+      <p id="bgy-status" class="mt-2 font-mono text-xs text-ink-500">Loading the {NCR_BARANGAY_COUNT}-barangay record&hellip;</p>
+
+      <div id="bgy-result" class="hidden mt-5">
+        <p class="font-display text-xl text-ink-900 leading-tight" id="bgy-title">&nbsp;</p>
+        <p class="text-sm text-ink-500 mb-3" id="bgy-sub">&nbsp;</p>
+
+        <!-- trajectory chart -->
+        <svg id="bgy-chart" viewBox="0 0 720 300" class="w-full h-auto" role="img" aria-labelledby="bgy-chart-title">
+          <title id="bgy-chart-title">Per-barangay canopy percent by year</title>
+        </svg>
+
+        <!-- two readings -->
+        <div class="grid sm:grid-cols-2 gap-4 mt-4">
+          <div class="border border-ink-300/50 bg-paper p-3">
+            <p class="kicker text-ink-500 mb-1">Canopy trajectory (model)</p>
+            <p class="font-mono text-sm text-ink-900" id="bgy-traj">&nbsp;</p>
+            <p class="font-mono text-[11px] text-ink-500 mt-1">Cross-sectional snapshots, not a change series. {SERIES_END} is provisional (imagery Jan&ndash;May only).</p>
+          </div>
+          <div class="border border-ink-300/50 bg-paper p-3">
+            <p class="kicker text-ink-500 mb-1">Hansen loss (independent)</p>
+            <p class="font-mono text-sm text-ink-900" id="bgy-hansen">&nbsp;</p>
+            <p class="font-mono text-[11px] text-ink-500 mt-1">Stand-replacement loss only, ~30 m, cumulative 2001&ndash;2025. Sub-pixel and partial-canopy thinning may not register; the detection year is approximate.</p>
+          </div>
+        </div>
+
+        <!-- non-accusatory read -->
+        <div class="border-l-2 border-forest-700 bg-forest-700/[0.04] pl-4 py-3 mt-4">
+          <p class="text-sm text-ink-900 leading-relaxed" id="bgy-read">&nbsp;</p>
+        </div>
+
+        <p class="font-mono text-[11px] text-ink-500 mt-3">
+          Statistical indicators derived from public-record satellite data. Patterns may have legitimate
+          explanations. This is not a compliance finding and has no legal value. Canopy is a vegetation proxy, not
+          a tree count.
+        </p>
+      </div>
+    </div>
+
+    <hr class="rule" />
+
+    <!-- ── Honesty boundary ──────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">What this can and cannot tell you</h2>
+    <div class="grid sm:grid-cols-2 gap-5">
+      <div>
+        <p class="kicker text-ink-500 mb-2">It can</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li>Show the canopy trajectory at a site, year by year, with the model's known margin.</li>
+          <li>Show where Hansen flagged a stand-replacement loss event near a site (≈30&nbsp;m), as an independent record.</li>
+          <li>Point you to the documented route for requesting the permit and replacement record.</li>
+          <li>Note that a flat or rising area-wide reading can still hide local loss offset by gain elsewhere.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="kicker text-ink-500 mb-2">It cannot</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li>Decide whether a replacement obligation was or was not met. That needs the permit record.</li>
+          <li>Prove the same trees grew back. The model reads canopy presence per year, not tree identity.</li>
+          <li>Give an exact per-location year a tree was cut. Hansen's loss year is an approximate detection year.</li>
+          <li>Resolve a single street tree or a small lot. Below ≈30&nbsp;m, change is not independently visible.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="mb-3 mt-4 text-sm text-ink-500">
+      The standard for a defensible change claim is a stratified reading with an uncertainty band, not a binary
+      yes/no. We follow that here: two independent signals, each with its limits stated, and no verdict drawn for
+      you. The Hansen forest-gain layer is frozen at 2000&ndash;2012, so post-2012 recovery is read from the model
+      trajectory, never claimed from Hansen gain.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── How to check it yourself ──────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">How to check it yourself</h2>
+    <p class="mb-3">
+      Permit and replacement records are not published in a single open dataset. They exist, but you have to ask
+      for them. The documented routes:
+    </p>
+    <ul class="list-disc pl-6 space-y-2 text-sm">
+      <li>
+        <strong>DENR-NCR.</strong> Special tree-cutting permits in Metro Manila are issued and held at the regional
+        office. A national Freedom of Information request for a specific project's permit is typically routed here;
+        file through <a href={"https://www.foi.gov.ph/"} class={link}>foi.gov.ph</a> and address it to DENR-NCR.
+        Expect to name the project and location precisely; a documented MRT-7 request was bounced because the
+        receiving office did not hold the file.
+      </li>
+      <li>
+        <strong>Quezon City.</strong> The Parks Development and Administration Department issues a Certificate of
+        No Objection as part of a tree-cutting permit, and applications must include a site plan showing the
+        affected trees. There is no public registry of issued permits; request directly at
+        <a href={"mailto:pdad@quezoncity.gov.ph"} class={link}>pdad@quezoncity.gov.ph</a>.
+      </li>
+      <li>
+        <strong>Infrastructure projects.</strong> Road-widening and similar works carry an Environmental
+        Compliance Certificate from the Environmental Management Bureau, which can list tree-cutting and
+        replacement conditions. Start at <a href={"https://emb.gov.ph/"} class={link}>emb.gov.ph</a> and the ECC
+        Online system; the per-project search surface is limited, so an FOI request is often the reliable path.
+      </li>
+      <li>
+        <strong>Your own LGU.</strong> Tree-cutting in NCR generally needs both a city permit and DENR clearance.
+        Ask your city environment or parks office for the permit and the required replacement count, then compare
+        it against the canopy reading above.
+      </li>
+    </ul>
+
+    <hr class="rule" />
+
+    <!-- ── Related work ──────────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Related work</h2>
+    <p class="mb-3">
+      Public satellite monitoring of forest loss is well established, and this page builds on it rather than
+      claiming new ground in detection:
+    </p>
+    <ul class="list-disc pl-6 space-y-1 text-sm">
+      <li>
+        <a href={"https://www.globalforestwatch.org/"} class={link}>Global Forest Watch</a> runs four public
+        near-real-time deforestation alert systems (GLAD-L, GLAD-S2, RADD, and the integrated alert), and its
+        country dashboards already report Philippine tree-cover loss.
+      </li>
+      <li>
+        <a href={"https://pro.globalforestwatch.org/"} class={link}>GFW Pro</a> already maps loss against legal
+        obligations, such as the EU Deforestation Regulation cutoff and national forest laws. It is a private
+        supply-chain due-diligence tool, currently covering four countries (not the Philippines) and scoped to
+        deforestation cutoffs, not replacement-planting ratios. Like this page, GFW states its maps have no legal
+        value.
+      </li>
+      <li>
+        DENR, with <a href={"https://philsa.gov.ph/"} class={link}>PhilSA</a>, has reported building a geospatial
+        database to monitor the national reforestation program. A 2024 study also applied remote sensing to
+        prioritise tree planting across NCR.
+      </li>
+    </ul>
+    <p class="mb-3 mt-3 text-sm text-ink-500">
+      What is distinct here is narrow and worth stating plainly: an open, per-barangay, interactive canopy reading
+      for Metro Manila, framed around the specific DENR replacement rule, with the request route attached. The
+      detection is not novel; the local, public, replacement-rule framing is.
+    </p>
+
+    <p class="text-sm text-ink-500 mt-8">
+      The model behind the trajectory is documented on the <a href="/methodology" class={link}>methodology</a> page
+      (F1&nbsp;{CANOPY_MODEL_F1.toFixed(2)} against {GOLD_LABEL_N} hand-labelled high-resolution pixels). The
+      per-barangay data, including the Hansen loss column, is on the <a href="/data" class={link}>data</a> page.
+    </p>
+  </article>
+
+  <script>
+    // Per-site lens: lazy-load the per-barangay geojson, wire the picker, render
+    // a 0-baseline trajectory + the independent Hansen loss + a non-accusatory read.
+    const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+    const PROVISIONAL = 2026;
+    const FOREST = "#1f3d2b";
+    const UMBER = "#b65724";
+
+    const input = document.getElementById("bgy-input") as HTMLInputElement | null;
+    const list = document.getElementById("bgy-list");
+    const statusEl = document.getElementById("bgy-status");
+    const result = document.getElementById("bgy-result");
+    const elTitle = document.getElementById("bgy-title");
+    const elSub = document.getElementById("bgy-sub");
+    const elChart = document.getElementById("bgy-chart");
+    const elTraj = document.getElementById("bgy-traj");
+    const elHansen = document.getElementById("bgy-hansen");
+    const elRead = document.getElementById("bgy-read");
+
+    type Props = Record<string, any>;
+    const index = new Map<string, Props>();
+    let loaded = false;
+    let loading = false;
+
+    function num(v: any): number | null {
+      return v == null || v === "" || Number.isNaN(Number(v)) ? null : Number(v);
+    }
+
+    async function ensureLoaded(): Promise<boolean> {
+      if (loaded) return true;
+      if (loading) return false;
+      loading = true;
+      try {
+        const res = await fetch("/data/per_barangay_canopy_model.geojson");
+        const gj = await res.json();
+        const opts: string[] = [];
+        for (const f of gj.features) {
+          const p = f.properties || {};
+          const name = p.barangay_name;
+          const lgu = p.lgu_name;
+          if (!name) continue;
+          const key = `${name}, ${lgu}`;
+          index.set(key.toLowerCase(), p);
+          opts.push(`<option value="${key}"></option>`);
+        }
+        if (list) list.innerHTML = opts.join("");
+        loaded = true;
+        loading = false;
+        if (statusEl) statusEl.textContent = `Start typing. ${index.size} barangays loaded.`;
+        return true;
+      } catch (e) {
+        loading = false;
+        if (statusEl) statusEl.textContent = "Could not load the barangay record. Try again later.";
+        console.warn("accountability: barangay load failed", e);
+        return false;
+      }
+    }
+
+    function fmtPct(v: number | null): string {
+      return v == null ? "n/a" : v.toFixed(1) + "%";
+    }
+
+    function renderChart(p: Props) {
+      if (!elChart) return;
+      const W = 720, H = 300;
+      const m = { top: 24, right: 22, bottom: 40, left: 44 };
+      const plotW = W - m.left - m.right;
+      const plotH = H - m.top - m.bottom;
+      const vals = YEARS.map((y) => num(p[`canopy_pct_model_${y}`]));
+      const present = vals.filter((v): v is number => v != null);
+      const maxV = present.length ? Math.max(...present) : 10;
+      // 0-baseline so small year-to-year wiggles are not over-dramatised.
+      const yMax = Math.max(12, Math.ceil(maxV + 2));
+      const x = (i: number) => m.left + (i / (YEARS.length - 1)) * plotW;
+      const y = (v: number) => m.top + (1 - v / yMax) * plotH;
+
+      const grid: string[] = [];
+      const step = yMax <= 16 ? 4 : 8;
+      for (let g = 0; g <= yMax; g += step) {
+        grid.push(
+          `<line x1="${m.left}" y1="${y(g)}" x2="${W - m.right}" y2="${y(g)}" stroke="#a7a094" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.6"/>` +
+            `<text x="${m.left - 8}" y="${y(g) + 3.5}" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6a6a6a">${g}</text>`,
+        );
+      }
+
+      const pts = YEARS.map((yr, i) => ({ yr, i, v: vals[i] }));
+      const drawn = pts.filter((d) => d.v != null) as { yr: number; i: number; v: number }[];
+      const firmPath = drawn.filter((d) => d.yr < PROVISIONAL);
+      const seg = (arr: { i: number; v: number }[]) =>
+        arr.map((d, k) => `${k === 0 ? "M" : "L"}${x(d.i).toFixed(1)},${y(d.v).toFixed(1)}`).join(" ");
+      const lastTwo = drawn.slice(-2);
+
+      const dots = drawn
+        .map(
+          (d) =>
+            `<circle cx="${x(d.i)}" cy="${y(d.v)}" r="${d.yr === PROVISIONAL ? 4 : 3.5}" fill="${d.yr === PROVISIONAL ? "#f7f3e9" : FOREST}" stroke="${FOREST}" stroke-width="1.5"/>` +
+            `<text x="${x(d.i)}" y="${y(d.v) - 9}" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="${FOREST}">${d.v.toFixed(1)}</text>`,
+        )
+        .join("");
+
+      const xlabels = YEARS.map(
+        (yr, i) =>
+          `<text x="${x(i)}" y="${m.top + plotH + 22}" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6a6a6a">${String(yr).slice(2)}</text>`,
+      ).join("");
+
+      elChart.innerHTML =
+        `<title>Canopy percent by year for ${p.barangay_name}</title>` +
+        grid.join("") +
+        `<text transform="translate(13 ${m.top + plotH / 2}) rotate(-90)" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="0.1em" fill="#6a6a6a">CANOPY %</text>` +
+        xlabels +
+        `<path d="${seg(firmPath)}" fill="none" stroke="${FOREST}" stroke-width="2.5" stroke-linejoin="round"/>` +
+        (lastTwo.length === 2
+          ? `<path d="${seg(lastTwo)}" fill="none" stroke="${FOREST}" stroke-width="2.5" stroke-dasharray="5 4" stroke-linejoin="round"/>`
+          : "") +
+        dots;
+    }
+
+    function render(p: Props) {
+      if (!result) return;
+      const v2019 = num(p.canopy_pct_model_2019);
+      const v2025 = num(p.canopy_pct_model_2025);
+      const v2026 = num(p.canopy_pct_model_2026);
+      const hansen = num(p.hansen_loss_ha_cumulative);
+      const totalHa = num(p.total_ha);
+
+      if (elTitle) elTitle.textContent = p.barangay_name ?? "Barangay";
+      if (elSub) elSub.textContent = `${p.lgu_name ?? ""}${totalHa != null ? ` · ${totalHa.toFixed(0)} ha` : ""}`;
+
+      renderChart(p);
+
+      // Firm year-over-year change uses 2025 (last non-provisional year) vs 2019.
+      const firmDelta = v2019 != null && v2025 != null ? v2025 - v2019 : null;
+      if (elTraj) {
+        const deltaStr =
+          firmDelta == null
+            ? ""
+            : ` Change 2019→2025: ${firmDelta >= 0 ? "+" : ""}${firmDelta.toFixed(1)} pp.`;
+        elTraj.textContent = `${fmtPct(v2019)} in 2019 → ${fmtPct(v2025)} in 2025 (${fmtPct(v2026)} provisional 2026).${deltaStr}`;
+      }
+      if (elHansen) {
+        elHansen.textContent =
+          hansen == null
+            ? "No Hansen value available for this barangay."
+            : hansen > 0
+              ? `${hansen.toFixed(1)} ha of stand-replacement loss flagged (cumulative 2001–2025).`
+              : "No stand-replacement loss event flagged through 2025.";
+      }
+
+      // Non-accusatory read. No verdict; "warrants" / snapshot language only.
+      let read = "";
+      const lossFlagged = hansen != null && hansen > 0;
+      const canopyDown = firmDelta != null && firmDelta < -0.5;
+      const canopyUp = firmDelta != null && firmDelta > 0.5;
+      if (lossFlagged && canopyDown) {
+        read =
+          "Hansen flagged stand-replacement canopy loss here, and the model's canopy reading is lower in 2025 than in 2019. Whether any cut was permitted, and whether replacement planting followed, warrants checking against the permit record below. The detection year is approximate and this is not a finding.";
+      } else if (lossFlagged && canopyUp) {
+        read =
+          "Hansen flagged stand-replacement loss here, yet the model's canopy reading sits above its 2019 level by 2025. That is a cross-sectional snapshot, not proof the same trees returned. It is consistent with replanting or regrowth, but only the permit and planting record can confirm what happened.";
+      } else if (lossFlagged) {
+        read =
+          "Hansen flagged stand-replacement loss here, and the model's canopy reading is roughly flat 2019→2025. Area-wide stability can still mask local loss offset by gain elsewhere. The permit record below is the way to check a specific site.";
+      } else if (canopyDown) {
+        read =
+          "Hansen flagged no stand-replacement loss event here, but it cannot resolve sub-30 m or partial-canopy thinning. The model's canopy reading is lower in 2025 than 2019, which warrants a closer look at the finer record.";
+      } else {
+        read =
+          "Hansen flagged no stand-replacement loss event here through 2025, and the model's canopy reading is steady or higher than 2019. No change signal stands out at this resolution; this is a reading, not a clearance.";
+      }
+      if (elRead) elRead.textContent = read;
+
+      result.classList.remove("hidden");
+    }
+
+    function lookup(raw: string) {
+      const key = raw.trim().toLowerCase();
+      if (!key) return;
+      let p = index.get(key);
+      if (!p) {
+        // bare-name fallback: first barangay whose name matches before the comma
+        for (const [k, v] of index) {
+          if (k.split(",")[0] === key) {
+            p = v;
+            break;
+          }
+        }
+      }
+      if (p) {
+        render(p);
+        if (statusEl) statusEl.textContent = `Showing ${p.barangay_name}, ${p.lgu_name}.`;
+      } else if (statusEl) {
+        statusEl.textContent = "No match. Pick a barangay from the list.";
+      }
+    }
+
+    if (input) {
+      input.addEventListener("focus", () => ensureLoaded(), { once: true });
+      const onChoose = () => lookup(input.value);
+      input.addEventListener("change", onChoose);
+      input.addEventListener("keydown", (e) => {
+        if ((e as KeyboardEvent).key === "Enter") onChoose();
+      });
+    }
+
+    // Deep-link: /accountability?barangay=Name, LGU  (from the map popup cross-link)
+    (async () => {
+      const q = new URLSearchParams(location.search).get("barangay");
+      if (!q) return;
+      const ok = await ensureLoaded();
+      if (!ok) return;
+      if (input) input.value = q;
+      lookup(q);
+    })();
+  </script>
+</Base>

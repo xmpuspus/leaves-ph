@@ -974,6 +974,7 @@ import { SERIES_START, SERIES_END } from "../lib/series";
                 <div style="color:#5a4f3a;">${p.lgu_name ?? ""}</div>
                 <div style="margin-top:6px;">${yr}${yr === 2026 ? " (provisional)" : ""}: <b>${pct == null ? "n/a" : Number(pct).toFixed(2) + "%"}</b></div>
                 <div style="color:#5a4f3a;">${ha == null ? "" : Number(ha).toFixed(1) + " ha canopy of " + Number(p.total_ha).toFixed(0) + " ha"}</div>
+                <div style="margin-top:7px;"><a href="/accountability?barangay=${encodeURIComponent(`${p.barangay_name ?? ""}, ${p.lgu_name ?? ""}`)}" style="color:#1f3d2b;text-decoration:underline;text-underline-offset:2px;">Check this site against the replacement rule &rarr;</a></div>
                 <div style="color:#675f4a;font-size:10px;margin-top:6px;">Source: human-calibrated canopy model (published).</div>
               </div>`,
             )

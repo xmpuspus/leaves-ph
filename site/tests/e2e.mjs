@@ -53,10 +53,14 @@ const noOverflow = async (page) => {
 };
 
 // ───────────── PAGE LOADS & STRUCTURE (1-7) ─────────────
-await run(1, "index loads with hero + R² 0.86 stat", async (page, errs) => {
+await run(1, "index (map-first) loads with hero h1 + finding F1 stat", async (page) => {
+  // Homepage is the immersive map; the hero h1 lives in MapView and the
+  // 'finding' band cites the published model F1. The detection-model R² lives
+  // on /methodology + /report now, not here.
   const h1 = (await page.locator("h1").first().innerText()).trim();
-  const hasR2 = await page.getByText("0.86", { exact: false }).first().isVisible();
-  return { pass: h1.length > 5 && hasR2 && errs.length === 0, detail: `h1="${h1.slice(0, 40)}" r2=${hasR2} errs=${errs.length}` };
+  const body = await page.locator("body").innerText();
+  const hasF1 = /F1\s*0\.78/.test(body);
+  return { pass: h1.length > 5 && hasF1, detail: `h1="${h1.slice(0, 40)}" F1=${hasF1}` };
 });
 await run(2, "map loads with MapLibre canvas + KPI strip", async (page) => {
   const canvas = await page.locator("canvas.maplibregl-canvas, #map canvas").first().isVisible();
@@ -85,11 +89,11 @@ await run(7, "privacy: 'not personal data' + reconciled polygons", async (page) 
 }, { path: "/privacy" });
 
 // ───────────── NAV & CROSS-PAGE (8-12) ─────────────
-await run(8, "header nav has 7 destinations", async (page) => {
+await run(8, "header nav has all destinations incl. accountability", async (page) => {
   const links = await page.locator("header a, nav a").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
-  const want = ["/", "/map", "/data", "/methodology", "/validation", "/faq", "/privacy"];
+  const want = ["/", "/report", "/data", "/methodology", "/validation", "/accountability", "/faq", "/privacy"];
   const have = want.filter((w) => links.includes(w));
-  return { pass: have.length >= 6, detail: `found ${have.length}/7: ${have.join(",")}` };
+  return { pass: have.length >= 7 && links.includes("/accountability"), detail: `found ${have.length}/8: ${have.join(",")}` };
 });
 await run(9, "footer links valid (no placeholder href)", async (page) => {
   const hrefs = await page.locator("footer a").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
@@ -102,11 +106,11 @@ await run(10, "logo/wordmark returns home", async (page) => {
   await page.waitForTimeout(500);
   return { pass: new URL(page.url()).pathname === "/", detail: `landed ${new URL(page.url()).pathname}` };
 });
-await run(11, "index 'open the map' CTA navigates to /map", async (page) => {
-  const link = page.locator('a[href="/map"]').first();
+await run(11, "index 'read the full report' CTA navigates to /report", async (page) => {
+  const link = page.locator('a[href="/report"]').first();
   const ok = (await link.count()) > 0;
   if (ok) { await link.click(); await page.waitForTimeout(800); }
-  return { pass: ok && new URL(page.url()).pathname.startsWith("/map"), detail: `url=${new URL(page.url()).pathname}` };
+  return { pass: ok && new URL(page.url()).pathname.startsWith("/report"), detail: `url=${new URL(page.url()).pathname}` };
 });
 await run(12, "active nav state marks current page", async (page) => {
   // current page link should differ stylistically (aria-current or a distinct class/weight)
@@ -149,7 +153,7 @@ await run(17, "LGU choropleth toggle off", async (page) => {
   return { pass: !(await t.isChecked()), detail: `lgu off=${!(await t.isChecked())}` };
 }, mapOpts);
 await run(18, "barangay layer toggle (892) loads", async (page, errs) => {
-  const t = page.locator('#layer-barangays, input[id*="barangay"]').first();
+  const t = page.locator('#layer-barangays');
   const exists = (await t.count()) > 0;
   let checked = false;
   if (exists) { await t.check(); await page.waitForTimeout(1800); checked = await t.isChecked(); }
@@ -192,15 +196,15 @@ await run(24, "no model-evolution / deployed-version narrative on the site", asy
   const hits = banned.filter((b) => body.includes(b));
   return { pass: hits.length === 0, detail: `bannedHits=${hits.join(",") || "none"}` };
 }, { path: "/methodology" });
-await run(25, "CanopyTrend shows 2 series + 2026 provisional", async (page) => {
+await run(25, "CanopyTrend (on /report) shows 2 series + 2026 provisional", async (page) => {
   const svg = await page.getByRole("img", { name: /NCR tree canopy percent per year/ }).isVisible();
   const body = await page.locator("body").innerText();
   return { pass: svg && /provisional/i.test(body), detail: `trendSvg=${svg} provisional=${/provisional/i.test(body)}` };
-});
-await run(26, "CanopyTrend shows published model 8.82% vs NDVI baseline 7.46% at 2026", async (page) => {
+}, { path: "/report" });
+await run(26, "CanopyTrend (on /report) shows published 8.82% vs NDVI 7.46% at 2026", async (page) => {
   const body = await page.locator("body").innerText();
   return { pass: body.includes("8.82") && body.includes("7.46"), detail: `model=8.82:${body.includes("8.82")} ndvi=7.46:${body.includes("7.46")}` };
-});
+}, { path: "/report" });
 await run(27, "LGU rankings table populated with values", async (page) => {
   const rows = await page.locator("#lgu-table-body tr, table tbody tr").count();
   return { pass: rows >= 10, detail: `rows=${rows}` };
@@ -289,6 +293,28 @@ await run(40, "share readiness: og:image + meta description present", async (pag
   if (og) { const localOg = og.replace(/^https?:\/\/[^/]+/, BASE); const r = await page.request.get(localOg).catch(() => null); ogOk = !!r && r.ok(); }
   return { pass: !!og && ogOk && !!desc && desc.length > 30, detail: `og=${og} ogResolvesLocal=${ogOk} descLen=${desc?.length}` };
 });
+
+// ───────────── ACCOUNTABILITY LENS (41-43) ─────────────
+await run(41, "accountability page: rule + lens + how-to-check, no accusatory terms", async (page) => {
+  const body = await page.locator("body").innerText();
+  const banned = ["fraud", "illegal", "guilty", "ghost", "criminal"];
+  const hits = banned.filter((b) => body.toLowerCase().includes(b));
+  const ok = /DMO 2012-02/.test(body) && /Check a site/i.test(body) && /How to check it yourself/i.test(body) && /no legal value/i.test(body) && hits.length === 0;
+  return { pass: ok, detail: `rule=${/DMO 2012-02/.test(body)} lens=${/Check a site/i.test(body)} foi=${/How to check/i.test(body)} accusatory=${hits.join(",") || "none"}` };
+}, { path: "/accountability" });
+await run(42, "accountability lens deep-link renders trajectory + Hansen + non-accusatory read", async (page) => {
+  const visible = await page.locator("#bgy-result").isVisible();
+  const paths = await page.locator("#bgy-chart path").count();
+  const hansen = (await page.locator("#bgy-hansen").innerText()).trim();
+  const read = (await page.locator("#bgy-read").innerText()).trim();
+  return { pass: visible && paths >= 1 && /stand-replacement/i.test(hansen) && read.length > 40 && !/\b(fraud|illegal|guilty)\b/i.test(read), detail: `visible=${visible} paths=${paths} read="${read.slice(0, 40)}"` };
+}, { path: "/accountability?barangay=" + encodeURIComponent("Almanza Dos, Las Pinas"), mapWait: true });
+await run(43, "accountability lens carries the public-record disclaimer when shown", async (page) => {
+  // The analytics-view disclaimer sits inside the lens result, revealed once a
+  // barangay is selected (deep-linked here), so innerText includes it.
+  const body = await page.locator("body").innerText();
+  return { pass: /public-record satellite data/i.test(body) && /not a compliance/i.test(body) && /no legal value/i.test(body), detail: `disclaimer=${/public-record satellite data/i.test(body)} legalValue=${/no legal value/i.test(body)}` };
+}, { path: "/accountability?barangay=" + encodeURIComponent("Almanza Dos, Las Pinas"), mapWait: true });
 
 await desk.close();
 await browser.close();

@@ -46,6 +46,7 @@ Full series, per-LGU table, detection-model accuracy, and adjacent published est
 - Browse the interactive map at [leaves.ph/map](https://leaves.ph/map). It carries an OSM/satellite basemap, a 1m Meta canopy raster overlay, 242,810 individual tree-crown polygons (connected components of Meta's 1m canopy-height mask) coloured by source (OSM-confirmed / tall canopy / candidate), and a year slider.
 - Inspect any tree crown: click a crown polygon and the popup shows an Esri aerial of that exact location plus the polygon's metadata (status, area, p50/p95 height).
 - Re-run the pipeline on a different city. The Cebu City proof in `pipeline/fetch_cebu_proof.py` shows the same pipeline run end-to-end against a different bbox, with no NCR-specific retraining.
+- Check a site against the DENR tree-replacement rule at [leaves.ph/accountability](https://leaves.ph/accountability). Pick a barangay to read its canopy trajectory 2019-2026 next to the independent Hansen stand-replacement loss for that area (`hansen_loss_ha_cumulative`, ~30m, cumulative 2001-2025), with the documented route to request the permit and replacement record. It is a method for checking, not a compliance verdict (see *What it is not*).
 
 ## What it is not
 
