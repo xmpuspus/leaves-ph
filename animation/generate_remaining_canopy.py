@@ -293,7 +293,7 @@ def render_frame(
     ax.text(
         121.17,
         14.875,
-        "Hansen v1.13 + Sentinel-2 NDVI",
+        "Human-calibrated model + Hansen v1.13",
         fontsize=7,
         color="#5a4f3a",
         family="monospace",
@@ -375,12 +375,25 @@ def render_frame(
     return img
 
 
-def ncr_pct_from_density(density: np.ndarray, lgu_mask: np.ndarray) -> float:
-    valid = lgu_mask & (density >= 0) & (density <= 100)
-    if not valid.any():
-        return 0.0
-    # Weighted-average density (treat 0-100 as percent canopy in pixel)
-    return float(density[valid].mean())
+def published_ncr_pct() -> dict[int, float]:
+    """Per-year area-weighted NCR canopy % from the published per-LGU CSV.
+
+    This is the same quantity every other surface reports (site, README,
+    BENCHMARKS), so the stamped headline matches them exactly instead of the
+    per-pixel mean density the overlay is drawn from.
+    """
+    import csv
+    from collections import defaultdict
+
+    num: dict[int, float] = defaultdict(float)
+    den: dict[int, float] = defaultdict(float)
+    csv_path = REPO_ROOT / "data" / "per_lgu" / "per_lgu_canopy_2019_2026.csv"
+    with open(csv_path) as f:
+        for row in csv.DictReader(f):
+            year = int(row["year"])
+            num[year] += float(row["canopy_ha"])
+            den[year] += float(row["total_ha"])
+    return {y: (100 * num[y] / den[y] if den[y] else 0.0) for y in num}
 
 
 def reproject_rgb_to_hansen_grid(year: int, hansen_meta: dict) -> np.ndarray | None:
@@ -448,13 +461,15 @@ def main() -> int:
     print(f"[remaining] LGU mask: {lgu_mask.sum():,} pixels inside")
     outlines = lgu_outlines_xy(bounds, tc.shape)
 
+    pub_pct = published_ncr_pct()
+
     # ---- Variant A: editorial paper basemap ----
     print("[remaining] rendering EDITORIAL paper variant")
     frames = []
     for year in YEARS:
         density = density_for_year(tc, ly, year)
-        pct = ncr_pct_from_density(density, lgu_mask)
-        print(f"  {year}: NCR mean density {pct:.2f}%")
+        pct = pub_pct.get(year, 0.0)
+        print(f"  {year}: published NCR canopy {pct:.2f}%")
         frames.append(render_frame(density, lgu_mask, outlines, bounds, year, pct))
     imageio.mimsave(str(OUT_GIF), frames, loop=0)
     _retime_gif(OUT_GIF)  # imageio loses per-frame delays; gifsicle sets them reliably
@@ -467,7 +482,7 @@ def main() -> int:
         sat_frames = []
         for year in YEARS:
             density = density_for_year(tc, ly, year)
-            pct = ncr_pct_from_density(density, lgu_mask)
+            pct = pub_pct.get(year, 0.0)
             rgb = reproject_rgb_to_hansen_grid(year, meta)
             if rgb is None:
                 print(f"  {year}: missing s2_rgb; skipping satellite variant")
