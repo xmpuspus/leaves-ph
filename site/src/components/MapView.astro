@@ -880,8 +880,9 @@ import { SERIES_START, SERIES_END } from "../lib/series";
       let bgons: any = null;
       let loaded = false;
       let loading = false;
-      // name (lowercased) -> { lon, lat, display }
-      const index = new Map<string, { lon: number; lat: number; display: string }>();
+      let barangayPopupFn: ((p: any, yr: number) => string) | null = null;
+      // name (lowercased) -> { lon, lat, display, props }
+      const index = new Map<string, { lon: number; lat: number; display: string; props?: any }>();
 
       function styleBarangays(year: number) {
         if (!bgons) return;
@@ -922,10 +923,10 @@ import { SERIES_START, SERIES_END } from "../lib/series";
               const c = centroid(f as any);
               const [lon, lat] = c.geometry.coordinates as [number, number];
               const display = lgu ? `${name} · ${lgu}` : name;
-              index.set(`${name}, ${lgu}`.toLowerCase(), { lon, lat, display });
+              index.set(`${name}, ${lgu}`.toLowerCase(), { lon, lat, display, props: f.properties });
               // Also key by bare name for first-match lookups.
               const bare = name.toLowerCase();
-              if (!index.has(bare)) index.set(bare, { lon, lat, display });
+              if (!index.has(bare)) index.set(bare, { lon, lat, display, props: f.properties });
             } catch {
               // skip malformed geometry
             }
@@ -959,25 +960,28 @@ import { SERIES_START, SERIES_END } from "../lib/series";
           before,
         );
 
-        map.on("click", "barangays-fill", (e: any) => {
-          const f = e.features?.[0];
-          if (!f) return;
-          const p = f.properties || {};
-          const yr = Number((slider as HTMLInputElement).value);
+        const barangayPopupHTML = (p: any, yr: number) => {
           const pct = p[`canopy_pct_model_${yr}`];
           const ha = p[`canopy_ha_model_${yr}`];
-          new maplibregl.Popup({ maxWidth: "300px", closeButton: true })
-            .setLngLat(e.lngLat)
-            .setHTML(
-              `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#1a1a1a;padding:10px 12px;">
+          return `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#1a1a1a;padding:10px 12px;">
                 <div style="font-family:'PT Serif',serif;font-size:14px;">${p.barangay_name ?? "Barangay"}</div>
                 <div style="color:#5a4f3a;">${p.lgu_name ?? ""}</div>
                 <div style="margin-top:6px;">${yr}${yr === 2026 ? " (provisional)" : ""}: <b>${pct == null ? "n/a" : Number(pct).toFixed(2) + "%"}</b></div>
                 <div style="color:#5a4f3a;">${ha == null ? "" : Number(ha).toFixed(1) + " ha canopy of " + Number(p.total_ha).toFixed(0) + " ha"}</div>
                 <div style="margin-top:7px;"><a href="/accountability?barangay=${encodeURIComponent(`${p.barangay_name ?? ""}, ${p.lgu_name ?? ""}`)}" style="color:#1f3d2b;text-decoration:underline;text-underline-offset:2px;">Check this site against the replacement rule &rarr;</a></div>
                 <div style="color:#675f4a;font-size:10px;margin-top:6px;">Source: human-calibrated canopy model (published).</div>
-              </div>`,
-            )
+              </div>`;
+        };
+        // Exposed so the name-search can open the same popup a polygon click does.
+        barangayPopupFn = barangayPopupHTML;
+
+        map.on("click", "barangays-fill", (e: any) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const yr = Number((slider as HTMLInputElement).value);
+          new maplibregl.Popup({ maxWidth: "300px", closeButton: true })
+            .setLngLat(e.lngLat)
+            .setHTML(barangayPopupHTML(f.properties || {}, yr))
             .addTo(map);
         });
         map.on("mouseenter", "barangays-fill", () => (map.getCanvas().style.cursor = "pointer"));
@@ -1043,6 +1047,15 @@ import { SERIES_START, SERIES_END } from "../lib/series";
         }
         if (searchMsg) searchMsg.textContent = hit.display;
         map.flyTo({ center: [hit.lon, hit.lat], zoom: 14.5, speed: 1.2 });
+        // Open the same popup a polygon click produces, so a name search is not a
+        // dead end: the visitor gets the reading + the accountability cross-link.
+        if (hit.props && barangayPopupFn) {
+          const yr = Number((slider as HTMLInputElement).value);
+          new maplibregl.Popup({ maxWidth: "300px", closeButton: true })
+            .setLngLat([hit.lon, hit.lat])
+            .setHTML(barangayPopupFn(hit.props, yr))
+            .addTo(map);
+        }
       }
 
       // Preload the geojson (and datalist options) the first time the user

@@ -10,7 +10,8 @@ import Base from "../layouts/Base.astro";
     <hr class="rule" />
 
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Published artifacts</h2>
-    <table class="text-sm w-full border border-ink-300/40">
+    <div class="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
+    <table class="text-sm w-full min-w-[34rem] border border-ink-300/40">
       <thead class="bg-paper-tint">
         <tr class="text-left">
           <th class="px-3 py-2 border-b border-ink-300/30">Artifact</th>
@@ -51,6 +52,7 @@ import Base from "../layouts/Base.astro";
         </tr>
       </tbody>
     </table>
+    </div>
 
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3">Reproducibility</h2>
     <pre class="bg-paper-tint p-4 rounded text-sm overflow-x-auto">git clone https://github.com/xmpuspus/leaves-ph

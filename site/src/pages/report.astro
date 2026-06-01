@@ -36,7 +36,7 @@ const pctFrac = LATEST_NCR_PCT.toFixed(2).split(".")[1];
         <p class="stat-hero">{pctWhole}·{pctFrac}<span class="text-umber-500">%</span></p>
         <dl class="mt-5 space-y-2 text-[13px] font-mono tabular-nums leading-[1.5]">
           <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Method</dt><dd class="text-ink-700">calibrated model</dd></div>
-          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Validated</dt><dd class="text-ink-700">F1 0·79 · n {GOLD_LABEL_N}</dd></div>
+          <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Validated</dt><dd class="text-ink-700">F1 {CANOPY_MODEL_F1.toFixed(2)} · n {GOLD_LABEL_N}</dd></div>
           <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Boundaries</dt><dd class="text-ink-700">PSA · {NCR_LGU_COUNT} LGUs</dd></div>
           <div class="flex items-baseline justify-between"><dt class="text-sepia-500">Series</dt><dd class="text-ink-700">{SERIES_RANGE}</dd></div>
         </dl>

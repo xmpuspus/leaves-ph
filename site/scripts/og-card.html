@@ -133,19 +133,22 @@
     </div>
 
     <div class="stats">
+      <!-- Stat values are injected from src/lib/series.ts by og-shot.mjs so the
+           card cannot drift from the published figures. Defaults below are the
+           current values and double as a fallback. -->
       <div class="tile">
-        <div class="num">7.46<span class="u">%</span></div>
+        <div class="num"><span id="og-canopy">8.82</span><span class="u">%</span></div>
         <div class="lab">NCR canopy<br/>(2026, provisional)</div>
       </div>
       <div class="vline"></div>
       <div class="tile">
-        <div class="num">17 · 892</div>
-        <div class="lab">17 LGUs<br/>892 barangays</div>
+        <div class="num"><span id="og-lgus">17</span> · <span id="og-bgys">892</span></div>
+        <div class="lab"><span id="og-lgus2">17</span> LGUs<br/><span id="og-bgys2">892</span> barangays</div>
       </div>
       <div class="vline"></div>
       <div class="tile">
-        <div class="num">R&sup2; 0.87</div>
-        <div class="lab">canopy model<br/>vs Meta 1 m</div>
+        <div class="num">F1 <span id="og-f1">0.78</span></div>
+        <div class="lab">canopy model<br/>vs <span id="og-labels">656</span> human labels</div>
       </div>
     </div>
 

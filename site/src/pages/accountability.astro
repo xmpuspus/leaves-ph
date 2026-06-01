@@ -428,6 +428,12 @@ const link = "text-umber-700 underline decoration-umber-500/50 underline-offset-
       if (!ok) return;
       if (input) input.value = q;
       lookup(q);
+      // A shared ?barangay= link should land the reader on their reading, not the
+      // intro 1400px above it. Scroll the rendered lens into view once it shows.
+      if (result && !result.classList.contains("hidden")) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        result.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      }
     })();
   </script>
 </Base>
