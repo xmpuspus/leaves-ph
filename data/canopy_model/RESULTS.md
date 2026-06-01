@@ -1,4 +1,4 @@
-# Manual high-resolution labeling — reality-anchored accuracy (Claim 3 gold truth)
+# Manual high-resolution labeling: reality-anchored accuracy (Claim 3 gold truth)
 
 Done 2026-05-29. The first accuracy number for Leaves.PH measured against
 **human visual labels on high-resolution imagery**, not against another satellite
@@ -28,7 +28,7 @@ product. Replaces "agreement with ESA WorldCover" as the headline accuracy.
   Labels + one-line reasons in `my_labels.csv`; chips in `chips/`, zooms in `zoom/`,
   ultra-zooms in `uz/`, contact sheet `contact_sheet.png`.
 
-## Headline result — NDVI > 0.62 mask vs manual labels
+## Headline result: NDVI > 0.62 mask vs manual labels
 
 Confusion (n=42): **TP 10, FP 3, FN 5, TN 24.**
 
@@ -40,7 +40,7 @@ Confusion (n=42): **TP 10, FP 3, FN 5, TN 24.**
 | IoU | 0.56 | **0.61** |
 | Accuracy | 0.81 | 0.95 |
 
-- **Implied true canopy fraction = 10.5%**, against the mask's 9.86% — the
+- **Implied true canopy fraction = 10.5%**, against the mask's 9.86%, the
   reality-anchored canopy area lands within ~0.7pp of the published 9.79% estimate.
 - Dropping the 5 cells Claude flagged ambiguous (n=37): precision 0.86, recall 0.83,
   IoU 0.73 (population-weighted precision 0.86, recall 0.83).
@@ -58,7 +58,7 @@ Confusion (n=42): **TP 10, FP 3, FN 5, TN 24.**
 - Per-stratum: dense-urban (A), reclaimed (B) and water/other (F) are 100% correctly
   negative; all recall loss is concentrated in the green-fringe (E) stratum.
 
-## Detection-model ceiling — Meta height ≥ 5m vs manual labels
+## Detection-model ceiling: Meta height ≥ 5m vs manual labels
 
 The detection model (CLIP + gradient-boosted regression) is trained to **reproduce
 Meta's 1m canopy fraction**, so the Meta target is its accuracy ceiling. Meta height
@@ -72,7 +72,7 @@ Meta's 1m canopy fraction**, so the Meta target is its accuracy ceiling. Meta he
 
 Meta never false-positives in this sample (every Meta ≥ 5m cell is real canopy by
 eye) but recovers only ~59% of canopy and implies just 6.2% canopy vs the 10.5%
-truth — it misses sub-5m and sparse urban trees. The NDVI mask trades some precision
+truth, it misses sub-5m and sparse urban trees. The NDVI mask trades some precision
 (0.78 vs 1.00) for much higher recall (0.73 vs 0.59); the two are complementary, and
 the model, reproducing Meta at R² 0.83–0.86, inherits Meta's high-precision /
 moderate-recall profile.
@@ -80,11 +80,11 @@ moderate-recall profile.
 ## Honest caveats
 
 - n=42 manual labels → wide CIs; this is a defensible first reality-anchored number,
-  not a definitive accuracy. Single labeler (Claude) — no second-rater κ.
+  not a definitive accuracy. Single labeler (Claude), no second-rater κ.
 - "Canopy" = ≥25% of the 30m cell is woody tree canopy by eye on ~0.6m imagery dated
   near (not exactly) 2021; canopy moves slowly so ±1–2yr basemap drift is minor.
 - Population-weighting leans on small per-stratum n (A=6, F=4 carry large weights);
-  those strata are unambiguous (roofs / bare / water), so their TN weight is robust,
+  those strata are unambiguous (roofs / bare / water), so their TN weight is stable,
   but the weighted recall depends on the 6 green-fringe chips.
 
 ## Files

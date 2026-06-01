@@ -25,23 +25,23 @@ Full v6+v9 union (n = 38,260), same estimator and hyperparameters as the shipped
 
 The honest headline is **R² 0.83–0.86 under grouped cross-validation** (0.86 location-grouped, 0.83 under coarse 5×5 spatial blocks where neighbouring 240m tiles and a location's 8 yearly epochs share a fold). `clf_v9_metrics.json` now reports these grouped numbers directly: headline `cv5` is location-grouped (R² 0.858), with `cv5_spatialblock_5x5` (0.826), `cv5_spatialblock_8x8` (0.836), and the old non-grouped shuffled split kept as `cv5_shuffled_superseded` (0.879). The shuffled split ([train_v9_multiepoch.py](detection/train/train_v9_multiepoch.py)) leaked adjacent tiles and repeated-location epochs across folds; it is superseded. Leakage inflation on the union is −0.02 (location) to −0.05 (spatial-block).
 
-**This R² measures reproduction of Meta v2 canopy fraction (the calibration target), not accuracy against independent ground truth.** Independent check: against ESA WorldCover v200 (separate 10m product, 2021) the NDVI baseline agrees on 93% of pixels (IoU 0.52, F1 0.69). Independent satellite products span 3% (Dynamic World) to 13% (ESA) for the same NCR/year — our estimate is bracketed inside that envelope. See "Adjacent published estimates" below.
+**This R² measures reproduction of Meta v2 canopy fraction (the calibration target), not accuracy against independent ground truth.** Independent check: against ESA WorldCover v200 (separate 10m product, 2021) the NDVI baseline agrees on 93% of pixels (IoU 0.52, F1 0.69). Independent satellite products span 3% (Dynamic World) to 13% (ESA) for the same NCR/year, our estimate is bracketed inside that envelope. See "Adjacent published estimates" below.
 
-### Published canopy model vs NDVI baseline — accuracy against manual high-resolution labels
+### Published canopy model vs NDVI baseline: accuracy against manual high-resolution labels
 
 The published canopy product is no longer the bare NDVI > 0.62 rule. It is a **human-calibrated classifier** (gradient-boosted over NDVI, Dynamic-World tree probability, Meta v2 1m canopy height, and the ESA tree class) trained on **656 manually labeled high-resolution pixels**. Labels were drawn by active learning (round 1 stratified-random over 6 disjoint regions of the 17-LGU 2021 grid, rounds 2–4 oversampling the NDVI decision boundary [0.55, 0.66] and grass-vs-tree confusion zones) plus a **500-pixel uniform-random round** that tightened the confidence intervals. Each 30m target cell was marked on a 0.5–1m Esri World Imagery chip and labeled canopy = ≥25% woody tree canopy.
 
-Scored against those labels under **region-grouped out-of-fold CV with post-stratified (NDVI-band × ESA-tree) population weighting** — unbiased despite the active-learning sampling — the model beats the baseline on every metric:
+Scored against those labels under **region-grouped out-of-fold CV with post-stratified (NDVI-band × ESA-tree) population weighting**, unbiased despite the active-learning sampling, the model beats the baseline on every metric:
 
 | Classifier (vs human labels, n=656) | Precision | Recall | F1 | IoU |
 |---|---|---|---|---|
 | **Published human-calibrated model (10 feat)** | **0.77** | **0.79** | **0.78** | **0.64** |
 | NDVI > 0.62 baseline (comparison) | 0.69 | 0.67 | 0.68 | 0.52 |
-| Meta height ≥ 5m (CLIP-model ceiling) | 0.96 | 0.46 | — | 0.45 |
+| Meta height ≥ 5m (CLIP-model ceiling) | 0.96 | 0.46 | – | 0.45 |
 
-The model's 10 features are NDVI, Dynamic-World tree prob, Meta 1m height, ESA-tree, and the raw Sentinel-2 spectral bands (red/nir/green/blue + GNDVI). It recovers diluted urban-fringe canopy the fixed threshold missed and uses the green/blue bands to reject high-NDVI grass/scrub the threshold over-called (precision 0.67 → 0.77); F1 +0.10, IoU +0.12 over the baseline. The NDVI baseline's own accuracy converged at F1 0.68 / IoU 0.52 (precision 95% CI 0.61–0.76 at n=656; implied canopy 10.1% vs its published 9.79%). **Feature ablation (region-grouped OOF, post-stratified):** the four base features score F1 0.75; adding the raw spectral bands lifts it to **0.78** (the win); ESA-neighbourhood fractions and NDVI texture give small gains; throwing all 21 features in overfits (0.74). **CLIP did not help, honestly reported:** the CLIP detection density as a scalar (F1 0.77, no gain) and a full CLIP ViT-L/14 embedding PCA-reduced (F1 0.73, a slight loss — the 240m S2 crop is too coarse for CLIP texture, and 656 samples overfit 768 dims). A learning curve on the 656 labels shows F1 plateaued by n≈300, so more labels tighten CIs but do not raise F1 — the feature set, not label count, is the ceiling. Single labeler — defensible, not definitive. Method, chips, scripts, per-round + ablation results: `tmp/labeling-20260529T073613Z/` (`RESULTS.md`, `master_labels.csv`, `model_comparison.json`, `rich_feature_result.json`, `clip_feature_result.json`, `learning_curve.json`).
+The model's 10 features are NDVI, Dynamic-World tree prob, Meta 1m height, ESA-tree, and the raw Sentinel-2 spectral bands (red/nir/green/blue + GNDVI). It recovers diluted urban-fringe canopy the fixed threshold missed and uses the green/blue bands to reject high-NDVI grass/scrub the threshold over-called (precision 0.67 → 0.77); F1 +0.10, IoU +0.12 over the baseline. The NDVI baseline's own accuracy converged at F1 0.68 / IoU 0.52 (precision 95% CI 0.61–0.76 at n=656; implied canopy 10.1% vs its published 9.79%). **Feature ablation (region-grouped OOF, post-stratified):** the four base features score F1 0.75; adding the raw spectral bands lifts it to **0.78** (the win); ESA-neighbourhood fractions and NDVI texture give small gains; throwing all 21 features in overfits (0.74). **CLIP did not help, honestly reported:** the CLIP detection density as a scalar (F1 0.77, no gain) and a full CLIP ViT-L/14 embedding PCA-reduced (F1 0.73, a slight loss, the 240m S2 crop is too coarse for CLIP texture, and 656 samples overfit 768 dims). A learning curve on the 656 labels shows F1 plateaued by n≈300, so more labels tighten CIs but do not raise F1, the feature set, not label count, is the ceiling. Single labeler, defensible, not definitive. Method, chips, scripts, per-round + ablation results: `data/canopy_model/` (`RESULTS.md`, `master_labels.csv`, `model_comparison.json`, `rich_feature_result.json`, `clip_feature_result.json`, `learning_curve.json`).
 
-## NCR area-weighted canopy — annual cross-sectional snapshots (not a change series)
+## NCR area-weighted canopy: annual cross-sectional snapshots (not a change series)
 
 Published series = the human-calibrated canopy model (above). The old NDVI baseline is shown alongside for comparison: the model **removes the threshold-crossing sawtooth** that plagued the NDVI series.
 
@@ -146,8 +146,8 @@ GeoJSON for site overlay: `site/public/data/per_barangay_canopy.geojson`.
 | `data/calibration_report.json` | NDVI sweep against Meta v2 truth |
 | `data/per_lgu/per_lgu_canopy_2019_2026.csv` | 17-LGU canopy series (hash-pinned canonical) |
 | `data/per_barangay/per_barangay_canopy_2019_2026.csv` | 892-barangay canopy series |
-| `detection/train/` | CLIP embeddings and the gradient-boosted regression head |
-| `detection/scan/` | per-pixel canopy density rasters and NCR/LGU series |
+| `detection/train/` | research-track training scripts (CLIP + gradient-boosted head); model binaries regenerable, not committed |
+| `detection/scan/` | research-track scan scripts; per-pixel density rasters regenerable, not committed |
 | `site/public/data/per_barangay_canopy.geojson` | per-barangay GeoJSON for the site overlay |
 
 ## Known limitations

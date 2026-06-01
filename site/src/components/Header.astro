@@ -14,17 +14,21 @@ const links = [
   { href: "/faq", label: "faq" },
   { href: "/privacy", label: "privacy" },
 ];
+const isActive = (href: string) =>
+  href === "/" ? pathname === "/" : pathname.startsWith(href);
 ---
 <header class="sticky top-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-ink-900">
   <div class="max-w-[1400px] mx-auto px-4 sm:px-8 h-[52px] flex items-center justify-between gap-4">
     <a href="/" class="no-underline shrink-0 font-display text-ink-900 leading-none tracking-[-0.035em]" style="font-size: 1.55rem;" aria-label="Leaves.PH home">
       Leaves<span class="text-umber-500">.</span>PH
     </a>
-    <nav aria-label="Primary" class="min-w-0">
+
+    <!-- Desktop nav: full row, scrollable on narrow tablets, hidden on phones -->
+    <nav aria-label="Primary" class="hidden sm:block min-w-0">
       <ul class="flex items-center gap-x-3 sm:gap-x-5 overflow-x-auto no-scrollbar whitespace-nowrap text-[11px] font-mono uppercase tracking-[0.16em] text-sepia-700">
         {
           links.map((link) => {
-            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            const active = isActive(link.href);
             return (
               <li class="shrink-0">
                 <a
@@ -40,5 +44,69 @@ const links = [
         }
       </ul>
     </nav>
+
+    <!-- Mobile menu button -->
+    <button
+      id="nav-toggle"
+      type="button"
+      class="sm:hidden -mr-1 inline-flex items-center justify-center w-10 h-10 text-ink-900"
+      aria-label="Open menu"
+      aria-controls="mobile-nav"
+      aria-expanded="false"
+    >
+      <svg id="nav-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="17" x2="21" y2="17" />
+      </svg>
+      <svg id="nav-icon-close" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="5" y1="5" x2="19" y2="19" /><line x1="19" y1="5" x2="5" y2="19" />
+      </svg>
+    </button>
   </div>
+
+  <!-- Mobile nav panel -->
+  <nav id="mobile-nav" aria-label="Primary" class="sm:hidden hidden border-t border-ink-900/15 bg-paper/98 backdrop-blur-sm">
+    <ul class="flex flex-col px-4 py-1 text-[12px] font-mono uppercase tracking-[0.16em] text-sepia-700">
+      {
+        links.map((link) => {
+          const active = isActive(link.href);
+          return (
+            <li class="border-b border-ink-900/8 last:border-b-0">
+              <a
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                class={`block py-3 no-underline ${active ? "text-umber-700" : "hover:text-ink-900"}`}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
 </header>
+
+<script>
+  const btn = document.getElementById("nav-toggle");
+  const panel = document.getElementById("mobile-nav");
+  const iconOpen = document.getElementById("nav-icon-open");
+  const iconClose = document.getElementById("nav-icon-close");
+  if (btn && panel && iconOpen && iconClose) {
+    const setOpen = (open: boolean) => {
+      panel.classList.toggle("hidden", !open);
+      iconOpen.classList.toggle("hidden", open);
+      iconClose.classList.toggle("hidden", !open);
+      btn.setAttribute("aria-expanded", String(open));
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    btn.addEventListener("click", () =>
+      setOpen(btn.getAttribute("aria-expanded") !== "true")
+    );
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && btn.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        (btn as HTMLButtonElement).focus();
+      }
+    });
+  }
+</script>

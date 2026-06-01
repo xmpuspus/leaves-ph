@@ -1,7 +1,7 @@
 """Human-calibrated canopy product (the published canopy source).
 
 A gradient-boosted classifier trained on 656 manual high-resolution gold labels
-(tmp/labeling-20260529T073613Z/), over 10 per-pixel features available every year:
+(data/canopy_model/), over 10 per-pixel features available every year:
     ndvi, dw (Dynamic-World tree prob), meta_h (Meta v2 1m height, static),
     esatree (ESA class-10 flag, static), and the raw Sentinel-2 spectral bands
     red, nir, green, blue plus gndvi and nir/red.

@@ -107,7 +107,7 @@
   .mark-disputed { color: #8b3f1d; font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-decoration: line-through; text-decoration-color: #8b3f1d; text-decoration-thickness: 1px; }
   .mark-unverified { color: #837d6a; font-family: "JetBrains Mono", monospace; font-size: 0.72rem; letter-spacing: 0.06em; font-style: italic; }
   .mark-unverified::after { content: " ?"; font-style: normal; }
-  /* Drop cap that wraps THREE lines, not just one — the real print convention. */
+  /* Drop cap that wraps THREE lines, not just one, the real print convention. */
   .dropcap::first-letter {
     font-family: "PT Serif", serif;
     float: left;
@@ -217,7 +217,7 @@
     color: #1a1a1a;
   }
   /* Dateline: bold-mono short prefix used at the start of a section body to
-     anchor location/time, like a newspaper byline ("MANILA — "). */
+     anchor location/time, like a newspaper byline ("MANILA, "). */
   .dateline {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.85em;
