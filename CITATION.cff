@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "Leaves.PH: open-source tree-cover validation for Metro Manila"
+title: "Leaves.PH: open tree-canopy measurement for Metro Manila"
 message: "If you use Leaves.PH in research, please cite it using these metadata."
 type: software
 authors:
@@ -27,15 +27,16 @@ keywords:
   - metro manila
   - civic technology
 abstract: >
-  Leaves.PH is an open-source pipeline that validates Metro Manila tree
-  cover against canonical public datasets (Hansen Global Forest Change,
-  ESA WorldCover, Dynamic World, Meta canopy height) and publishes a
-  per-LGU annual canopy curve for 2016-2026. v1.0 covers the 17 NCR cities
-  plus Pateros. The build is bit-exact reproducible from cached Sentinel-2
-  composites via a deterministic Docker recipe.
+  Leaves.PH measures Metro Manila tree canopy from Sentinel-2 imagery with a
+  human-calibrated classifier, cross-checked against canonical public datasets
+  (Hansen Global Forest Change, ESA WorldCover, Dynamic World, Meta canopy
+  height), and publishes per-LGU and per-barangay annual canopy snapshots for
+  2019-2026 across the 17 NCR LGUs (16 cities plus the municipality of Pateros).
+  The build is bit-exact reproducible from cached Sentinel-2 composites via a
+  deterministic Docker recipe.
 preferred-citation:
   type: software
-  title: "Leaves.PH: open-source tree-cover validation for Metro Manila"
+  title: "Leaves.PH: open tree-canopy measurement for Metro Manila"
   authors:
     - given-names: Xavier
       family-names: Puspus

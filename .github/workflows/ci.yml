@@ -32,17 +32,19 @@ jobs:
         run: pytest tests/ -q
       - name: AI-jargon sweep
         run: |
-          if grep -nE '(delve|tapestry|in the realm of|paradigm shift|game-changer|cutting-edge|state-of-the-art|forefront)' \
-              README.md MODEL_CARD.md BENCHMARKS.md CHANGELOG.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md \
-              docs/research/prior-work.md 2>/dev/null; then
+          files=$(git ls-files '*.md' '*.mdx' CITATION.cff)
+          if grep -nE '(delve|tapestry|in the realm of|paradigm shift|game-changer|cutting-edge|state-of-the-art|forefront)' $files 2>/dev/null; then
             echo "AI-jargon hits detected. Rewrite the flagged lines."
             exit 1
           fi
-          echo "AI-jargon sweep: PASS"
+          echo "AI-jargon sweep: PASS ($(echo $files | wc -w) files)"
       - name: Em-dash sweep
         run: |
-          if grep -n "\xe2\x80\x94" README.md MODEL_CARD.md BENCHMARKS.md CHANGELOG.md CONTRIBUTING.md docs/research/prior-work.md 2>/dev/null; then
+          # grep -P interprets \xNN as the literal UTF-8 byte; the previous
+          # non-P pattern silently never matched. Scan every tracked doc.
+          files=$(git ls-files '*.md' '*.mdx' CITATION.cff)
+          if grep -nP "\xe2\x80\x94" $files 2>/dev/null; then
             echo "Em-dashes detected. Replace with hyphen-space, comma, period, or parens."
             exit 1
           fi
-          echo "Em-dash sweep: PASS"
+          echo "Em-dash sweep: PASS ($(echo $files | wc -w) files)"
