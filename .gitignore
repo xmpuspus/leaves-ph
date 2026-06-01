@@ -82,6 +82,73 @@ pipeline/*.log
 
 # Detection scratch (Phase 4 only; classifier joblibs ARE committed when small)
 detection/train/_baselines/*.npz
+
+# --- Showcase audit (2026-06): commit source, ignore heavy regenerable + research scratch ---
+# Local agent config
+.claude/
+site/.claude/
+
+# Heavy regenerable model caches (small gold labels stay tracked under data/canopy_model/)
+data/canopy_model/*.npy
+data/canopy_model/*.npz
+
+# Large regenerable boundary / OSM extracts (tracked: data/lgu/ncr_lgu.geojson)
+data/lgu/ncr_barangays.geojson
+data/lgu/ncr_osm_canopy_areas.geojson
+
+# Cebu proof outputs (regenerable via pipeline/fetch_cebu_proof.py + detection/scan/scan_cebu.py)
+data/cebu/
+detection/scan_cebu/
+
+# Superseded versioned per-barangay scratch (single-model reframe dropped versions)
+data/per_barangay/*_v9.csv
+
+# Detection research track: keep the Makefile-orchestrated scan/train SCRIPTS, ignore the
+# heavy datasets, model binaries, per-version metrics, and unreferenced experiments (v7-v11).
+detection/train/*.npz
+detection/train/*.joblib
+detection/train/clf_v*_metrics.json
+detection/train/clf_v*_residuals_by_bin.json
+detection/train/clf_v*_reliability.json
+detection/train/clf_v*_per_year_metrics.json
+detection/train/clf_v8_per_lgu/
+detection/train/clf_v8_per_lgu_manifest.json
+detection/train/v9_vs_v11_qc_holdout.json
+!detection/train/clf_v9_metrics.json
+!detection/train/clf_v9_metrics_honest.json
+detection/train/build_dataset_v9_multiepoch.py
+detection/train/build_dataset_v10_finewindow.py
+detection/train/build_dataset_v11_10m.py
+detection/train/train_v7_gbr.py
+detection/train/train_v8_per_lgu_platt.py
+detection/train/train_v9_multiepoch.py
+detection/train/train_v10_finewindow.py
+detection/train/train_v11_10m.py
+
+# Detection scan/bootstrap/buildings: keep *.py, ignore downloaded/derived outputs
+detection/scan/*.png
+detection/scan/*.json
+detection/scan/*.csv
+detection/scan/tiles/
+detection/scan/validation/
+detection/scan/validation_v3/
+detection/scan/multi_year_scan_v9.py
+detection/bootstrap/*.geojson
+detection/bootstrap/*.json
+detection/bootstrap/*.jsonl
+detection/bootstrap/*.csv
+detection/buildings/*.png
+detection/buildings/tiles/
+
+# Superseded / one-off scripts (not part of the published pipeline)
+pipeline/aggregate_barangay.py
+pipeline/fetch_qc_10m.py
+scripts/finalize_v9_series.py
+scripts/make_surprise_visuals.py
+scripts/record_demo_gif.py
+
+# Raw research notes (curated docs/research/prior-work.md is the tracked version)
+docs/research/_raw_*/
 detection/train/*.log
 
 # Site build

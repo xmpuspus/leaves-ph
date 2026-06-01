@@ -4,6 +4,7 @@
 Mirrors solar-map-ph/scripts/publish_to_huggingface.py.
 
 What lands on HuggingFace:
+  - README.md dataset card (license, tags, cross-links; generated here)
   - Per-LGU canopy series CSV (canonical)
   - BENCHMARKS.md (with v0/v3 comparison)
   - MODEL_CARD.md
@@ -19,12 +20,84 @@ Requires HUGGINGFACE_HUB_TOKEN in env.
 from __future__ import annotations
 
 import argparse
+import io
 import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ID = "xmpuspus/leaves-ph"
+DOI = "10.5281/zenodo.20470306"
+
+
+def dataset_card(version: str) -> str:
+    """Dataset README with HF frontmatter.
+
+    The viewer is disabled on purpose: this repo is a collection of published
+    artefacts (CSVs, GeoJSON-adjacent series, model card, validation panels),
+    not a single train/validation table, so the auto-detected split viewer has
+    nothing coherent to render. Numbers live in the uploaded BENCHMARKS.md and
+    MODEL_CARD.md so they are stated in exactly one place.
+    """
+    return f"""---
+license: cc-by-4.0
+language:
+  - en
+pretty_name: "Leaves.PH: Metro Manila tree-canopy series"
+tags:
+  - remote-sensing
+  - urban-canopy
+  - sentinel-2
+  - metro-manila
+  - geospatial
+viewer: false
+---
+
+# Leaves.PH: Metro Manila tree-canopy series
+
+Open per-LGU and per-barangay annual tree-canopy estimates for the 17 LGUs of
+Metro Manila (2019 to 2026), measured from Sentinel-2 imagery with a
+human-calibrated classifier. Canopy here is a dense-vegetation proxy, not a
+pixel-exact tree census. Read each year as a cross-sectional snapshot, not a
+validated change series.
+
+## What is in this repo
+
+- `per_lgu/per_lgu_canopy_2019_2026.csv`, `per_barangay/per_barangay_canopy_2019_2026_model.csv`: the published canopy series.
+- `MODEL_CARD.md`, `BENCHMARKS.md`, `RESULTS.md`: accuracy, intended use, known biases, and the 656-label evaluation. All metrics live here.
+- `canopy_model/`: the published classifier, its 656 manual gold labels, and the ablation it was chosen from.
+- `validation_v3/*.png`: per-LGU visual validation panels.
+
+The CLIP detection artefacts are a separate research track (in optimization) and
+are not the source of any published figure.
+
+## Links
+
+- Code and full methodology: https://github.com/xmpuspus/leaves-ph
+- Interactive map: https://leaves.ph
+- Model repository: https://huggingface.co/xmpuspus/leaves-ph
+- DOI: https://doi.org/{DOI}
+
+## License
+
+Data: CC-BY-4.0. Code (in the GitHub repository): MIT. Upstream inputs retain
+their own licenses (Copernicus Sentinel-2, Hansen GFC, ESA WorldCover, Google
+Dynamic World, Meta Canopy Height, OpenStreetMap, PSA); see the repository
+LICENSE for the required attribution string.
+
+## Citation
+
+```
+@software{{puspus_leaves_ph_2026,
+  title  = {{Leaves.PH: open tree-canopy measurement for Metro Manila}},
+  author = {{Puspus, Xavier}},
+  year   = {{2026}},
+  version = {{{version}}},
+  doi    = {{{DOI}}},
+  url    = {{https://github.com/xmpuspus/leaves-ph}}
+}}
+```
+"""
 
 
 def main() -> int:
@@ -90,6 +163,17 @@ def main() -> int:
 
     api = HfApi(token=token)
     create_repo(REPO_ID, repo_type="dataset", exist_ok=True, token=token)
+
+    # Dataset card first, so the repo renders with a license + cross-links.
+    print("[hf] uploading README.md (dataset card)")
+    api.upload_file(
+        path_or_fileobj=io.BytesIO(dataset_card(args.version).encode("utf-8")),
+        path_in_repo="README.md",
+        repo_id=REPO_ID,
+        repo_type="dataset",
+        token=token,
+        commit_message=f"Leaves.PH v{args.version}: dataset card",
+    )
 
     for p in artefacts:
         rel = p.relative_to(ROOT)
