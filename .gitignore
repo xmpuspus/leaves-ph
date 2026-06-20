@@ -168,3 +168,6 @@ site/public/data/tree_crowns_ncr.pmtiles
 # Local-only manual launch attachments (heavy redundant video formats)
 docs/demo/*.mp4
 docs/demo/*.webm
+
+# Protected-area compute intermediate cache (rebuildable)
+data/protected_areas/.pa_compute_cache.json

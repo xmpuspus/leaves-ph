@@ -13,6 +13,10 @@ SITE_DATA := site/public/data
 PER_LGU_CSV := $(DATA)/per_lgu/per_lgu_canopy_2019_2026.csv
 PER_LGU_GEOJSON := $(SITE_DATA)/per_lgu_canopy.geojson
 
+# Protected-area forest loss (WDPA x Hansen; national /accountability extension)
+PA_LOSS_CSV := $(DATA)/protected_areas/pa_forest_loss.csv
+PA_LOSS_GEOJSON := $(SITE_DATA)/pa_forest_loss.geojson
+
 # Animation outputs
 HERO_GIF := docs/demo/hero.gif
 SALEX_GIF := docs/demo/salex-timeline.gif
@@ -20,7 +24,8 @@ LAMESA_GIF := docs/demo/la-mesa-watershed.gif
 QUIRINO_GIF := docs/demo/quirino-avenue.gif
 CHOROPLETH_GIF := docs/demo/lgu-choropleth.gif
 
-.PHONY: all fetch compute calibrate animate verify hash hash-verify status test clean help \
+.PHONY: all fetch compute compute-pa calibrate animate verify hash hash-verify \
+        hash-pa hash-verify-pa status test clean help \
         train scan release-build release-tag release-zenodo release-hf release release-smoke
 
 help:
@@ -28,6 +33,7 @@ help:
 	@echo "  make all          Full pipeline: fetch -> compute -> calibrate -> animate -> verify"
 	@echo "  make fetch        Pull S2 + Hansen + ESA + Dynamic World + Meta from GEE (network)"
 	@echo "  make compute      Per-LGU canopy curves 2016-2026 from cached composites"
+	@echo "  make compute-pa   Forest loss inside PH protected areas (WDPA x Hansen, EE)"
 	@echo "  make calibrate    Tune NDVI threshold against Meta canopy height v2"
 	@echo "  make animate      Generate the 5 hero GIFs (hero, SALEX, La Mesa, Quirino, choropleth)"
 	@echo "  make verify       Run scripts/verify_release.py (release gate)"
@@ -67,6 +73,15 @@ $(PER_LGU_CSV): $(PIPELINE)/compute_canopy_model.py $(PIPELINE)/aggregate_lgu.py
 
 compute: $(PER_LGU_CSV)
 	@echo "[make compute] $(PER_LGU_CSV) ready"
+
+# ----- compute-pa (forest loss inside PH protected areas; WDPA x Hansen, EE) -----
+# Network step (Earth Engine). Writes the per-PA CSV, the map GeoJSON, and the
+# summary JSON the /protected-areas page reads. Personal EE key only.
+$(PA_LOSS_CSV) $(PA_LOSS_GEOJSON): $(PIPELINE)/compute_pa_loss.py
+	$(PY) $(PIPELINE)/compute_pa_loss.py
+
+compute-pa: $(PA_LOSS_CSV)
+	@echo "[make compute-pa] $(PA_LOSS_CSV) ready"
 
 $(PER_LGU_GEOJSON): $(PER_LGU_CSV) $(PIPELINE)/csv_to_geojson.py
 	$(PY) $(PIPELINE)/csv_to_geojson.py
@@ -118,6 +133,27 @@ hash-verify: $(PER_LGU_CSV)
 	else \
 	  echo "[hash-verify] FAIL: per_lgu_canopy_2019_2026.csv sha256 = $$actual (expected $$expected)"; \
 	  echo "[hash-verify] Likely cause: dependency version drift. Check requirements.txt pins."; \
+	  exit 1; \
+	fi
+
+# Protected-area CSV is byte-pinned the same way as the per-LGU canonical.
+EXPECTED_HASH_PA := 8eaa8e9b32090dee
+
+hash-pa:
+	@$(PY) -c "import hashlib, os; \
+p='$(PA_LOSS_CSV)'; \
+print(p, 'sha256:', (hashlib.sha256(open(p,'rb').read()).hexdigest()[:16] if os.path.exists(p) else 'missing'))"
+
+hash-verify-pa: $(PA_LOSS_CSV)
+	@actual=$$($(PY) -c "import hashlib; print(hashlib.sha256(open('$(PA_LOSS_CSV)','rb').read()).hexdigest()[:16])"); \
+	expected="$(EXPECTED_HASH_PA)"; \
+	if [ "$$expected" = "PENDING" ]; then \
+	  echo "[hash-verify-pa] SKIP: canonical hash not yet pinned (unpinned-hash)"; \
+	elif [ "$$actual" = "$$expected" ]; then \
+	  echo "[hash-verify-pa] OK: pa_forest_loss.csv sha256 = $$actual"; \
+	else \
+	  echo "[hash-verify-pa] FAIL: pa_forest_loss.csv sha256 = $$actual (expected $$expected)"; \
+	  echo "[hash-verify-pa] Likely cause: WDPA/Hansen asset drift or dependency drift."; \
 	  exit 1; \
 	fi
 
@@ -233,7 +269,7 @@ print('[smoke] title check:', 'Leaves.PH' in b); \
 print('[smoke] method check (NDVI):', 'NDVI' in b); \
 import sys; sys.exit(0 if ok else 1)"
 
-release: verify hash-verify release-build release-tag release-zenodo
+release: verify hash-verify hash-verify-pa release-build release-tag release-zenodo
 	@echo
 	@echo "[release] v$(VERSION) reached step 5/7."
 	@echo "  Step 6 (release-hf) requires HUGGINGFACE_HUB_TOKEN"

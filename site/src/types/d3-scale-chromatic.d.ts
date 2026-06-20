@@ -8,4 +8,7 @@ declare module "d3-scale-chromatic" {
   export const interpolateYlGnBu: (t: number) => string;
   export const interpolateGreens: (t: number) => string;
   export const interpolateBuGn: (t: number) => string;
+  export const interpolateYlOrBr: (t: number) => string;
+  export const interpolateYlOrRd: (t: number) => string;
+  export const interpolateOrRd: (t: number) => string;
 }

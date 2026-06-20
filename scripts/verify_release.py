@@ -240,6 +240,36 @@ def gate_per_barangay():
     return ("per-barangay aggregation", len(rows) >= 800, f"{len(rows)} barangays")
 
 
+def gate_pa_loss():
+    """Protected-area forest-loss product: CSV shape, GeoJSON, summary integrity."""
+    csv_p = ROOT / "data" / "protected_areas" / "pa_forest_loss.csv"
+    gj_p = ROOT / "site" / "public" / "data" / "pa_forest_loss.geojson"
+    sm_p = ROOT / "site" / "public" / "data" / "pa_forest_loss_summary.json"
+    if not csv_p.exists() or not gj_p.exists() or not sm_p.exists():
+        return ("PA forest-loss product", False, "missing CSV/GeoJSON/summary")
+    with csv_p.open() as f:
+        rows = list(csv.DictReader(f))
+    need_cols = {"site_id", "name", "desig", "loss_ha", "forest2000_ha", "pct_of_forest2000"}
+    have_cols = set(rows[0].keys()) if rows else set()
+    fc = json.loads(gj_p.read_text())
+    n_feat = len(fc.get("features", []))
+    sm = json.loads(sm_p.read_text())
+    total = sm.get("total_loss_ha") or 0
+    # 200+ national PAs, columns present, features present, headline > 0 and bounded
+    ok = (
+        len(rows) >= 200
+        and need_cols.issubset(have_cols)
+        and n_feat >= 150
+        and 1_000 < total < 1_000_000
+        and bool(sm.get("disclaimer"))
+    )
+    return (
+        "PA forest-loss product",
+        ok,
+        f"{len(rows)} PAs / {n_feat} features / {total:,} ha total",
+    )
+
+
 def gate_validation_panels():
     d = ROOT / "detection" / "scan" / "validation_v3"
     if not d.exists():
@@ -401,6 +431,7 @@ def main() -> int:
         gate_clf_v8,
         gate_clf_v9,
         gate_per_barangay,
+        gate_pa_loss,
         gate_validation_panels,
         gate_demo_gifs,
         gate_series_constants,

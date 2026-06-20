@@ -1,0 +1,252 @@
+rank,site_id,name,desig,iucn_cat,status,status_yr,rep_area_ha,area_ha,forest2000_ha,loss_ha,pct_of_forest2000,pct_of_pa
+1,317297,Palawan Game Refuge and Bird Sanctuary (Proc 219),Game Refuge and Bird Sanctuary,Not Assigned,Designated,1967,1088181.0,1083022.5,864498.5,101355.0,11.72,9.359
+2,555715015,Mt. Mantalingahan Protected Landscape,Protected Landscape,V,Designated,2009,121887.0,120963.7,114540.5,13110.6,11.45,10.838
+3,555583093,"Sohoton Natural Bridge National Park, Jicontol Watershed Forest Reserve, Taft Forest Philippine Eagle Wildlife Sanctuary & Calbiga Caves Protected Landscape",Natural Park,II,Designated,2018,335106.0,334895.9,330867.8,8135.2,2.46,2.429
+4,555583092,Quirino Protected Landscape,Protected Landscape,V,Designated,2005,183365.0,183446.4,161394.3,6093.4,3.78,3.322
+5,14753,Malampaya Sound Protected Landscape,Protected Landscape,V,Designated,2000,201018.0,200376.5,74335.7,5121.2,6.89,2.556
+6,555703872,Entire Province of Palawan (Proc 2152) Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,55471.0,55173.5,48749.4,4308.2,8.84,7.809
+7,555715047,Calavite & F.B. Harrison Game Refuge and Bird Sanctuary,Game Refuge and Bird Sanctuary,Not Assigned,Designated,1920,106479.0,106408.1,59796.6,3790.0,6.34,3.562
+8,317296,Northern Sierra Madre Natural Park,Natural Park,II,Designated,2001,356969.0,357198.3,278280.2,3671.9,1.32,1.028
+9,555583085,Lake Lanao Watershed Reservation,Watershed Reservation,Not Assigned,Designated,1992,171293.0,171333.5,111622.6,3148.6,2.82,1.838
+10,555583103,"Unnamed National Park, Wildlife Sanctuary and Game Preserve (PP 1636)",Wildlife Sanctuary,Not Assigned,Designated,1977,115448.0,115456.1,104121.5,2788.9,2.68,2.416
+11,145491,"Island of Siargao, Bucas Grande, Middle Bucas and East Bucas in Dinagat MSFR & Island of Siargao, Poneas, Dahican, Tona, Laonan Abanay and Bancuyo Wilderness Area",Protected Landscape and Seascape,V,Designated,2018,283975.0,283393.5,50198.0,2725.3,5.43,0.962
+12,306533,Sebu Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1985,98534.0,98524.4,57274.4,2442.5,4.26,2.479
+13,1337,Mts. Iglit-Baco Natural Park,Natural Park,II,Designated,2018,106656.0,106641.7,65585.8,2293.1,3.5,2.15
+14,71275,El Nido Managed Resource Protected Area,Managed Resource Protected Area,IV,Designated,1998,91955.0,91667.8,35184.0,2218.7,6.31,2.42
+15,7289,St. Paul Subterranean National Park,National Park,II,Designated,1999,21909.0,21818.1,20720.1,1753.3,8.46,8.036
+16,306536,Libungan Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,52821.0,52823.4,28427.2,1392.9,4.9,2.637
+17,71294,Peñablanca Protected Landscape,Protected Landscape and Seascape,V,Designated,2018,118654.0,118721.4,93935.9,1328.8,1.41,1.119
+18,306453,Mt. Kanlaon National Park,Natural Park,II,Designated,2001,23560.0,23577.8,14950.8,1268.4,8.48,5.38
+19,555583095,"Alamio, Buayan, Carac-an, Panikian River and Sipangpang Falls Watershed Forest Reserve",Watershed Forest Reserve,Not Assigned,Designated,2009,43346.0,43276.2,42687.1,1171.7,2.74,2.708
+20,555645336,Pangasananan,Pangasananan,VI,Established,0,6996.0,6905.4,6828.0,1160.3,16.99,16.803
+21,306540,Andanan Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1991,17186.0,17157.9,16020.2,1152.4,7.19,6.716
+22,145492,Agusan Marsh Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,40941.0,40869.9,35581.2,1098.1,3.09,2.687
+23,61479,Casecnan River Watershed Forest Reserve,Protected Lanscape,V,Designated,2018,86247.0,86244.4,75783.7,929.2,1.23,1.077
+24,14729,Mt. Calavite Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,18173.0,18150.5,12688.2,876.9,6.91,4.831
+25,840,Mt. Apo Natural Park,Natural Park,II,Designated,2018,55012.0,54966.4,44393.5,746.9,1.68,1.359
+26,306416,Marikina Watershed Reservation,Protected Landscape,V,Designated,2018,26126.0,26123.1,19534.4,693.2,3.55,2.654
+27,555715055,Tinuy-an Falls Protected Landscape,Protected Landscape,V,Designated,2018,4322.0,4311.8,4269.5,680.2,15.93,15.775
+28,306457,Jalaur River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,9463.0,9469.1,7311.5,449.7,6.15,4.75
+29,306402,Wangag Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1987,6924.0,9452.6,9257.1,435.8,4.71,4.61
+30,5215,Mt. Pulag National Park,National Park,Not Assigned,Designated,1987,11602.0,11596.4,10892.3,434.2,3.99,3.744
+31,555645495,Inuyog No Banwa,Inuyog No Banwa,VI,Established,0,9789.0,9663.2,7084.2,397.6,5.61,4.114
+32,306405,Angat (Metro Water District) Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1968,54574.0,54569.2,52318.5,389.0,0.74,0.713
+33,555715057,Ticao-Burias Pass Protected Seascape,Protected Seascape,V,Designated,2018,414244.0,414029.8,16334.2,387.8,2.37,0.094
+34,7216,Taal Volcano Island National Park,Protected Landscape,V,Designated,2018,62292.0,62264.9,27480.9,382.1,1.39,0.614
+35,306383,Ambuklao-Binga & Upper Agno Watershed Forest Reserve,Resource Reserve,Ib,Designated,2000,78005.0,77959.9,56379.4,370.3,0.66,0.475
+36,555583089,Bago River Watershed Forest Reserve,Natural Park,II,Designated,2018,70826.0,70879.2,43340.4,327.7,0.76,0.462
+37,555583094,South Upi Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1987,1739.0,1739.1,1368.5,313.0,22.87,18.0
+38,555715059,Mt. Malindang National Park,Natural Park,Not Assigned,Designated,2018,17286.0,17327.1,13264.5,299.5,2.26,1.729
+39,555583080,Aliwagwag Protected Landscape,Protected Landscape,V,Designated,2018,10261.0,10236.3,10200.6,276.7,2.71,2.704
+40,101391,Batanes Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2001,210688.0,210788.2,11771.6,265.1,2.25,0.126
+41,306408,Pantabangan-Caranglan Watershed Reservation,Watershed Reservation,Not Assigned,Designated,1969,94865.0,94847.8,53053.8,240.3,0.45,0.253
+42,306541,Cabadbaran Watershed,Watershed,Not Assigned,Designated,1991,15180.0,15159.3,14285.5,230.0,1.61,1.517
+43,7217,Naujan Lake National Park,National Park,Not Assigned,Designated,1968,15326.0,15326.0,5696.2,221.7,3.89,1.446
+44,14747,Calauit Island Game Preserve and Wildlife Sanctuary,Wildlife Sanctuary,Not Assigned,Designated,1976,3702.0,3693.9,2875.7,204.6,7.12,5.54
+45,10326,Mt. Malindang National Park,Natural Park,II,Designated,2018,35138.0,35160.2,33861.3,200.3,0.59,0.57
+46,71274,Catanduanes Watershed Forest Reserve,Natural Park,II,Designated,2018,48924.0,48940.4,48642.9,199.2,0.41,0.407
+47,306506,Pasonanca Watershed Forest Reserve,Natural Park,II,Designated,2018,12102.0,12108.3,11867.6,191.8,1.62,1.584
+48,101403,Mt. Matutum Protected Landscape,Protected Landscape,V,Designated,2018,13947.0,13939.5,8545.4,187.7,2.2,1.347
+49,555715012,Mt. Apo Natural Park,Natural Park,Not Assigned,Designated,2018,9099.0,9092.0,7302.3,179.4,2.46,1.973
+50,10325,Magapit Game Refuge and Bird Sanctuary,Protected Landscape,V,Designated,2000,3851.0,3852.2,2767.2,169.6,6.13,4.403
+51,7219,"Central Cebu National Park, Mananga River Watershed Forest Reserve, Buhisan Watershed Forest Reserve, Sudlon National Park",Protected Landscape,V,Designated,2007,28489.0,28504.3,17072.3,168.8,0.99,0.592
+52,317292,Aklan River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,24132.0,24146.1,22246.6,162.7,0.73,0.674
+53,5211,Bicol National Park,Natural Park,II,Designated,2018,5466.0,5470.7,5095.8,149.8,2.94,2.739
+54,306406,Angat Watershed and Forest Range (Pilot),Watershed and Forest Range,Not Assigned,Designated,1968,6672.0,6670.5,6430.9,146.7,2.28,2.199
+55,317294,Chocolate Hills Natural Monument,Natural Monument,III,Designated,2018,13995.0,14000.0,7681.1,140.4,1.83,1.003
+56,306455,Pan-ay River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,4077.0,4079.4,2146.3,137.1,6.39,3.361
+57,306458,Ilog-Hilabangan Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,10476.0,10483.4,5601.4,130.9,2.34,1.249
+58,306496,Biri Larosa Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,32284.0,32287.8,7538.1,111.3,1.48,0.345
+59,306412,Dinadiawan River Watershed Forest Reserve,Protected Landscape,V,Designated,2018,3367.0,3367.6,3231.9,93.7,2.9,2.783
+60,555715048,"Mangrove Areas in Tumalong Bay, Baong River, Pongca Bay,Mangrove in Pisan, Sagayapan, Tintauan and Sacol Island Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,8990.0,8993.9,5551.7,92.5,1.67,1.028
+61,555715035,Marcos Highway Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1978,31542.0,31510.8,20971.3,89.2,0.43,0.283
+62,306522,Muleta-Manupali Watershed Forest Reserve,Natural Park,II,Designated,2018,22225.0,22220.5,20535.0,88.6,0.43,0.399
+63,306474,Balinsasayao Twin Lakes Natural Park,Natural Park,II,Designated,2018,8016.0,8022.2,7239.0,84.6,1.17,1.055
+64,306433,"Palawan Flora, Fauna and Watershed Forest Reserve (Parcel 2)",Watershed Forest Reserve,Not Assigned,Designated,1985,3240.0,3224.2,3215.2,77.6,2.41,2.407
+65,555583086,Marinduque Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,9760.0,9763.8,9020.8,77.0,0.85,0.789
+66,306432,"Palawan Flora, Fauna and Watershed Forest Reserve (Parcel 1)",Watershed Forest Reserve,Not Assigned,Designated,1982,4799.0,4775.9,4722.5,74.8,1.58,1.567
+67,14740,Rajah Sikatuna National Park,Protected Landscape,V,Designated,2018,10965.0,10968.1,10305.1,71.9,0.7,0.655
+68,555583090,Northwest Panay Peninsula Natural Park,Natural Park,II,Designated,2018,12009.0,12015.1,11444.6,68.9,0.6,0.573
+69,7226,Basilan National Park,Natural Biotic Area,VI,Designated,2018,4546.0,4548.1,4275.6,66.0,1.54,1.45
+70,306499,Palompon Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1988,5631.0,5631.9,4966.5,62.1,1.25,1.102
+71,306434,"Calatrava, San Andres, San Agustin Watershed Forest Reserve",Watershed Forest Reserve,Not Assigned,Designated,1982,2614.0,2615.5,2479.1,59.0,2.38,2.254
+72,306481,Loboc Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1953,8890.0,8893.3,7962.2,58.5,0.74,0.658
+73,555715058,Mt. Kitanglad Range National Park,Natural Park,Not Assigned,Designated,2018,16140.0,16135.1,14304.4,57.7,0.4,0.358
+74,7232,Mainit Hotsprings National Park,Protected Landscape,V,Designated,2018,1423.0,1419.7,1309.6,54.4,4.15,3.83
+75,306426,Dibalo-Pingit-Zabali-Malayat Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1992,4572.0,4572.6,4542.9,53.7,1.18,1.174
+76,306421,Dipaculao Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1987,2678.0,2678.7,2608.3,51.8,1.99,1.934
+77,555583104,Tumauini Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,2018,6509.0,6512.4,5583.8,49.6,0.89,0.761
+78,305510,Rizal National Park,Protected Landscape,V,Designated,2018,475.0,475.1,447.8,48.8,10.89,10.263
+79,7215,Bataan National Park,Natural Park,II,Designated,2018,20004.0,19979.9,17269.3,47.3,0.27,0.237
+80,844,Aurora Memorial,National Park,Not Assigned,Designated,1949,6517.0,6516.6,6061.6,45.1,0.74,0.692
+81,555583082,Guiuan Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,66725.0,66620.4,3417.8,44.8,1.31,0.067
+82,555583081,Pan-as Falls Hayiban Watershed Forest Reserve,Protected Landscape,V,Designated,2018,5068.0,5068.4,5043.2,43.6,0.86,0.861
+83,555715036,Isabela (Monte-alto Timber Resouce Corporation Parcel (1 & 2) Wildeness Area,Wilderness Area,Not Assigned,Designated,1987,1139.0,1139.8,831.5,42.2,5.08,3.707
+84,555715024,"Mangrove Areas along Coastline of Dupon Bay from Sacay point to Mouth of Dupon River, Apali Point to Calunganan Point Puerto Bello Lao Mangrove from Bo. Tuban and Bo. Manpagui Santa Cruiz Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2738.0,2737.4,1838.5,41.4,2.25,1.511
+85,555583083,Mt. Hamiguitan Range Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,7137.0,6342.7,6208.4,40.4,0.65,0.636
+86,306401,Bawa Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1987,9447.0,6928.0,6871.3,37.3,0.54,0.538
+87,306444,Abasig-Matogdon Mananap Watershed Forest Reserve,Natural Biotic Area,VI,Designated,2018,5918.0,5922.6,5841.3,35.6,0.61,0.6
+88,5219,Mt. Isarog National Park,Natural Park,II,Designated,2018,10091.0,10098.2,9598.5,35.5,0.37,0.351
+89,306384,Lower Agno Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1983,39082.0,39054.6,24624.5,34.8,0.14,0.089
+90,306502,Buug Watershed Forest Reserve,Natural Biotic Area,VI,Designated,2018,1261.0,1262.3,1099.1,31.7,2.88,2.509
+91,306531,Mati Watershed Forest Reserve,Protected Landscape,V,Designated,2018,884.0,882.4,726.1,30.7,4.23,3.479
+92,555715037,"Island of Awasan, Cabilan, Capaquian, Sugbuhan and Tagboaba Wilderness Area",Wilderness Area,Not Assigned,Designated,1981,4672.0,4665.7,829.9,28.6,3.45,0.614
+93,555583088,Mt. Inayawan Range Natural Park,Natural Park,II,Designated,2018,4236.0,4238.0,4218.8,28.5,0.68,0.673
+94,306398,Salinas Deer Refuge,Natural Monument,III,Designated,2018,5966.0,5963.9,2094.0,26.3,1.26,0.441
+95,555715045,Olongapo Naval Base Perimeter National Park,Watershed Forest Reserve,Not Assigned,Designated,1987,6293.0,6285.3,4290.5,25.9,0.6,0.413
+96,555583087,Mt. Balatukan Range Natural Park,Natural Park,II,Designated,2018,8438.0,8434.5,8069.8,25.1,0.31,0.297
+97,101394,Mt. Guiting-Guiting Natural Park,Natural Park,II,Designated,2018,15515.0,15526.2,15380.7,23.0,0.15,0.148
+98,841,Mts. Banahaw- San Cristobal National Park,Protected Landscape,V,Designated,2009,11311.0,11311.7,10554.5,20.2,0.19,0.179
+99,64412,Mt. Kitanglad Range National Park,Natural Park,Not Assigned,Designated,2018,47234.0,31085.8,29703.2,19.9,0.07,0.064
+100,306483,Alihawan-Cansujay Anibongan River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1992,3737.0,3738.2,2609.0,19.4,0.74,0.519
+101,306409,Doña Remedios Trinidad-General Tinio Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1988,20931.0,20928.5,20644.7,19.3,0.09,0.092
+102,306527,Baganga Watershed Reservation,Protected Landscape,V,Designated,2000,115.0,114.5,114.1,17.7,15.47,15.422
+103,306493,Lake Danao Natural Park,Natural Park,Not Assigned,Designated,2018,2244.0,2243.9,2018.4,17.3,0.86,0.77
+104,555715025,Mangrove Areas from Tagasilay to the Mouth of Tigbao River including east of Vitali Island Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2661.0,2662.2,745.4,16.6,2.23,0.624
+105,555715026,"Mangrove Areas from Del Pilar River to Palita Island, Bo. Salvacion and Dahican Magrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2420.0,2421.8,1589.0,16.3,1.03,0.673
+106,14708,Biak-na-Bato National Park,National Park,Not Assigned,Designated,1982,2112.0,2111.7,1742.8,14.4,0.83,0.681
+107,306410,Simbahan-Talagas River Watershed Forest Reserve,Protected Landscape,V,Designated,2018,2284.0,2285.3,2224.6,14.4,0.65,0.628
+108,7211,Minalungao National Park,National Park,Not Assigned,Designated,1967,2018.0,2017.9,1184.0,13.9,1.17,0.689
+109,306442,Lagonoy Watershed Forest Reserve,Natural Biotic Area,VI,Designated,2018,444.0,443.9,432.1,13.8,3.18,3.1
+110,555715043,"Mangrove From Baculin Point to Lakud Point, From Tanuip Point to Quinablangan Island and Samal Island Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,1849.0,1843.2,1603.8,13.5,0.84,0.734
+111,306459,Dalanas River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,7955.0,7959.3,6290.2,13.4,0.21,0.168
+112,306519,Mount Timolan Protected Landscape,Protected Landscape,V,Designated,2018,2245.0,2246.0,2081.2,12.6,0.61,0.562
+113,555583084,Kalbario-Patapat Natural Park,Natural Park,II,Designated,2018,3903.0,3901.5,3859.1,12.4,0.32,0.318
+114,305911,Pujada Bay Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,20873.0,20823.1,291.9,12.2,4.19,0.059
+115,306472,Maasin Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1923,6540.0,6544.2,5106.0,10.8,0.21,0.165
+116,7228,Rungkunan National Park,National Park,Not Assigned,Designated,1965,968.0,967.9,934.0,10.5,1.12,1.083
+117,306411,Amro River Watershed Forest Reserve,Protected Landscape,V,Designated,2018,6431.0,6434.6,6363.8,10.2,0.16,0.159
+118,306504,Siocon Watershed Forest Reserve,Resource Reserve,Ib,Designated,2018,856.0,856.0,854.6,10.1,1.18,1.179
+119,555715020,"Island of Basot, Quinalaang and Malabungot Magrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,3584.0,3586.1,2279.3,9.9,0.43,0.276
+120,306420,Calabgan Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1992,4630.0,4631.7,4615.6,9.8,0.21,0.211
+121,198475,Turtle Islands Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,242958.0,241556.9,182.6,9.7,5.31,0.004
+122,306407,Talavera Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1938,27486.0,27475.4,13901.2,9.6,0.07,0.035
+123,7224,Salikata National Park,National Park,Not Assigned,Designated,1965,660.0,659.7,645.1,9.4,1.46,1.427
+124,5209,Fuyot Springs National Parks,National Park,Not Assigned,Designated,1938,1160.0,1160.8,663.6,8.6,1.3,0.743
+125,306539,Surigao Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1990,952.0,950.9,922.6,8.5,0.92,0.89
+126,7243,Mts. Palay-palay-Mataas-na-Gulod National Park,Protected Landscape,V,Designated,2018,3973.0,3970.5,3523.8,8.5,0.24,0.214
+127,306413,Talaytay River Watershed Forest Reserve,Protected Landscape,V,Designated,2018,3598.0,3599.9,3573.4,7.8,0.22,0.217
+128,306414,Buenavista Watershed Forest Reserve,Protected Landscape,V,Designated,2018,287.0,287.3,280.4,7.8,2.8,2.73
+129,306423,Alabat Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1987,317.0,317.0,316.4,7.1,2.24,2.232
+130,18473,Lake Buluan Game Refuge and Bird Sanctuary,Game Refuge and Bird Sanctuary,Not Assigned,Designated,1929,8367.0,8365.2,2427.3,7.0,0.29,0.083
+131,555715038,"Island of Polilio, Alabat, Cabelete, Jomalig, Patnanongan, Kalotkot, Kalongkooan, Palasan, Calabao, Icol and San Rafael Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,4750.0,4751.2,4080.1,6.7,0.16,0.141
+132,306445,"Panciscan Pt. in Bitos Bay up to Bano Sanlay, Panicijan River in Butuan Bay; Mangroves along the banks of Sta. Rosa River in San Jacinto town Mangrove Swamp Forest Reserve",Natural Park,II,Designated,2018,519.0,519.2,233.7,6.5,2.78,1.253
+133,842,Mayon Volcano National Park,Natural Park,II,Designated,2018,5327.0,5330.4,3327.2,6.5,0.2,0.122
+134,5210,Mt. Arayat National Park,National Park,Not Assigned,Designated,1937,3707.0,3704.1,2602.9,6.3,0.24,0.169
+135,555715039,"Tanglar point to Bicol River up to the Islands of Lahay, Locsuhin, Haponan, Quinabungan, Lamit and Batan Magrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,3142.0,3143.6,2568.0,6.1,0.24,0.194
+136,306454,Tipulu-an Mau-it River Watershed,Natural Park,II,Designated,2000,6778.0,6782.1,4869.1,4.9,0.1,0.072
+137,306528,Island of Pandasan Wilderness Area,Protected Landscape and Seascape,V,Designated,2018,7293.0,7280.7,138.5,4.6,3.33,0.063
+138,14736,Mahagnao Volcano National Park,Natural Park,II,Designated,2018,341.0,340.7,310.8,4.3,1.39,1.27
+139,305927,Sarangani Bay Protected Seascape,Protected Seascape,V,Designated,2018,210888.0,210794.0,340.6,4.3,1.27,0.002
+140,7327,Island of Bantayan Wilderness Area,Wilderness Area,Not Assigned,Designated,1981,11260.0,11266.4,1412.6,4.2,0.3,0.037
+141,5216,Balbalasang-Balbalan National Park,National Park,Not Assigned,Designated,1972,1443.0,1442.4,1216.5,4.1,0.34,0.284
+142,555715028,"Putiao River to Malbog River, Getumbro Pt. to Prieto Diaz, Panuntingan Pt. to Tagdon River, Sinagbatan Bay to Mantay Pt. Magrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2593.0,2594.3,1830.2,4.1,0.22,0.157
+143,555715030,"Mangrove areas along banks of Mamburao River, Buluangan River to Lagarum River, Naujan, bank of Betel Creek, Sablayan Pt. to Bagong Sabang RIver, Labangan to Calalayuan Pt. Sukol River, Casiliga River, Island of Soguicay Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,997.0,997.1,679.6,3.9,0.57,0.391
+144,145484,Palaui Island Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,8049.0,8053.4,2492.3,3.8,0.15,0.047
+145,555715046,Mangrove Areas from Liangan River to Lipatan River of the Municipality of Lapayan Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,191.0,190.9,124.0,3.8,3.07,1.993
+146,5220,Bulusan Volcano National Park,Natural Park,II,Designated,2018,3642.0,3643.0,3312.3,3.2,0.1,0.088
+147,145486,Pamitinan Protected Landscape,Protected Landscape,V,Designated,2018,609.0,609.0,522.1,3.1,0.6,0.51
+148,14710,Capalonga Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1966,359.0,359.1,355.1,3.1,0.87,0.856
+149,555715040,"Island of Dinagat, Hikdop, Sibate and Hanigad Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,1898.0,1895.1,1349.6,3.0,0.22,0.156
+150,101396,Sagay Marine Reserve,Resource Reserve,Ib,Designated,2001,32515.0,32533.4,162.6,2.9,1.78,0.009
+151,555715042,"Island of Pamusuan, Handayan, Majanay,,, Islets of Bonoon, Lapinig, Pinahon and Lapinig Chico, Mangrove areas east of Soom River Pangpang Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2851.0,2850.5,1283.7,2.5,0.2,0.088
+152,7209,Mt. Data National Park,National Park,Not Assigned,Designated,1936,5512.0,5508.5,2399.8,2.4,0.1,0.043
+153,306476,Tañon Strait Protected Seascape,Protected Seascape,V,Designated,2018,534589.0,534941.3,2110.0,2.1,0.1,0.0
+154,555715029,"Mangroves from Malaquing River to Mabunga River, Cueva Point to Kimartinez Point, Kabugao Point to Kabalog Andang Point Magrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,447.0,446.8,302.6,2.1,0.69,0.468
+155,306515,Selinog Island,Protected Landscape and Seascape,V,Designated,2018,959.0,960.2,56.5,2.0,3.6,0.212
+156,7218,Bulabog-Putian National Park,National Park,Not Assigned,Designated,1961,889.0,889.8,876.6,1.9,0.22,0.217
+157,306427,Aurora Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1936,1637.0,1637.1,1567.4,1.8,0.11,0.109
+158,306471,Kabangkalan Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1991,417.0,417.1,289.6,1.7,0.58,0.405
+159,555715067,Mount Makiling,Forest Reserve,Not Assigned,Designated,1933,4230.0,4228.9,4137.0,1.6,0.04,0.039
+160,846,Quezon National Park,Protected Landscape,V,Designated,2018,1043.0,1043.2,1025.5,1.6,0.16,0.155
+161,555715053,"Island of Ponson, Poro, Pacihan",Protected Landscape and Seascape,V,Designated,2018,1437.0,1437.0,694.4,1.5,0.22,0.107
+162,7214,Roosevelt National Park,Protected Landscape,V,Designated,2018,950.0,949.2,491.5,1.5,0.3,0.155
+163,306436,Sibuyan Island Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,505.0,504.8,372.2,1.3,0.35,0.259
+164,555583100,Mt. Timpoong Hibok-hibok Natural Monument,Natural Monument,III,Designated,2018,2203.0,2203.2,2136.2,1.3,0.06,0.061
+165,306435,Torrijos Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1932,158.0,157.9,156.7,1.2,0.75,0.74
+166,306441,"Island of Basot, Quinalaang and Malabungot Wilderness Area",Protected Landscape,V,Designated,2018,148.0,147.8,137.9,1.2,0.88,0.823
+167,7208,Northern Luzon Heroes Hill National Park,National Park,Not Assigned,Designated,1963,5397.0,5391.5,3569.5,1.2,0.03,0.022
+168,555715013,Island of Ambugan / Hambungan & Inabanga River Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,1215.0,1215.0,1042.4,1.1,0.11,0.093
+169,555715021,Island of Majaba and Napayuan Wilderness Area,Wilderness Area,Not Assigned,Designated,1981,441.0,441.1,66.8,1.1,1.65,0.249
+170,555715041,"Mangrove Areas along Municipalities of Lavigan, Valencia Up to Taon River Municipality of Barcelona,, Islands of Masopelid, Mahaba, Condona, Bayagnan, Bilabid and Caye Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,1311.0,1308.6,1088.3,1.1,0.1,0.082
+171,7227,Mt. Dajo National Park,National Park,Not Assigned,Designated,1938,212.0,212.3,206.7,1.1,0.52,0.503
+172,306403,Watershed Purposes of Mariveles (Palanas) Watershed and Forest Range,Watershed and Forest Range,Not Assigned,Designated,1919,347.0,346.7,246.5,1.0,0.41,0.294
+173,61467,Dahican Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1933,42.0,42.3,41.4,1.0,2.31,2.265
+174,306397,Tanap Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1971,303.0,303.1,193.3,0.9,0.45,0.286
+175,555715033,"Palsabangan River up to Mazintuto River, Bacong River to Sandoval Point Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,867.0,866.7,410.3,0.9,0.23,0.109
+176,306393,Ilocos Norte Metro Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1934,2248.0,2245.9,1930.5,0.8,0.04,0.038
+177,306424,Tibiang-Damagandong Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1938,274.0,274.6,269.0,0.8,0.29,0.285
+178,306521,Mimbilisan Protected Landscape,Protected Landscape,V,Designated,2018,107.0,106.8,95.7,0.7,0.74,0.662
+179,555715031,"Island of Sta Cruz and Salomague, foreshoreline of dapdap and alabo to the mouth of tagum river, malinoa creek to salomague point, foreshoreline of Barrio Cabuyagan to eastern side of Dating Bayan RIver in Calancan Bay Mangrove Swamp Forest Reserve",Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,2351.0,2352.4,1857.9,0.7,0.04,0.028
+180,306400,Dupax Watershed Reservation,Watershed Reservation,Not Assigned,Designated,1934,339.0,338.4,221.9,0.6,0.27,0.178
+181,306418,Infanta Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1967,480.0,479.8,479.4,0.6,0.12,0.122
+182,306419,Lopez Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1940,441.0,440.8,425.9,0.6,0.14,0.138
+183,555715022,"Island of Lamagon (Lamayan), Cepaya and Cobeton Wilderness Area",Wilderness Area,Not Assigned,Designated,1981,587.0,585.9,521.3,0.6,0.12,0.105
+184,306417,Mulanay Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1938,30.0,29.7,29.7,0.5,1.76,1.76
+185,555583097,Calauag Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1939,307.0,307.2,273.1,0.5,0.19,0.17
+186,555583098,Kuapnit Balinsasayao National Park,National Park,Not Assigned,Designated,1937,377.0,376.7,367.3,0.5,0.13,0.13
+187,555715051,Buhi Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,1621.0,1621.7,162.4,0.5,0.28,0.029
+188,7207,Bessang Pass Natural Monument/Landmark,Natural Monument,III,Designated,2018,581.0,580.6,552.4,0.5,0.1,0.092
+189,306524,Mahugunao Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1932,147.0,147.2,139.0,0.4,0.25,0.24
+190,555583091,Island of Panglao; Mangrove areas from the west of Loboc River to the municipality of Laya Mangrove Swamp Forest Reserve,Protected Seascape,V,Designated,2018,2445.0,2446.4,132.7,0.4,0.28,0.015
+191,555715023,"Island of Catiil, Colangaman, Lomislis, Tagangdio, Tintinan, and islet of Pamasuan Wilderness Area",Wilderness Area,Not Assigned,Designated,1981,219.0,219.2,172.7,0.4,0.2,0.161
+192,555715032,Barrio Bagumbang to Malautan River Mangrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,543.0,543.4,315.3,0.4,0.12,0.068
+193,306387,Lidlidda Watershed Forest Reserve,Protected Landscape,V,Designated,2018,1042.0,1041.1,970.9,0.3,0.03,0.025
+194,306425,Binahaan River Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1991,476.0,476.4,470.5,0.3,0.07,0.069
+195,317298,Polilio Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1966,126.0,126.0,125.8,0.3,0.28,0.275
+196,555715049,Mado Hot Spring National Park,National Park,Not Assigned,Designated,1939,49.0,48.8,11.0,0.3,2.43,0.546
+197,101392,Masinloc and Oyon Bay Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,7558.0,7543.1,504.9,0.2,0.04,0.003
+198,305421,Baliangao Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,316.0,315.6,111.8,0.2,0.2,0.069
+199,306396,Naguilian Watershed Reservation,Watershed Reservation,Not Assigned,Designated,1936,87.0,86.7,76.6,0.2,0.32,0.279
+200,62059,Hinulugan Taktak National Park,Protected Landscape,V,Designated,2018,4.0,3.6,3.3,0.2,6.71,6.178
+201,64413,Taklong Island National Marine Reserve,Resource Reserve,Ib,Designated,1990,1144.0,1144.2,133.1,0.1,0.05,0.006
+202,7223,Sacred Mountain National Park,National Park,Not Assigned,Designated,1965,90.0,89.6,84.4,0.1,0.11,0.103
+203,101399,Apo Island Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,691.0,691.9,49.7,0.0,0.0,0.0
+204,13185,Island of Alibijaban Wildeness Area,Wilderness Area,Not Assigned,Designated,1981,1072.0,1073.1,202.1,0.0,0.0,0.0
+205,13187,Island of Dampalit Wilderness Area,Wilderness Area,Not Assigned,Designated,1981,17.0,16.5,9.7,0.0,0.0,0.0
+206,18474,Lake Malimanga Bird and Fish Sanctuary,Bird and Fish Sanctuary,Not Assigned,Designated,1980,23.0,22.8,13.4,0.0,0.0,0.0
+207,198473,"Island of Banaon, Basaan, Saac, Tambu, Bambanon Wilderness Area",Protected Landscape and Seascape,V,Designated,2018,6446.0,6447.9,157.7,0.0,0.0,0.0
+208,306389,Libunao Spring Watershed Forest Reserve,Protected Landscape,V,Designated,2018,47.0,47.1,45.2,0.0,0.0,0.0
+209,306390,Bigbiga Spring Watershed Forest Reserve,Protected Landscape,V,Designated,2018,143.0,142.7,131.6,0.0,0.0,0.0
+210,306391,Sta Lucia Protected Landscape,Protected Landscape,V,Designated,2018,196.0,196.1,123.6,0.0,0.0,0.0
+211,306395,Santa Watershed Forest Reserve,Watershed Forest Reserve,Not Assigned,Designated,1935,27.0,27.2,27.0,0.0,0.0,0.0
+212,306415,Maulawin Spring Watershed Forest Reserve,Protected Landscape,V,Designated,2018,183.0,183.2,177.9,0.0,0.0,0.0
+213,306440,"Islands of Guinauyan, Naro, Chico, and Pobre Wilderness Area",Wildlife Sanctuary,IV,Designated,2000,8.0,7.8,2.0,0.0,0.0,0.0
+214,306443,"Islands of Guinauyan, Naro, Chico, and Pobre Wilderness Area",Wildlife Sanctuary,IV,Designated,2000,110.0,110.0,43.4,0.0,0.0,0.0
+215,306473,"Mangrove areas from Agio Point up to the Municipality of Cambuyao; Mangrove aras from Bo. Biabas to Bo. Ondol including Bo. Condary, and Juagdan except the Island of Tintiman Mangrove Wilderness area",Protected Landscape,Not Assigned,Designated,2018,1166.0,1165.9,472.4,0.0,0.0,0.001
+216,306495,Cuatro Islas Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,11407.0,11406.9,96.4,0.0,0.0,0.0
+217,306508,Sta. Cruz Island National Park,Protected Landscape and Seascape,V,Designated,2018,1827.0,1828.0,166.5,0.0,0.0,0.0
+218,306511,Aliguay Island Protected Landscape & Seascape,Protected Landscape and Seascape,V,Designated,2018,1188.0,1189.1,27.3,0.0,0.0,0.0
+219,306513,Dumanquillas Bay Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,26112.0,26132.9,272.4,0.0,0.01,0.0
+220,306517,Murcielagos Island Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,100.0,100.5,5.3,0.0,0.0,0.0
+221,306530,Malagos Watershed Reservation,Watershed Reservation,Not Assigned,Designated,1933,235.0,235.1,233.0,0.0,0.0,0.0
+222,5208,Agoo-Damortis National Park,Protected Landscape and Seascape,V,Designated,2018,10775.0,10761.6,20.5,0.0,0.0,0.0
+223,5218,Apo Reef Natural Park,Natural Park,II,Designated,2018,15772.0,15782.1,11.8,0.0,0.0,0.0
+224,555549230,Tubbataha Reefs National Marine Park,Natural Park,II,Designated,2010,97030.4,96825.3,0.0,0.0,,0.0
+225,555583096,"Island of Budlanan, Bugatusan, Panga, Silo, Cabgan, Canconstino, tabaon, Maagpit, and Islet of Basihan, Bugatusan, Hayaan, Inanoran , and Poom Point East of Basihan Islet (Getafe Group of Island) (Clarin Group of Island) Wilderness Area",Wilderness Area,Not Assigned,Designated,1981,38.0,38.3,2.3,0.0,0.0,0.0
+226,555583101,Quezon Memorial National Park,Parks and Wildlife Center,Not Assigned,Designated,2018,24.0,23.8,10.3,0.0,0.0,0.0
+227,555583102,Olango Island Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2018,1382.0,1382.9,7.8,0.0,0.0,0.0
+228,555715014,Rasa Island Wildlife Sanctuary,Wildlife Sanctuary,IV,Designated,2006,1995.0,1984.0,877.2,0.0,0.0,0.0
+229,555715017,Luneta National Park,National Park,Not Assigned,Designated,1955,16.0,16.0,0.7,0.0,0.0,0.0
+230,555715018,"Islands of Guinauyan, Naro, Chico, and Pobre Wilderness Area",Wilderness Area,Not Assigned,Designated,1981,151.0,151.0,61.2,0.0,0.0,0.0
+231,555715019,Manila Bay Beach Resort National Park,National Park,Not Assigned,Designated,1954,465.0,464.5,0.4,0.0,0.0,0.0
+232,555715027,Mangrove from Pigbucan Point to Paron Point Magrove Swamp Forest Reserve,Mangrove Swamp Forest Reserve,Not Assigned,Designated,1981,195.0,194.6,168.8,0.0,0.0,0.0
+233,555715034,Pagsanjan Gorge National Park,National Park,Not Assigned,Designated,1939,167.0,166.4,165.9,0.0,0.0,0.0
+234,555715044,Tubbataha Reefs,Natural Park,Not Assigned,Designated,2010,354570.2,353816.6,0.0,0.0,,0.0
+235,555715050,Las Piñas-Parañaque Critical Habitat and Ecotourism Area (LPPCHEA)/Las Piñas-Parañaque,Wetland Park,IV,Designated,2018,182.0,181.5,39.2,0.0,0.0,0.0
+236,555715052,Philippine Rise Marine Resource Reserve,Marine Resource Reserve,Ib,Designated,2018,352390.0,358007.9,0.0,0.0,,0.0
+237,555715056,Bangan Hill National Park,National Park,II,Designated,1995,13.0,13.1,7.4,0.0,0.0,0.0
+238,61483,Island of Rasa Wilderness Area,Wilderness Area,Not Assigned,Designated,1981,293.0,292.7,30.8,0.0,0.0,0.0
+239,7205,Paoay Lake National Park,National Park,Not Assigned,Designated,1978,379.0,378.4,12.5,0.0,0.0,0.0
+240,7206,Cassamata Hill National Park,National Park,Not Assigned,Designated,1974,55.0,55.1,24.1,0.0,0.0,0.0
+241,7210,Manleluag Spring Protected Landscape,Protected Landscape,V,Designated,2018,1939.0,1936.2,1427.2,0.0,0.0,0.0
+242,7213,Olongapo Naval Base Perimeter National Park,National Park,Not Assigned,Designated,1968,5.0,4.6,0.0,0.0,0.0,0.0
+243,7220,Guadalupe Mabugnao Mainit Hot Spring National Park,National Park,Not Assigned,Designated,1972,62.0,62.3,44.5,0.0,0.0,0.0
+244,7221,Initao-Libertad Protected Landscape and Seascape,Protected Landscape and Seascape,V,Designated,2018,921.0,921.2,54.2,0.0,0.0,0.0
+245,7225,Pantuwaraya Lake National Park,National Park,Not Assigned,Designated,1965,19.0,19.1,4.0,0.0,0.0,0.0
+246,7229,Lake Dapao National Park,National Park,Not Assigned,Designated,1965,998.0,998.5,31.7,0.0,0.0,0.0
+247,7230,Lake Butig National Park,National Park,Not Assigned,Designated,1965,35.0,35.3,10.2,0.0,0.0,0.0
+248,7236,Caramoan National Park,National Park,Not Assigned,Designated,1938,347.0,347.2,322.8,0.0,0.0,0.0
+249,7237,Libmanan Caves National Park,National Park,Not Assigned,Designated,1934,19.0,18.5,18.5,0.0,0.0,0.0
+250,7240,MacArthur Landing National Park (Imelda Park),National Park,Not Assigned,Designated,1977,7.0,6.8,3.9,0.0,0.0,0.0
+251,845,Hundred Island National Park,National Park,Not Assigned,Designated,1982,1762.0,1759.0,213.8,0.0,0.0,0.0
