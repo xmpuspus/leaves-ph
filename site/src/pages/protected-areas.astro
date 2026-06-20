@@ -1,0 +1,557 @@
+---
+import Base from "../layouts/Base.astro";
+import { PA_LOSS_START, PA_LOSS_END, PA_TREECOVER_MIN_PCT } from "../lib/series";
+
+const link =
+  "text-umber-700 underline decoration-umber-500/50 underline-offset-2";
+---
+<Base
+  title="Leaves.PH · forest loss inside protected areas"
+  pathname="/protected-areas"
+  description="Tree-cover loss inside every Philippine legally protected area since 2016, named and ranked, from the public Hansen and WDPA records. A national extension of the DENR accountability lens. Not a deforestation verdict."
+>
+  <div id="pa-root" data-lang="en">
+  <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
+
+    <!-- ── header + language toggle ─────────────────────────────────────── -->
+    <div class="flex items-start justify-between gap-4 mb-4">
+      <p class="kicker">METHOD &middot; ACCOUNTABILITY AT THE NATIONAL SCALE</p>
+      <div class="shrink-0 inline-flex border border-ink-900 font-mono text-[11px] uppercase tracking-[0.12em]" role="group" aria-label="Language">
+        <button id="lang-en" type="button" class="px-2.5 py-1 bg-forest-700 text-paper" aria-pressed="true">EN</button>
+        <button id="lang-tl" type="button" class="px-2.5 py-1 bg-paper text-ink-700" aria-pressed="false">TL</button>
+      </div>
+    </div>
+
+    <h1 data-en class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">What was cleared inside the protected areas.</h1>
+    <h1 data-tl class="font-display font-medium tracking-tight text-ink-900 mb-3" style="font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05;">Ano ang nawala sa loob ng mga protektadong lugar.</h1>
+
+    <p data-en class="text-sm text-ink-500 mb-6 max-w-narrow">
+      The <a href="/accountability" class={link}>accountability page</a> reads one Metro Manila barangay against the
+      tree-replacement rule. This reads the whole country: how much tree cover the public satellite record shows
+      cleared inside each legally protected area since {PA_LOSS_START}, named and ranked. A method for asking where to
+      look, not a verdict on any site.
+    </p>
+    <p data-tl class="text-sm text-ink-500 mb-6 max-w-narrow">
+      Binabasa ng <a href="/accountability" class={link}>accountability page</a> ang isang barangay sa Metro Manila
+      laban sa patakaran sa pagpapalit ng puno. Ito naman ay para sa buong bansa: gaano karaming puno, ayon sa
+      pampublikong rekord ng satellite, ang nawala sa loob ng bawat protektadong lugar mula {PA_LOSS_START}, nakapangalan
+      at nakahanay. Isang paraan ng pagtatanong kung saan titingin, hindi isang hatol sa anumang lugar.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── headline stat (filled from the summary JSON) ─────────────────── -->
+    <div class="border border-ink-900 bg-paper-tint/40 p-5 sm:p-6">
+      <p class="kicker text-ink-500 mb-2" data-en>TREE-COVER LOSS INSIDE PROTECTED AREAS, {PA_LOSS_START}&ndash;{PA_LOSS_END}</p>
+      <p class="kicker text-ink-500 mb-2" data-tl>PAGKAWALA NG PUNO SA LOOB NG MGA PROTEKTADONG LUGAR, {PA_LOSS_START}&ndash;{PA_LOSS_END}</p>
+      <p class="stat-medium" id="hl-loss-ha">&mdash;</p>
+      <p class="text-sm text-ink-700 mt-2 leading-relaxed" id="hl-sentence-en" data-en>&nbsp;</p>
+      <p class="text-sm text-ink-700 mt-2 leading-relaxed" id="hl-sentence-tl" data-tl>&nbsp;</p>
+    </div>
+
+    <p data-en class="mt-5 mb-3 text-sm">
+      <strong>Read this carefully.</strong> Hansen tree-cover loss is stand replacement seen from orbit. It is not a
+      finding of illegal logging. It includes timber-plantation harvest, fire, and typhoon blowdown, and it cannot
+      tell you whether any clearing was permitted. A protected status on paper and a clearing on the ground are two
+      separate records; this page lines them up so they can be checked, nothing more.
+    </p>
+    <p data-tl class="mt-5 mb-3 text-sm">
+      <strong>Basahin nang maigi.</strong> Ang Hansen tree-cover loss ay pagkawala ng puno na nakikita mula sa
+      satellite. Hindi ito patunay ng iligal na pagtotroso. Kasama rito ang pag-aani ng plantasyon ng kahoy, sunog, at
+      pinsala ng bagyo, at hindi nito masasabi kung may permiso ang anumang pagputol. Magkaibang rekord ang
+      "protektado sa papel" at "nalinis sa lupa"; pinagtatabi lang ito ng pahinang ito para masuri, wala nang iba.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── locator map ──────────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Where the loss sits</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Saan nakatuon ang pagkawala</h2>
+    <p class="text-sm text-ink-500 mb-3" data-en>
+      Each shape is one protected area, shaded by the share of its year-2000 forest lost since {PA_LOSS_START}. Darker
+      means a larger share gone. Tap any area for its figures.
+    </p>
+    <p class="text-sm text-ink-500 mb-3" data-tl>
+      Bawat hugis ay isang protektadong lugar, kulay ayon sa bahagi ng kagubatan nito noong taong 2000 na nawala mula
+      {PA_LOSS_START}. Mas madilim, mas malaking bahagi ang nawala. Pindutin ang alinmang lugar para sa mga datos.
+    </p>
+
+    <div class="relative w-full border border-ink-900" style="height: clamp(380px, 60vh, 560px);">
+      <div id="pa-map" class="w-full h-full bg-paper-tint"></div>
+      <div id="pa-map-loading" class="absolute inset-0 z-10 flex items-center justify-center bg-paper-tint/85 pointer-events-none transition-opacity duration-300">
+        <span class="font-mono text-[12px] uppercase tracking-[0.15em] text-ink-700">Loading the map&hellip;</span>
+      </div>
+      <!-- legend -->
+      <div class="map-panel absolute bottom-2 left-2 z-20 !p-2.5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-500 mb-1" data-en>share of forest lost</p>
+        <p class="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-500 mb-1" data-tl>bahaging nawala</p>
+        <div class="flex items-center gap-1.5 font-mono text-[10px] text-ink-500">
+          <span>0%</span>
+          <span class="inline-block h-2.5 w-24 border border-ink-300" style="background:linear-gradient(to right,#ffffd4,#fee391,#fe9929,#d95f0e,#993404)"></span>
+          <span>20%+</span>
+        </div>
+      </div>
+    </div>
+    <p class="fig-caption" data-en>
+      Boundaries: WDPA (UNEP-WCMC and IUCN). Loss: Hansen Global Forest Change v1.13 at &ge;{PA_TREECOVER_MIN_PCT}% year-2000
+      canopy. Marine and very small areas register little, because Hansen sees land tree cover only.
+    </p>
+    <p class="fig-caption" data-tl>
+      Hangganan: WDPA (UNEP-WCMC at IUCN). Pagkawala: Hansen Global Forest Change v1.13 sa &ge;{PA_TREECOVER_MIN_PCT}% na
+      canopy noong taong 2000. Maliit ang nakikita sa mga marine at napakaliit na lugar, dahil lupa lang ang nakikita ng Hansen.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── ranked inventory ─────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>The inventory</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Ang talaan</h2>
+    <p class="text-sm text-ink-500 mb-4" data-en>
+      Every protected area with measured loss, ranked. Search by name, or sort by hectares or by the share of the
+      area's own year-2000 forest. Designation matters: a vast old "game refuge" proclamation and a small watershed
+      reserve are not the same kind of place.
+    </p>
+    <p class="text-sm text-ink-500 mb-4" data-tl>
+      Bawat protektadong lugar na may nasukat na pagkawala, nakahanay. Maghanap sa pangalan, o ihanay ayon sa ektarya o
+      sa bahagi ng sariling kagubatan nito noong 2000. Mahalaga ang uri: magkaiba ang isang malawak na lumang "game
+      refuge" at isang maliit na watershed reserve.
+
+    </p>
+
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      <input
+        id="pa-search"
+        type="search"
+        placeholder="search a protected area…"
+        autocomplete="off"
+        class="flex-1 min-w-[12rem] border border-ink-900 bg-paper px-3 py-2 font-mono text-sm text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-700/40"
+        aria-label="Search protected areas by name"
+      />
+      <div class="inline-flex border border-ink-900 font-mono text-[11px] uppercase tracking-[0.1em]">
+        <button id="sort-ha" type="button" class="px-3 py-2 bg-forest-700 text-paper" aria-pressed="true">
+          <span data-en>by hectares</span><span data-tl>ayon ektarya</span>
+        </button>
+        <button id="sort-pct" type="button" class="px-3 py-2 bg-paper text-ink-700" aria-pressed="false">
+          <span data-en>by % of forest</span><span data-tl>ayon %</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
+    <table class="w-full text-sm border border-ink-300/40">
+      <thead class="bg-paper-tint">
+        <tr class="text-left font-mono text-[11px] uppercase tracking-[0.1em] text-sepia-500">
+          <th class="px-2 py-2 border-b border-ink-300/30 w-8">#</th>
+          <th class="px-2 py-2 border-b border-ink-300/30"><span data-en>protected area</span><span data-tl>protektadong lugar</span></th>
+          <th class="px-2 py-2 border-b border-ink-300/30 text-right"><span data-en>loss (ha)</span><span data-tl>nawala (ha)</span></th>
+          <th class="px-2 py-2 border-b border-ink-300/30 text-right"><span data-en>% of its forest</span><span data-tl>% ng kagubatan</span></th>
+        </tr>
+      </thead>
+      <tbody id="pa-tbody" class="font-mono tabular-nums text-[13px]"></tbody>
+    </table>
+    </div>
+    <p class="font-mono text-[11px] text-ink-500 mt-2" id="pa-table-note">&nbsp;</p>
+
+    <hr class="rule" />
+
+    <!-- ── what it can / cannot say ─────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>What this can and cannot tell you</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Ano ang masasabi at hindi masasabi nito</h2>
+    <div class="grid sm:grid-cols-2 gap-5">
+      <div>
+        <p class="kicker text-ink-500 mb-2" data-en>It can</p>
+        <p class="kicker text-ink-500 mb-2" data-tl>Kaya nito</p>
+        <ul data-en class="list-disc pl-5 space-y-1 text-sm">
+          <li>Show how much tree cover the Hansen record flags as lost inside each protected area, year {PA_LOSS_START} on.</li>
+          <li>Rank areas two honest ways: by raw hectares, and by the share of each area's own year-2000 forest.</li>
+          <li>Name the designation, so a million-hectare proclamation is not confused with a small reserve.</li>
+          <li>Point you to the management agency to ask what happened and whether it was allowed.</li>
+        </ul>
+        <ul data-tl class="list-disc pl-5 space-y-1 text-sm">
+          <li>Ipakita kung gaano karaming puno ang itinala ng Hansen na nawala sa bawat protektadong lugar, mula {PA_LOSS_START}.</li>
+          <li>Maghanay sa dalawang tapat na paraan: ayon sa ektarya, at ayon sa bahagi ng sariling kagubatan noong 2000.</li>
+          <li>Pangalanan ang uri, para hindi malito ang isang napakalaking proklamasyon sa isang maliit na reserba.</li>
+          <li>Ituro ang ahensyang namamahala para itanong kung ano ang nangyari at kung pinahintulutan ito.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="kicker text-ink-500 mb-2" data-en>It cannot</p>
+        <p class="kicker text-ink-500 mb-2" data-tl>Hindi kaya nito</p>
+        <ul data-en class="list-disc pl-5 space-y-1 text-sm">
+          <li>Say a clearing was illegal. Permitted harvest, fire, and storm damage all read as loss.</li>
+          <li>Separate plantation rotation inside a multiple-use area from the loss of natural forest.</li>
+          <li>Give an exact year per pixel. Hansen's loss year is an approximate detection year.</li>
+          <li>Resolve a single tree or a small lot. Below about 30 m, change is not independently visible.</li>
+        </ul>
+        <ul data-tl class="list-disc pl-5 space-y-1 text-sm">
+          <li>Sabihing iligal ang isang pagputol. Ang may-permiso na pag-aani, sunog, at pinsala ng bagyo ay nababasa ring pagkawala.</li>
+          <li>Ihiwalay ang umiikot na plantasyon sa loob ng multiple-use area mula sa pagkawala ng likas na kagubatan.</li>
+          <li>Magbigay ng eksaktong taon kada pixel. Tinatayang taon lamang ang itinatala ng Hansen.</li>
+          <li>Suriin ang isang puno o maliit na lote. Sa ilalim ng mga 30 m, hindi nakikita nang malinaw ang pagbabago.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="rule" />
+
+    <!-- ── how to check ─────────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>How to check a protected area yourself</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Paano suriin ang isang protektadong lugar</h2>
+    <ul data-en class="list-disc pl-6 space-y-2 text-sm">
+      <li><strong>DENR-BMB.</strong> Protected areas are managed under the Expanded NIPAS Act (RA 11038, 2018) by the Biodiversity Management Bureau and each area's Protected Area Management Board. Ask them for the management plan and any clearing or tenure records for the area.</li>
+      <li><strong>Freedom of Information.</strong> File for permits, ECCs, or tenurial instruments covering the site through <a href="https://www.foi.gov.ph/" class={link}>foi.gov.ph</a>, addressed to DENR. Name the protected area and the years precisely.</li>
+      <li><strong>The raw record.</strong> Confirm any number here against <a href="https://www.globalforestwatch.org/" class={link}>Global Forest Watch</a>, which serves the same Hansen layer interactively, and the boundary against <a href="https://www.protectedplanet.net/" class={link}>Protected Planet</a> (WDPA).</li>
+    </ul>
+    <ul data-tl class="list-disc pl-6 space-y-2 text-sm">
+      <li><strong>DENR-BMB.</strong> Pinamamahalaan ang mga protektadong lugar sa ilalim ng Expanded NIPAS Act (RA 11038, 2018) ng Biodiversity Management Bureau at ng Protected Area Management Board ng bawat lugar. Hingin sa kanila ang management plan at anumang rekord ng pagputol o tenure.</li>
+      <li><strong>Freedom of Information.</strong> Mag-file para sa mga permiso, ECC, o tenurial instrument sa pamamagitan ng <a href="https://www.foi.gov.ph/" class={link}>foi.gov.ph</a>, nakapatungkol sa DENR. Pangalanan nang tiyak ang lugar at mga taon.</li>
+      <li><strong>Ang hilaw na rekord.</strong> Tiyakin ang anumang numero dito sa <a href="https://www.globalforestwatch.org/" class={link}>Global Forest Watch</a>, na naghahain ng parehong Hansen layer, at ang hangganan sa <a href="https://www.protectedplanet.net/" class={link}>Protected Planet</a> (WDPA).</li>
+    </ul>
+
+    <hr class="rule" />
+
+    <!-- ── related work (honest novelty) ───────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Related work</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Kaugnay na gawa</h2>
+    <p data-en class="mb-3 text-sm">
+      The detection is not new. <a href="https://www.globalforestwatch.org/" class={link}>Global Forest Watch</a>
+      already serves Hansen tree-cover loss and lets anyone query it inside a protected area one at a time, and the
+      <a href="https://www.protectedplanet.net/" class={link}>WDPA</a> publishes the boundaries. What this adds is
+      narrow and worth stating plainly: one clean, named, ranked, downloadable table of every Philippine protected
+      area by the tree cover lost inside it, in English and Filipino, tied to the same accountability framing as the
+      rest of this site. The data is theirs; the packaging is the contribution.
+    </p>
+    <p data-tl class="mb-3 text-sm">
+      Hindi bago ang pagtukoy. Naghahain na ang <a href="https://www.globalforestwatch.org/" class={link}>Global Forest
+      Watch</a> ng Hansen tree-cover loss at maaaring tingnan ito kada protektadong lugar nang isa-isa, at naglalathala
+      ang <a href="https://www.protectedplanet.net/" class={link}>WDPA</a> ng mga hangganan. Ang idinagdag dito ay tiyak:
+      isang malinis, nakapangalan, nakahanay, at nada-download na talaan ng bawat protektadong lugar sa Pilipinas ayon
+      sa nawalang puno, sa Ingles at Filipino, kaugnay ng parehong accountability na balangkas ng buong site na ito.
+      Sa kanila ang datos; ang pagbabalot ang ambag.
+    </p>
+
+    <hr class="rule" />
+
+    <!-- ── data + citation ─────────────────────────────────────────────── -->
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Data and method</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Datos at paraan</h2>
+    <p data-en class="text-sm mb-3">
+      Per-area figures: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/protected_areas/pa_forest_loss.csv" class={link}>pa_forest_loss.csv</a>
+      (one row per protected area). Map polygons: <a href="/data/pa_forest_loss.geojson" class={link}>pa_forest_loss.geojson</a>.
+      Both are regenerable with <code>make compute-pa</code> from the committed pipeline. International overlay
+      designations (ASEAN Heritage Park, World Heritage Site, Ramsar) are excluded so a site under more than one
+      designation is counted once. The per-area figures are exact; the national total is their sum and may slightly
+      overcount where two national designations overlap. CC-BY-4.0.
+    </p>
+    <p data-tl class="text-sm mb-3">
+      Mga datos kada lugar: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/protected_areas/pa_forest_loss.csv" class={link}>pa_forest_loss.csv</a>
+      (isang hilera kada protektadong lugar). Mga polygon ng mapa: <a href="/data/pa_forest_loss.geojson" class={link}>pa_forest_loss.geojson</a>.
+      Pareho itong mabubuo muli gamit ang <code>make compute-pa</code>. Hindi kasama ang mga international na designasyon
+      (ASEAN Heritage Park, World Heritage Site, Ramsar) para minsan lang mabilang ang isang lugar na may higit sa isang
+      designasyon. Eksakto ang datos kada lugar; ang pambansang kabuuan ay kanilang kabuuan at maaaring bahagyang
+      sumobra kung saan nag-o-overlap ang dalawang pambansang designasyon. CC-BY-4.0.
+    </p>
+
+    <p class="font-mono text-[11px] text-ink-500 mt-6" id="pa-disclaimer">&nbsp;</p>
+    <p class="text-sm text-ink-500 mt-4" data-en>
+      The per-barangay version of this method, for one Metro Manila site against the DENR replacement rule, is on the
+      <a href="/accountability" class={link}>accountability</a> page. The canopy model behind the rest of the site is on
+      <a href="/methodology" class={link}>methodology</a>.
+    </p>
+    <p class="text-sm text-ink-500 mt-4" data-tl>
+      Ang per-barangay na bersyon ng paraang ito, para sa isang lugar sa Metro Manila laban sa patakaran ng DENR, ay
+      nasa <a href="/accountability" class={link}>accountability</a> page. Ang canopy model ng buong site ay nasa
+      <a href="/methodology" class={link}>methodology</a>.
+    </p>
+  </article>
+  </div>
+</Base>
+
+<style>
+  #pa-root[data-lang="en"] [data-tl] { display: none !important; }
+  #pa-root[data-lang="tl"] [data-en] { display: none !important; }
+</style>
+
+<script>
+  import maplibregl from "maplibre-gl";
+  import "maplibre-gl/dist/maplibre-gl.css";
+  import { interpolateYlOrBr } from "d3-scale-chromatic";
+
+  type Props = Record<string, any>;
+  type Summary = {
+    window_start: number;
+    window_end: number;
+    n_protected_areas: number;
+    n_with_loss: number;
+    total_loss_ha: number;
+    forest2000_ha: number;
+    pct_of_pa_forest_lost: number | null;
+    worst_by_ha: { name: string; loss_ha: number }[];
+    disclaimer: string;
+  };
+
+  const root = document.getElementById("pa-root") as HTMLElement | null;
+  const PCT_FULL = 20; // map colour saturates at 20% of a park's forest lost
+
+  function curLang(): "en" | "tl" {
+    return root?.dataset.lang === "tl" ? "tl" : "en";
+  }
+  function fmtInt(n: number | null | undefined): string {
+    return n == null ? "n/a" : Math.round(n).toLocaleString();
+  }
+  function fmtPct(n: number | null | undefined): string {
+    return n == null ? "n/a" : `${n.toFixed(1)}%`;
+  }
+  function colorForPct(pct: number | null | undefined): string {
+    if (pct == null || pct <= 0) return "#f1ead8";
+    const t = Math.max(0, Math.min(1, pct / PCT_FULL));
+    return interpolateYlOrBr(0.12 + t * 0.82);
+  }
+
+  // ── language toggle ──────────────────────────────────────────────────
+  const btnEn = document.getElementById("lang-en");
+  const btnTl = document.getElementById("lang-tl");
+  function setLang(lang: "en" | "tl") {
+    if (!root) return;
+    root.dataset.lang = lang;
+    const on = "bg-forest-700 text-paper";
+    const off = "bg-paper text-ink-700";
+    if (btnEn && btnTl) {
+      btnEn.className = `px-2.5 py-1 ${lang === "en" ? on : off}`;
+      btnTl.className = `px-2.5 py-1 ${lang === "tl" ? on : off}`;
+      btnEn.setAttribute("aria-pressed", String(lang === "en"));
+      btnTl.setAttribute("aria-pressed", String(lang === "tl"));
+    }
+    try {
+      localStorage.setItem("pa_lang", lang);
+    } catch {}
+    renderDynamic();
+  }
+  btnEn?.addEventListener("click", () => setLang("en"));
+  btnTl?.addEventListener("click", () => setLang("tl"));
+
+  // ── headline (from summary JSON) ─────────────────────────────────────
+  let summary: Summary | null = null;
+  function renderHeadline() {
+    if (!summary) return;
+    const ha = document.getElementById("hl-loss-ha");
+    if (ha) ha.textContent = `${fmtInt(summary.total_loss_ha)} ha`;
+    const lead =
+      summary.worst_by_ha && summary.worst_by_ha[0] ? summary.worst_by_ha[0] : null;
+    const leadPart = lead
+      ? { en: `${lead.name} alone accounts for ${fmtInt(lead.loss_ha)} ha.`, tl: `${lead.name} lamang ang umaabot sa ${fmtInt(lead.loss_ha)} ha.` }
+      : { en: "", tl: "" };
+    const en = document.getElementById("hl-sentence-en");
+    const tl = document.getElementById("hl-sentence-tl");
+    if (en)
+      en.textContent =
+        `Across ${summary.n_protected_areas} legally protected areas, the Hansen record flags this much tree cover ` +
+        `cleared between ${summary.window_start} and ${summary.window_end}, about ${fmtPct(summary.pct_of_pa_forest_lost)} of ` +
+        `their year-2000 forest. ${summary.n_with_loss} areas show measurable loss. ${leadPart.en}`;
+    if (tl)
+      tl.textContent =
+        `Sa ${summary.n_protected_areas} protektadong lugar, itinatala ng Hansen ang ganito karaming punong nalinis ` +
+        `sa pagitan ng ${summary.window_start} at ${summary.window_end}, mga ${fmtPct(summary.pct_of_pa_forest_lost)} ng kanilang ` +
+        `kagubatan noong taong 2000. ${summary.n_with_loss} na lugar ang may nasukat na pagkawala. ${leadPart.tl}`;
+    const disc = document.getElementById("pa-disclaimer");
+    if (disc) disc.textContent = summary.disclaimer;
+  }
+
+  // ── inventory table ──────────────────────────────────────────────────
+  let rows: Props[] = [];
+  let sortMode: "ha" | "pct" = "ha";
+  const tbody = document.getElementById("pa-tbody");
+  const searchEl = document.getElementById("pa-search") as HTMLInputElement | null;
+  const noteEl = document.getElementById("pa-table-note");
+  const sortHaBtn = document.getElementById("sort-ha");
+  const sortPctBtn = document.getElementById("sort-pct");
+
+  function renderTable() {
+    if (!tbody) return;
+    const q = (searchEl?.value || "").trim().toLowerCase();
+    let list = rows.filter((r) => Number(r.loss_ha) > 1);
+    if (q) list = list.filter((r) => String(r.name || "").toLowerCase().includes(q));
+    list = list.slice().sort((a, b) =>
+      sortMode === "ha"
+        ? Number(b.loss_ha) - Number(a.loss_ha)
+        : (Number(b.pct_of_forest2000) || 0) - (Number(a.pct_of_forest2000) || 0),
+    );
+    const maxHa = list.length ? Number(list[0].loss_ha) : 1;
+    const maxPct = list.reduce((m, r) => Math.max(m, Number(r.pct_of_forest2000) || 0), 1);
+    tbody.innerHTML = list
+      .map((r, i) => {
+        const ha = Number(r.loss_ha);
+        const pct = r.pct_of_forest2000 == null ? null : Number(r.pct_of_forest2000);
+        const barW = sortMode === "ha" ? (ha / maxHa) * 100 : ((pct || 0) / maxPct) * 100;
+        const desig = String(r.desig || "");
+        return `<tr class="border-t border-ink-300/40 hover:bg-paper-tint/60 cursor-pointer" data-site="${r.site_id}">
+          <td class="px-2 py-1.5 text-ink-500">${i + 1}</td>
+          <td class="px-2 py-1.5">
+            <span class="text-ink-900">${String(r.name || "")}</span>
+            <span class="block text-[10px] text-sepia-500 uppercase tracking-[0.06em]">${desig}</span>
+          </td>
+          <td class="px-2 py-1.5 text-right">
+            <span class="relative inline-block">
+              <span class="text-ink-900">${fmtInt(ha)}</span>
+            </span>
+            <span class="block h-[2px] mt-0.5 ml-auto bg-umber-500/70" style="width:${Math.max(2, barW)}%"></span>
+          </td>
+          <td class="px-2 py-1.5 text-right text-ink-900">${pct == null ? "n/a" : pct.toFixed(1) + "%"}</td>
+        </tr>`;
+      })
+      .join("");
+    tbody.querySelectorAll("tr[data-site]").forEach((tr) => {
+      tr.addEventListener("click", () => {
+        const sid = (tr as HTMLElement).dataset.site;
+        const f = features.find((g) => String(g.properties.site_id) === sid);
+        if (f && map) flyToFeature(f);
+      });
+    });
+    if (noteEl) {
+      const shown = list.length;
+      noteEl.textContent =
+        curLang() === "tl"
+          ? `Ipinapakita ang ${shown} na lugar na may pagkawala. Pindutin ang hilera para tingnan sa mapa.`
+          : `Showing ${shown} areas with measured loss. Tap a row to find it on the map.`;
+    }
+  }
+  searchEl?.addEventListener("input", renderTable);
+  function setSort(mode: "ha" | "pct") {
+    sortMode = mode;
+    const on = "bg-forest-700 text-paper";
+    const off = "bg-paper text-ink-700";
+    if (sortHaBtn) sortHaBtn.className = `px-3 py-2 ${mode === "ha" ? on : off}`;
+    if (sortPctBtn) sortPctBtn.className = `px-3 py-2 ${mode === "pct" ? on : off}`;
+    sortHaBtn?.setAttribute("aria-pressed", String(mode === "ha"));
+    sortPctBtn?.setAttribute("aria-pressed", String(mode === "pct"));
+    renderTable();
+  }
+  sortHaBtn?.addEventListener("click", () => setSort("ha"));
+  sortPctBtn?.addEventListener("click", () => setSort("pct"));
+
+  function renderDynamic() {
+    renderHeadline();
+    renderTable();
+  }
+
+  // ── map ──────────────────────────────────────────────────────────────
+  let map: any = null;
+  let features: any[] = [];
+  let popup: any = null;
+
+  function popupHTML(p: Props): string {
+    const tl = curLang() === "tl";
+    const lossLbl = tl ? "puno na nawala" : "tree cover lost";
+    const ofForest = tl ? "ng kagubatan nito noong 2000" : "of its year-2000 forest";
+    const since = tl ? `mula ${summary?.window_start ?? ""}` : `since ${summary?.window_start ?? ""}`;
+    const pct = p.pct_of_forest2000 == null ? null : Number(p.pct_of_forest2000);
+    return `<div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.55;color:#1a1a1a;padding:9px 11px;max-width:240px;">
+      <div style="font-family:'PT Serif',serif;font-size:14px;line-height:1.2;">${String(p.name || "")}</div>
+      <div style="color:#5a4f3a;text-transform:uppercase;letter-spacing:0.05em;font-size:10px;margin-top:2px;">${String(p.desig || "")}</div>
+      <div style="margin-top:7px;">${fmtInt(p.loss_ha)} ha ${lossLbl} ${since}</div>
+      <div style="color:#8b3f1d;">${pct == null ? "" : pct.toFixed(1) + "% " + ofForest}</div>
+    </div>`;
+  }
+  function flyToFeature(f: any) {
+    if (!map) return;
+    const lon = f.properties.lon;
+    const lat = f.properties.lat;
+    if (typeof lon === "number" && typeof lat === "number") {
+      map.flyTo({ center: [lon, lat], zoom: 8.5, speed: 1.2 });
+      if (popup) popup.remove();
+      popup = new maplibregl.Popup({ maxWidth: "260px", closeButton: true })
+        .setLngLat([lon, lat])
+        .setHTML(popupHTML(f.properties))
+        .addTo(map);
+    }
+  }
+
+  async function init() {
+    const [sumRes, gjRes] = await Promise.all([
+      fetch("/data/pa_forest_loss_summary.json"),
+      fetch("/data/pa_forest_loss.geojson"),
+    ]);
+    summary = (await sumRes.json()) as Summary;
+    const gj = await gjRes.json();
+    features = gj.features || [];
+    rows = features.map((f: any) => f.properties);
+
+    renderDynamic();
+
+    for (const f of features) {
+      f.properties._fill = colorForPct(f.properties.pct_of_forest2000);
+    }
+    map = new maplibregl.Map({
+      container: "pa-map",
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: [
+              "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            ],
+            tileSize: 256,
+            attribution: "&copy; OpenStreetMap contributors",
+          },
+        },
+        layers: [
+          { id: "osm", type: "raster", source: "osm", paint: { "raster-saturation": -0.5, "raster-opacity": 0.55 } },
+        ],
+      },
+      center: [122.5, 12.2],
+      zoom: 4.6,
+      maxZoom: 12,
+      minZoom: 4,
+      attributionControl: { compact: true },
+    });
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    map.fitBounds([[116.5, 4.5], [127.0, 20.0]], { padding: 24, animate: false });
+
+    map.on("load", () => {
+      map.addSource("pa", { type: "geojson", data: gj });
+      map.addLayer({
+        id: "pa-fill",
+        type: "fill",
+        source: "pa",
+        paint: { "fill-color": ["get", "_fill"], "fill-opacity": 0.75 },
+      });
+      map.addLayer({
+        id: "pa-outline",
+        type: "line",
+        source: "pa",
+        paint: { "line-color": "#1a1a1a", "line-width": 0.5, "line-opacity": 0.6 },
+      });
+      map.on("click", "pa-fill", (e: any) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        if (popup) popup.remove();
+        popup = new maplibregl.Popup({ maxWidth: "260px", closeButton: true })
+          .setLngLat(e.lngLat)
+          .setHTML(popupHTML(f.properties))
+          .addTo(map);
+      });
+      map.on("mouseenter", "pa-fill", () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", "pa-fill", () => (map.getCanvas().style.cursor = ""));
+      const load = document.getElementById("pa-map-loading");
+      if (load) {
+        load.style.opacity = "0";
+        window.setTimeout(() => (load.style.display = "none"), 320);
+      }
+    });
+  }
+
+  // Restore saved language before first paint of dynamic content.
+  try {
+    const saved = localStorage.getItem("pa_lang");
+    if (saved === "tl") setLang("tl");
+  } catch {}
+
+  init().catch((err) => {
+    console.error("protected-areas init failed", err);
+    const load = document.getElementById("pa-map-loading");
+    if (load) load.innerHTML = '<span class="font-mono text-[12px] text-umber-700">Data failed to load. Retry shortly.</span>';
+  });
+</script>

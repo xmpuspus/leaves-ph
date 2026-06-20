@@ -36,6 +36,16 @@ import Base from "../layouts/Base.astro";
           <td class="px-3 py-2">892 OSM admin-level=10 barangay polygons; barangay_name, lgu_name, total_ha; canopy_pct_model_&lt;year&gt; and canopy_ha_model_&lt;year&gt; for year in 2019..2026; hansen_loss_ha_cumulative (stand-replacement loss ha, ~30 m, cumulative 2001-2025). Powers the <a href="/accountability" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">accountability</a> per-site lens.</td>
         </tr>
         <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/protected_areas/pa_forest_loss.csv" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">pa_forest_loss.csv</a></td>
+          <td class="px-3 py-2">CSV</td>
+          <td class="px-3 py-2">One row per Philippine protected area (national designations). Columns: rank, site_id, name, desig, iucn_cat, status, status_yr, rep_area_ha, area_ha, forest2000_ha, loss_ha, pct_of_forest2000, pct_of_pa. WDPA boundaries x Hansen tree-cover loss 2016-2025. Powers the <a href="/protected-areas" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">protected areas</a> map. Hansen loss is stand replacement, not a deforestation verdict.</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="/data/pa_forest_loss.geojson" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">pa_forest_loss.geojson</a></td>
+          <td class="px-3 py-2">GeoJSON</td>
+          <td class="px-3 py-2">Per-PA simplified polygons; props = loss_ha, forest2000_ha, pct_of_forest2000, pct_of_pa, desig, lon/lat. The protected-areas map layer.</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
           <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">BENCHMARKS.md</a></td>
           <td class="px-3 py-2">Markdown</td>
           <td class="px-3 py-2">Methodology cross-reference: adjacent published NCR canopy estimates (DENR, GFW, EJN, ScienceKonek, Meta) with their respective definitions; per-LGU MAE against the Meta calibration layer</td>

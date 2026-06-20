@@ -15,8 +15,8 @@ identifiers:
     value: "10.5281/zenodo.20470307"
     description: "Version DOI for v0.7.0"
 license: MIT
-version: "0.7.0"
-date-released: "2026-05-31"
+version: "0.8.0"
+date-released: "2026-06-21"
 keywords:
   - tree cover
   - urban canopy
@@ -26,14 +26,19 @@ keywords:
   - remote sensing
   - metro manila
   - civic technology
+  - protected areas
+  - wdpa
+  - deforestation monitoring
 abstract: >
   Leaves.PH measures Metro Manila tree canopy from Sentinel-2 imagery with a
   human-calibrated classifier, cross-checked against canonical public datasets
   (Hansen Global Forest Change, ESA WorldCover, Dynamic World, Meta canopy
   height), and publishes per-LGU and per-barangay annual canopy snapshots for
   2019-2026 across the 17 NCR LGUs (16 cities plus the municipality of Pateros).
-  The build is bit-exact reproducible from cached Sentinel-2 composites via a
-  deterministic Docker recipe.
+  It also ranks tree-cover loss inside every Philippine legally protected area
+  since 2016 (WDPA boundaries against Hansen Global Forest Change), a national
+  extension of its DENR accountability lens. The build is bit-exact reproducible
+  from cached Sentinel-2 composites via a deterministic Docker recipe.
 preferred-citation:
   type: software
   title: "Leaves.PH: open tree-canopy measurement for Metro Manila"
@@ -41,6 +46,6 @@ preferred-citation:
     - given-names: Xavier
       family-names: Puspus
   year: 2026
-  version: "0.7.0"
+  version: "0.8.0"
   doi: "10.5281/zenodo.20470306"
   url: "https://github.com/xmpuspus/leaves-ph"

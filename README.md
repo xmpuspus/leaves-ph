@@ -49,10 +49,11 @@ Full series, per-LGU table, detection-model accuracy, and adjacent published est
 - Inspect any tree crown: click a crown polygon and the popup shows an Esri aerial of that exact location plus the polygon's metadata (status, area, p50/p95 height).
 - Re-run the pipeline on a different city. The Cebu City proof in `pipeline/fetch_cebu_proof.py` shows the same pipeline run end-to-end against a different bbox, with no NCR-specific retraining.
 - Check a site against the DENR tree-replacement rule at [leaves.ph/accountability](https://leaves.ph/accountability). Pick a barangay to read its canopy trajectory 2019-2026 next to the independent Hansen stand-replacement loss for that area (`hansen_loss_ha_cumulative`, ~30m, cumulative 2001-2025), with the documented route to request the permit and replacement record. It is a method for checking, not a compliance verdict (see *What it is not*).
+- Read forest loss inside the national protected areas at [leaves.ph/protected-areas](https://leaves.ph/protected-areas). Tree-cover loss inside every Philippine legally protected area since 2016 (WDPA boundaries x Hansen), named and ranked, in English and Filipino, with a map and a downloadable per-area table. The national extension of the accountability lens. Hansen loss is stand replacement (it includes plantation harvest, fire, and storm damage), not a deforestation verdict.
 
 ## What it is not
 
-- Not a competing global forest model. Uses Hansen GFC, ESA WorldCover, Dynamic World, and Meta Canopy Height verbatim and stacks them.
+- Not a competing global forest model. Uses Hansen GFC, ESA WorldCover, Dynamic World, Meta Canopy Height, and WDPA protected-area boundaries verbatim and stacks them.
 - Not a per-tree census. A 30m Sentinel-2 pixel can contain a few small trees or none; the per-crown polygons in `tree_crowns_ncr_tagged.pmtiles` are derived from a 5m-tall canopy mask, not from individual tree detections.
 - Not a permit-compliance tool. The pipeline computes canopy fractions from public-record satellite imagery. Specific allegations of unpermitted cutting require independent investigation.
 - Not a measurement of every tree. Sub-pixel canopy (street trees in a building shadow, hedges, recently-planted seedlings) sits below the model's resolution floor.
@@ -108,6 +109,8 @@ Published under `site/public/data/` and `data/per_lgu/` (CC-BY-4.0):
 | `site/public/data/per_lgu_canopy.geojson` | one feature per LGU; props = canopy_<year>_pct + canopy_<year>_ha | derived from the CSV |
 | `data/per_barangay/per_barangay_canopy_2019_2026.csv` | (barangay, lgu_name, canopy_pct_<year> × 8, canopy_ha × 8) | 892 OSM admin-level=10 polygons inside NCR |
 | `site/public/data/tree_crowns_ncr_tagged.pmtiles` | 242,810 crown polygons (connected components of Meta's 1m canopy-height mask); status ∈ {confirmed, new, candidate} | the map's vector layer |
+| `data/protected_areas/pa_forest_loss.csv` | one row per PH protected area (national designations); columns: rank, site_id, name, desig, iucn_cat, status, status_yr, rep_area_ha, area_ha, forest2000_ha, loss_ha, pct_of_forest2000, pct_of_pa | WDPA x Hansen tree-cover loss 2016-2025; powers [/protected-areas](https://leaves.ph/protected-areas); hash-pinned |
+| `site/public/data/pa_forest_loss.geojson` | per-PA simplified polygons; props = loss_ha, forest2000_ha, pct_of_forest2000, pct_of_pa, desig, lon/lat | the protected-areas map layer |
 | `site/public/validation/*.png` | per-LGU visual validation panels | 17 panels comparing baseline vs detection model |
 
 The research-track detection model's per-year density rasters are regenerable with [`detection/scan/ncr_scan.py`](detection/scan/ncr_scan.py); they are not committed (large, and not the source of any published figure).
@@ -126,7 +129,7 @@ Code: MIT (see [`LICENSE`](LICENSE)). Data products: CC-BY-4.0.
 Attribution when redistributing the data: *Leaves.PH (2026), Sentinel-2 2019-2026 (2026 provisional), https://github.com/xmpuspus/leaves-ph*.
 
 Required upstream attribution line:
-*Imagery contains modified Copernicus Sentinel data 2019-2026 processed by ESA. Tree-cover-loss layer: Hansen et al. 2013 via Global Forest Watch. Land cover: ESA WorldCover v200 (CC-BY-4.0) and Google Dynamic World v1 (CC-BY-4.0). Canopy height: Meta AI / Land & Carbon Lab Global Canopy Height v2 (CC-BY-4.0). Administrative boundaries: OpenStreetMap contributors and Philippine Statistics Authority.*
+*Imagery contains modified Copernicus Sentinel data 2019-2026 processed by ESA. Tree-cover-loss layer: Hansen et al. 2013 via Global Forest Watch. Land cover: ESA WorldCover v200 (CC-BY-4.0) and Google Dynamic World v1 (CC-BY-4.0). Canopy height: Meta AI / Land & Carbon Lab Global Canopy Height v2 (CC-BY-4.0). Protected-area boundaries: World Database on Protected Areas (WDPA), UNEP-WCMC and IUCN, via Protected Planet (protectedplanet.net). Administrative boundaries: OpenStreetMap contributors and Philippine Statistics Authority.*
 
 ## Citation
 

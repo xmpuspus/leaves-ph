@@ -55,3 +55,13 @@ export const GOLD_LABEL_N = 656;
 export const MODEL_R2 = 0.86;
 export const MODEL_MAE = 0.053;
 export const MODEL_REFERENCE = "Meta AI Global Canopy Height v2 (1 m, canopy > 5 m)";
+
+// Protected-area forest-loss surface (/protected-areas). The national extension
+// of the per-barangay /accountability lens: tree-cover loss inside every PH
+// legally protected area (WDPA) against the Hansen Global Forest Change record.
+// Window is fixed by the Hansen 2025_v1_13 asset (lossyear 16..25 = 2016..2025),
+// independent of the NCR canopy series years. All figures shown on the page are
+// read live from site/public/data/pa_forest_loss_summary.json, never hardcoded.
+export const PA_LOSS_START = 2016;
+export const PA_LOSS_END = 2025;
+export const PA_TREECOVER_MIN_PCT = 30;

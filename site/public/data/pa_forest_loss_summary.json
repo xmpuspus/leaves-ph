@@ -1,0 +1,210 @@
+{
+  "hansen_asset": "UMD/hansen/global_forest_change_2025_v1_13",
+  "wdpa_asset": "WCMC/WDPA/current/polygons",
+  "window_start": 2016,
+  "window_end": 2025,
+  "treecover_min_pct": 30,
+  "n_wdpa_records": 266,
+  "n_protected_areas": 251,
+  "n_intl_overlays_excluded": 15,
+  "n_with_loss": 171,
+  "total_loss_ha": 185955,
+  "total_loss_method": "national-designations-sum",
+  "total_loss_dedup_sum_ha": 185955,
+  "forest2000_ha": 3778390,
+  "pct_of_pa_forest_lost": 4.92,
+  "worst_by_ha": [
+    {
+      "name": "Palawan Game Refuge and Bird Sanctuary (Proc 219)",
+      "desig": "Game Refuge and Bird Sanctuary",
+      "loss_ha": 101355,
+      "pct_of_forest2000": 11.72,
+      "forest2000_ha": 864498
+    },
+    {
+      "name": "Mt. Mantalingahan Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 13111,
+      "pct_of_forest2000": 11.45,
+      "forest2000_ha": 114540
+    },
+    {
+      "name": "Sohoton Natural Bridge National Park, Jicontol Watershed Forest Reserve, Taft Forest Philippine Eagle Wildlife Sanctuary & Calbiga Caves Protected Landscape",
+      "desig": "Natural Park",
+      "loss_ha": 8135,
+      "pct_of_forest2000": 2.46,
+      "forest2000_ha": 330868
+    },
+    {
+      "name": "Quirino Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 6093,
+      "pct_of_forest2000": 3.78,
+      "forest2000_ha": 161394
+    },
+    {
+      "name": "Malampaya Sound Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 5121,
+      "pct_of_forest2000": 6.89,
+      "forest2000_ha": 74336
+    },
+    {
+      "name": "Entire Province of Palawan (Proc 2152) Mangrove Swamp Forest Reserve",
+      "desig": "Mangrove Swamp Forest Reserve",
+      "loss_ha": 4308,
+      "pct_of_forest2000": 8.84,
+      "forest2000_ha": 48749
+    },
+    {
+      "name": "Calavite & F.B. Harrison Game Refuge and Bird Sanctuary",
+      "desig": "Game Refuge and Bird Sanctuary",
+      "loss_ha": 3790,
+      "pct_of_forest2000": 6.34,
+      "forest2000_ha": 59797
+    },
+    {
+      "name": "Northern Sierra Madre Natural Park",
+      "desig": "Natural Park",
+      "loss_ha": 3672,
+      "pct_of_forest2000": 1.32,
+      "forest2000_ha": 278280
+    },
+    {
+      "name": "Lake Lanao Watershed Reservation",
+      "desig": "Watershed Reservation",
+      "loss_ha": 3149,
+      "pct_of_forest2000": 2.82,
+      "forest2000_ha": 111623
+    },
+    {
+      "name": "Unnamed National Park, Wildlife Sanctuary and Game Preserve (PP 1636)",
+      "desig": "Wildlife Sanctuary",
+      "loss_ha": 2789,
+      "pct_of_forest2000": 2.68,
+      "forest2000_ha": 104122
+    },
+    {
+      "name": "Island of Siargao, Bucas Grande, Middle Bucas and East Bucas in Dinagat MSFR & Island of Siargao, Poneas, Dahican, Tona, Laonan Abanay and Bancuyo Wilderness Area",
+      "desig": "Protected Landscape and Seascape",
+      "loss_ha": 2725,
+      "pct_of_forest2000": 5.43,
+      "forest2000_ha": 50198
+    },
+    {
+      "name": "Sebu Watershed Forest Reserve",
+      "desig": "Watershed Forest Reserve",
+      "loss_ha": 2442,
+      "pct_of_forest2000": 4.26,
+      "forest2000_ha": 57274
+    },
+    {
+      "name": "Mts. Iglit-Baco Natural Park",
+      "desig": "Natural Park",
+      "loss_ha": 2293,
+      "pct_of_forest2000": 3.5,
+      "forest2000_ha": 65586
+    },
+    {
+      "name": "El Nido Managed Resource Protected Area",
+      "desig": "Managed Resource Protected Area",
+      "loss_ha": 2219,
+      "pct_of_forest2000": 6.31,
+      "forest2000_ha": 35184
+    },
+    {
+      "name": "St. Paul Subterranean National Park",
+      "desig": "National Park",
+      "loss_ha": 1753,
+      "pct_of_forest2000": 8.46,
+      "forest2000_ha": 20720
+    }
+  ],
+  "worst_by_pct": [
+    {
+      "name": "South Upi Watershed Forest Reserve",
+      "desig": "Watershed Forest Reserve",
+      "loss_ha": 313,
+      "pct_of_forest2000": 22.87,
+      "forest2000_ha": 1368
+    },
+    {
+      "name": "Pangasananan",
+      "desig": "Pangasananan",
+      "loss_ha": 1160,
+      "pct_of_forest2000": 16.99,
+      "forest2000_ha": 6828
+    },
+    {
+      "name": "Tinuy-an Falls Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 680,
+      "pct_of_forest2000": 15.93,
+      "forest2000_ha": 4270
+    },
+    {
+      "name": "Palawan Game Refuge and Bird Sanctuary (Proc 219)",
+      "desig": "Game Refuge and Bird Sanctuary",
+      "loss_ha": 101355,
+      "pct_of_forest2000": 11.72,
+      "forest2000_ha": 864498
+    },
+    {
+      "name": "Mt. Mantalingahan Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 13111,
+      "pct_of_forest2000": 11.45,
+      "forest2000_ha": 114540
+    },
+    {
+      "name": "Entire Province of Palawan (Proc 2152) Mangrove Swamp Forest Reserve",
+      "desig": "Mangrove Swamp Forest Reserve",
+      "loss_ha": 4308,
+      "pct_of_forest2000": 8.84,
+      "forest2000_ha": 48749
+    },
+    {
+      "name": "Mt. Kanlaon National Park",
+      "desig": "Natural Park",
+      "loss_ha": 1268,
+      "pct_of_forest2000": 8.48,
+      "forest2000_ha": 14951
+    },
+    {
+      "name": "St. Paul Subterranean National Park",
+      "desig": "National Park",
+      "loss_ha": 1753,
+      "pct_of_forest2000": 8.46,
+      "forest2000_ha": 20720
+    },
+    {
+      "name": "Andanan Watershed Forest Reserve",
+      "desig": "Watershed Forest Reserve",
+      "loss_ha": 1152,
+      "pct_of_forest2000": 7.19,
+      "forest2000_ha": 16020
+    },
+    {
+      "name": "Calauit Island Game Preserve and Wildlife Sanctuary",
+      "desig": "Wildlife Sanctuary",
+      "loss_ha": 205,
+      "pct_of_forest2000": 7.12,
+      "forest2000_ha": 2876
+    },
+    {
+      "name": "Mt. Calavite Wildlife Sanctuary",
+      "desig": "Wildlife Sanctuary",
+      "loss_ha": 877,
+      "pct_of_forest2000": 6.91,
+      "forest2000_ha": 12688
+    },
+    {
+      "name": "Malampaya Sound Protected Landscape",
+      "desig": "Protected Landscape",
+      "loss_ha": 5121,
+      "pct_of_forest2000": 6.89,
+      "forest2000_ha": 74336
+    }
+  ],
+  "disclaimer": "Statistical indicators derived from public-record satellite data. Hansen tree-cover loss is stand replacement (which includes plantation harvest, fire, and storm damage), not a finding of illegal or unpermitted clearing. Patterns may have legitimate explanations and warrant independent review."
+}
