@@ -12,6 +12,16 @@ An interactive map of Metro Manila's tree canopy, measured from satellite imager
 
 Explore the live map at **[leaves.ph](https://leaves.ph)**: drag the year, find your barangay, click any tree.
 
+## Forest loss inside the protected areas
+
+[![A walkthrough of leaves.ph/protected-areas: the headline that about 186,000 hectares of tree cover were cleared inside 251 Philippine protected areas since 2016, the national map shaded by each area's share of forest lost, the searchable ranked inventory, and the same page switched to Filipino](docs/demo/protected-areas.gif)](https://leaves.ph/protected-areas)
+
+How much forest has been cleared *inside* the country's legally protected areas? The [protected-areas page](https://leaves.ph/protected-areas) takes the official protected-area boundaries (WDPA) and the public satellite record (Hansen Global Forest Change) and ranks every Philippine protected area by the tree cover lost inside it since 2016.
+
+About **186,000 hectares** of tree cover were cleared inside the **251** nationally protected areas between 2016 and 2025, roughly **4.9%** of the forest they held in 2000. One area, the Palawan Game Refuge and Bird Sanctuary, accounts for more than half. The page names and ranks every area two ways, by hectares and by the share of each area's own year-2000 forest, in English and Filipino, with a national map and a downloadable table.
+
+This is satellite tree-cover loss. It also picks up plantation harvest, fire, and storm damage, so it is not a finding of illegal logging. It is a place to start asking where to look, not a verdict on any site, and it is the national extension of the per-barangay [accountability](https://leaves.ph/accountability) method. Per-area figures: [`pa_forest_loss.csv`](data/protected_areas/pa_forest_loss.csv); rebuild with `make compute-pa`.
+
 ## What it measures
 
 For each year, what fraction of each LGU's area reads as tree canopy. The published figures come from a **human-calibrated canopy model** trained on manual high-resolution labels (it still carries a known grass/scrub margin, so read it as a tree-canopy estimate, not a pixel-exact census).
