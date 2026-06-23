@@ -171,3 +171,4 @@ docs/demo/*.webm
 
 # Protected-area compute intermediate cache (rebuildable)
 data/protected_areas/.pa_compute_cache.json
+data/flood/.flood_compute_cache.json
