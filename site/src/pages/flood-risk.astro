@@ -7,7 +7,7 @@ const link =
 <Base
   title="Leaves.PH · does less canopy mean more flooding?"
   pathname="/flood-risk"
-  description="Testing the link between tree canopy and flooding across Metro Manila barangays, using observed July 2025 radar inundation and a confounder-controlled model. A co-occurrence screen, not a causal claim."
+  description="Does cutting trees flood a barangay? We tested it across Metro Manila using observed July 2025 radar flooding. Low ground and concrete drive flooding, not a lack of trees."
 >
   <div id="fl-root" data-lang="en">
   <article class="max-w-prose mx-auto px-5 sm:px-8 pt-12 pb-16 text-ink-700 leading-[1.7]">
@@ -64,17 +64,17 @@ const link =
     <hr class="rule" />
 
     <!-- ── what actually predicts flooding (diverging bars from JSON) ────── -->
-    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>What actually predicts where it flooded</h2>
-    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Ano ang humuhula kung saan bumaha</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>So what does flood a barangay?</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Ano nga ba ang nagpapabaha sa barangay?</h2>
     <p class="text-sm text-ink-500 mb-4" data-en>
-      Each bar is one factor's standardized pull on observed inundation across the {""}
-      <span id="nb-barangays">&mdash;</span> barangays, holding the others fixed. Bars left of the line push flooding
-      down, bars right push it up. Canopy is the short one.
+      Each bar shows how much one thing pushed flooding up or down across the {""}
+      <span id="nb-barangays">&mdash;</span> barangays, after taking the others into account. Bars to the left made
+      flooding less likely, bars to the right more likely. Tree cover is the short one.
     </p>
     <p class="text-sm text-ink-500 mb-4" data-tl>
-      Bawat bar ay lakas ng isang salik sa nakitang baha sa {""}
-      <span id="nb-barangays-tl">&mdash;</span> barangay, habang nakapirmi ang iba. Ang nasa kaliwa ng linya ay
-      nagpapababa ng baha, ang nasa kanan ay nagtataas. Maikli ang sa canopy.
+      Ipinapakita ng bawat bar kung gaano nito itinaas o ibinaba ang baha sa {""}
+      <span id="nb-barangays-tl">&mdash;</span> barangay, matapos isaalang-alang ang iba. Ang nasa kaliwa ay
+      nagpapababa ng baha, ang nasa kanan ay nagtataas. Maikli ang sa puno.
     </p>
 
     <div class="border border-ink-300/50 bg-paper p-4 sm:p-5">
@@ -87,27 +87,27 @@ const link =
     <p class="fig-caption" id="beta-caption-en" data-en>&nbsp;</p>
     <p class="fig-caption" id="beta-caption-tl" data-tl>&nbsp;</p>
 
-    <!-- ── the shrinkage line (key stats strip) ─────────────────────────── -->
+    <!-- ── by the numbers (key stats strip) ─────────────────────────────── -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-ink-300/40 border border-ink-300/40 mt-6 font-mono">
       <div class="bg-paper p-3">
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>canopy, raw</p>
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>canopy, hilaw</p>
-        <p class="text-lg text-ink-900 tabular-nums" id="kpi-beta-raw">&mdash;</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>barangays checked</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>barangay na sinuri</p>
+        <p class="text-lg text-ink-900 tabular-nums" id="kpi-checked">&mdash;</p>
       </div>
       <div class="bg-paper p-3">
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>canopy, controlled</p>
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>canopy, kontrolado</p>
-        <p class="text-lg text-ink-900 tabular-nums" id="kpi-beta-ctrl">&mdash;</p>
-      </div>
-      <div class="bg-paper p-3">
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>model fit (R&sup2;)</p>
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>akma (R&sup2;)</p>
-        <p class="text-lg text-ink-900 tabular-nums" id="kpi-r2">&mdash;</p>
-      </div>
-      <div class="bg-paper p-3">
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>barangays flooded</p>
-        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>barangay binaha</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>flooded in July 2025</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>binaha noong Hulyo 2025</p>
         <p class="text-lg text-ink-900 tabular-nums" id="kpi-flooded">&mdash;</p>
+      </div>
+      <div class="bg-paper p-3">
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>those, with few trees</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>doon, kulang sa puno</p>
+        <p class="text-lg text-ink-900 tabular-nums" id="kpi-priority">&mdash;</p>
+      </div>
+      <div class="bg-paper p-3">
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-en>tree cover's effect</p>
+        <p class="text-[10px] uppercase tracking-[0.1em] text-ink-500" data-tl>epekto ng puno</p>
+        <p class="text-lg text-ink-900" id="kpi-effect">&mdash;</p>
       </div>
     </div>
     <p class="fig-caption" id="stats-caption-en" data-en>&nbsp;</p>
@@ -119,14 +119,13 @@ const link =
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Where the radar saw water</h2>
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Saan nakakita ng tubig ang radar</h2>
     <p class="text-sm text-ink-500 mb-3" data-en>
-      Each shape is one barangay, shaded by the share of its land the radar flagged as new standing water on
-      2025-07-23. Outlined barangays are the priority set: flood-exposed and in the lowest canopy third. Tap any
-      barangay for its figures.
+      Each shape is one barangay, shaded by how much of it the radar saw underwater on 2025-07-23. The outlined
+      barangays are the ones to watch: they flooded and have few trees. Tap any barangay for its numbers.
     </p>
     <p class="text-sm text-ink-500 mb-3" data-tl>
-      Bawat hugis ay isang barangay, kulay ayon sa bahagi ng lupa nitong natukoy ng radar bilang bagong nakatayong
-      tubig noong 2025-07-23. Ang may guhit-hangganan ay ang priority: binaha at nasa pinakamababang ikatlo ng canopy.
-      Pindutin ang alinmang barangay para sa datos.
+      Bawat hugis ay isang barangay, kulay ayon sa kung gaano kalaki nito ang nakitang lubog ng radar noong
+      2025-07-23. Ang may guhit-hangganan ang dapat bantayan: binaha at kulang sa puno. Pindutin ang alinmang
+      barangay para sa mga numero.
     </p>
 
     <div class="relative w-full border border-ink-900" style="height: clamp(380px, 60vh, 560px);">
@@ -161,17 +160,17 @@ const link =
     <hr class="rule" />
 
     <!-- ── priority list ────────────────────────────────────────────────── -->
-    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>The priority screen</h2>
-    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Ang priority na talaan</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Where to act first</h2>
+    <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Saan unang kumilos</h2>
     <p class="text-sm text-ink-500 mb-4" data-en>
-      This is the honest, useful product: barangays that are both flood-exposed and tree-poor. Trees are not the flood
-      lever here, but these are the places where drainage upgrades and urban forestry both make sense, and where a
-      cutting permit deserves a closer look. A co-occurrence screen for prioritization, not a causal verdict.
+      The useful list: barangays that both flooded and have few trees. Planting trees will not stop the flood, but these
+      are the places where fixing drainage and planting trees both make sense, and where a tree-cutting permit deserves a
+      closer look. It is a list of where two problems overlap, not proof that trees stop floods.
     </p>
     <p class="text-sm text-ink-500 mb-4" data-tl>
-      Ito ang tapat at kapaki-pakinabang na produkto: mga barangay na binaha at kulang sa puno. Hindi puno ang lunas ng
-      baha dito, ngunit dito may saysay ang pagpapaayos ng drainage at pagtatanim ng puno, at dito dapat suriing mabuti
-      ang permiso sa pagputol. Talaan ng pagsasabay para sa pagbibigay-priyoridad, hindi hatol ng sanhi.
+      Ang kapaki-pakinabang na listahan: mga barangay na binaha at kulang sa puno. Hindi mapipigil ng pagtatanim ang
+      baha, ngunit dito may saysay ang sabayang pag-aayos ng drainage at pagtatanim, at dito dapat suriing mabuti ang
+      permiso sa pagputol ng puno. Listahan ito ng pagsasanib ng dalawang problema, hindi patunay na pinipigil ng puno ang baha.
     </p>
 
     <div class="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
@@ -225,9 +224,9 @@ const link =
         <p class="kicker text-ink-500 mb-2" data-tl>Kaya nito</p>
         <ul data-en class="list-disc pl-5 space-y-1 text-sm">
           <li>Show where radar saw standing water in one severe Metro Manila flood, by barangay.</li>
-          <li>Test the canopy and flooding link properly, holding low ground, built-up share, and distance to water fixed.</li>
-          <li>Flag barangays that are both flood-exposed and tree-poor, for combined drainage and urban-forestry action.</li>
-          <li>Show that a raw canopy correlation runs backwards here, and why.</li>
+          <li>Test the trees-and-flooding link properly, after accounting for low ground, concrete, and distance to water.</li>
+          <li>Point to the barangays that both flooded and have few trees, for combined drainage and tree-planting work.</li>
+          <li>Show that the simple "fewer trees, more floods" link actually runs backwards here, and why.</li>
         </ul>
         <ul data-tl class="list-disc pl-5 space-y-1 text-sm">
           <li>Ipakita kung saan nakakita ng tubig ang radar sa isang malubhang baha sa Metro Manila, kada barangay.</li>
@@ -240,7 +239,7 @@ const link =
         <p class="kicker text-ink-500 mb-2" data-en>It cannot</p>
         <p class="kicker text-ink-500 mb-2" data-tl>Hindi kaya nito</p>
         <ul data-en class="list-disc pl-5 space-y-1 text-sm">
-          <li>Say trees cause or prevent a barangay flood. This is an observed correlation, not an experiment.</li>
+          <li>Say trees cause or prevent a barangay flood. This is a pattern we measured, not a controlled test.</li>
           <li>Catch every flood. Radar under-sees water inside dense built-up cores, so figures are a lower bound.</li>
           <li>Stand on one storm. It reads the July 2025 event, the most severe recent flood with clean radar.</li>
           <li>Resolve a single street. Below about 30 m, inundation is not independently visible.</li>
@@ -260,21 +259,24 @@ const link =
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-en>Data and method</h2>
     <h2 class="font-display text-2xl text-ink-900 mt-8 mb-3" data-tl>Datos at paraan</h2>
     <p data-en class="text-sm mb-3">
-      Observed inundation is Sentinel-1 radar change detection for 2025-07-23 against a dry May to June reference, with
-      permanent water and steep ground removed. Confounders are height above nearest drainage and elevation (MERIT
-      Hydro), built-up fraction (Dynamic World), and distance to water (JRC Global Surface Water). The model is a linear
-      fit on standardized predictors with conservative error estimates, plus a logistic check and a test for spatial
-      clustering in the residuals.
+      Flooding is measured from Sentinel-1 radar: we compare 2025-07-23 against a dry May to June baseline and flag the
+      ground that turned to standing water, leaving out rivers, the bay, and steep slopes. We then compare flooding
+      against tree cover and the main flood causes (how low the ground sits and its drainage, how built-up it is, and
+      how close it is to water) and measure how much each one matters. We ran the check two ways and confirmed nearby
+      barangays did not skew the result. Low ground comes from MERIT Hydro, built-up share from Dynamic World, water
+      from JRC Global Surface Water.
       Per-barangay figures: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/flood/flood_canopy_barangay.csv" class={link}>flood_canopy_barangay.csv</a>.
       Map polygons: <a href="/data/flood_canopy_barangay.geojson" class={link}>flood_canopy_barangay.geojson</a>. Both
       regenerable with <code>make compute-flood</code>. CC-BY-4.0.
     </p>
     <p data-tl class="text-sm mb-3">
-      Ang nakitang baha ay Sentinel-1 radar change detection para sa 2025-07-23 laban sa tuyong sanggunian noong Mayo
-      hanggang Hunyo, walang permanenteng tubig at matarik na lupa. Ang mga confounder ay taas mula sa pinakamalapit na
-      daluyan at elevation (MERIT Hydro), dami ng gusali (Dynamic World), at layo sa tubig (JRC Global Surface Water).
-      Ang modelo ay matibay na linear fit sa standardized na salik, may logistic na pagsusuri at spatial na pagsusuri ng
-      residuals. Datos kada barangay: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/flood/flood_canopy_barangay.csv" class={link}>flood_canopy_barangay.csv</a>.
+      Sinusukat ang baha mula sa Sentinel-1 radar: inihahambing ang 2025-07-23 sa tuyong baseline noong Mayo hanggang
+      Hunyo at tinutukoy ang lupang naging nakatayong tubig, hindi kasama ang ilog, look, at matarik na lupa.
+      Inihahambing namin ang baha sa puno at sa pangunahing sanhi ng baha (gaano kababa ang lupa at drainage, gaano
+      kasiksik, at gaano kalapit sa tubig) at sinusukat kung gaano kahalaga ang bawat isa. Sinuri namin ito sa dalawang
+      paraan at tiniyak na hindi ito nililihis ng magkakalapit na barangay. Ang mababang lupa ay mula sa MERIT Hydro,
+      dami ng gusali sa Dynamic World, tubig sa JRC Global Surface Water.
+      Datos kada barangay: <a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/flood/flood_canopy_barangay.csv" class={link}>flood_canopy_barangay.csv</a>.
       Polygon ng mapa: <a href="/data/flood_canopy_barangay.geojson" class={link}>flood_canopy_barangay.geojson</a>.
       Mabubuo muli gamit ang <code>make compute-flood</code>. CC-BY-4.0.
     </p>
@@ -358,9 +360,6 @@ const link =
   function fmtSigned(n: number, d = 3): string {
     return (n >= 0 ? "+" : "") + n.toFixed(d);
   }
-  function stars(p: number): string {
-    return p < 0.001 ? "***" : p < 0.01 ? "**" : p < 0.05 ? "*" : "";
-  }
   function colorForFlood(pct: number | null | undefined): string {
     if (pct == null || pct <= 0.01) return FLOOD_RAMP[0];
     return rampColor(pct / FLOOD_FULL);
@@ -392,28 +391,26 @@ const link =
   function renderHeadline() {
     if (!summary) return;
     const tl = curLang() === "tl";
-    const r = summary.regression;
-    const bRaw = r.canopy_beta_bivariate;
-    const bCtrl = r.canopy_beta_controlled;
-    const pCtrl = r.ols_controlled.p["z_canopy_pct_2025"];
     const verdict = document.getElementById("hl-verdict");
-    if (verdict) verdict.textContent = tl ? "Hindi ang puno." : "Not the trees.";
+    if (verdict)
+      verdict.textContent = tl
+        ? "Mababang lupa at semento ang nagpapabaha, hindi ang kawalan ng puno."
+        : "Low ground and concrete flood a barangay, not a lack of trees.";
     const en = document.getElementById("hl-sentence-en");
     const tlEl = document.getElementById("hl-sentence-tl");
     if (en)
       en.textContent =
-        `Across ${summary.n_barangays} Metro Manila barangays, the raw link runs backwards: greener barangays show more ` +
-        `radar-detected flooding (r = ${fmtSigned(summary.raw_canopy_flood_pearson_r, 2)}), because radar under-sees water ` +
-        `inside dense built-up cores. Control for low ground, built-up fraction, and distance to water, and canopy's own ` +
-        `pull shrinks from ${fmtSigned(bRaw)} to ${fmtSigned(bCtrl)} and is no longer significant (p = ${pCtrl.toFixed(2)}). ` +
-        `At this scale, flooding tracks low ground and how built-up a barangay is, not its tree cover.`;
+        `We checked all ${summary.n_barangays} Metro Manila barangays against the big July 2025 flood. The ones with fewer ` +
+        `trees did not flood more. If anything the greener ones looked a little wetter, but only because radar sees water in ` +
+        `open spaces and misses it between buildings. Once you account for low ground and how paved-over a barangay is, tree ` +
+        `cover barely changes the flooding. What floods a barangay is low ground and concrete, not how many trees it has.`;
     if (tlEl)
       tlEl.textContent =
-        `Sa ${summary.n_barangays} barangay sa Metro Manila, baligtad ang hilaw na ugnayan: mas maraming natukoy na baha ng ` +
-        `radar sa mas luntiang barangay (r = ${fmtSigned(summary.raw_canopy_flood_pearson_r, 2)}), dahil hirap makita ng radar ` +
-        `ang tubig sa siksik na lugar. Kapag isinaalang-alang ang mababang lupa, dami ng gusali, at layo sa tubig, lumiliit ang ` +
-        `lakas ng canopy mula ${fmtSigned(bRaw)} hanggang ${fmtSigned(bCtrl)} at hindi na makabuluhan (p = ${pCtrl.toFixed(2)}). ` +
-        `Sa antas na ito, sumusunod ang baha sa mababang lupa at dami ng semento, hindi sa puno.`;
+        `Sinuri namin ang lahat ng ${summary.n_barangays} barangay sa Metro Manila laban sa malaking baha noong Hulyo 2025. ` +
+        `Ang mga may kakaunting puno ay hindi mas binaha. Kung tutuusin mukhang mas basa pa ang mas luntian, ngunit dahil lang ` +
+        `nakikita ng radar ang tubig sa bukas na lugar at hindi sa pagitan ng mga gusali. Kapag isinaalang-alang ang mababang ` +
+        `lupa at kung gaano kasemento ang barangay, halos hindi binabago ng puno ang baha. Mababang lupa at semento ang ` +
+        `nagpapabaha, hindi ang dami ng puno.`;
     const disc = document.getElementById("fl-disclaimer");
     if (disc) disc.textContent = summary.disclaimer;
   }
@@ -425,7 +422,6 @@ const link =
     const host = document.getElementById("beta-bars");
     if (!host) return;
     const coef = summary.regression.ols_controlled.coef;
-    const pv = summary.regression.ols_controlled.p;
     const keys = Object.keys(LABELS).filter((k) => k in coef);
     const maxAbs = Math.max(...keys.map((k) => Math.abs(coef[k])), 0.02);
     const ordered = keys.slice().sort((a, b) => Math.abs(coef[b]) - Math.abs(coef[a]));
@@ -439,7 +435,7 @@ const link =
         return `<div class="flex items-center gap-2">
           <span class="w-28 sm:w-40 shrink-0 text-[11px] sm:text-xs ${isCanopy ? "text-forest-700 font-semibold" : "text-ink-700"}">${LABELS[k][tl ? "tl" : "en"]}</span>
           <span class="relative flex-1 h-4 bg-paper-tint border-l border-ink-400">${bar}</span>
-          <span class="w-14 shrink-0 text-right font-mono text-[11px] tabular-nums ${isCanopy ? "text-forest-700" : "text-ink-700"}">${fmtSigned(v)}${stars(pv[k])}</span>
+          <span class="w-14 shrink-0 text-right font-mono text-[11px] tabular-nums ${isCanopy ? "text-forest-700" : "text-ink-700"}">${fmtSigned(v)}</span>
         </div>`;
       })
       .join("");
@@ -453,48 +449,40 @@ const link =
     const capTl = document.getElementById("beta-caption-tl");
     if (capEn)
       capEn.textContent =
-        "Standardized coefficients from the controlled linear model. Stars mark significance (* p<0.05, ** p<0.01, *** p<0.001). " +
-        "Built-up's strong negative pull is largely a radar detection effect (water is hidden between buildings), plus real drainage. " +
-        "Canopy's bar is short and not significant.";
+        "Longer bar, bigger effect on flooding. Built-up areas have the strongest link, but most of that is the radar " +
+        "missing water between buildings, not real safety. Tree cover's bar is so short it could be down to chance.";
     if (capTl)
       capTl.textContent =
-        "Standardized na coefficient mula sa matibay na linear model. Ang bituin ay tanda ng kahalagahan (* p<0.05, ** p<0.01, *** p<0.001). " +
-        "Ang malakas na negatibong lakas ng gusali ay higit na epekto ng radar (tinatago ang tubig sa pagitan ng gusali), kasama ang totoong drainage. " +
-        "Maikli at hindi makabuluhan ang bar ng canopy.";
+        "Mas mahabang bar, mas malaking epekto sa baha. Pinakamalakas ang ugnayan ng mga siksik na lugar, ngunit halos " +
+        "lahat niyan ay dahil hindi nakikita ng radar ang tubig sa pagitan ng gusali, hindi tunay na kaligtasan. " +
+        "Napakaikli ng bar ng puno kaya maaaring tsamba lang.";
   }
 
   // ── stats strip ──────────────────────────────────────────────────────
   function renderStats() {
     if (!summary) return;
-    const r = summary.regression;
+    const tl = curLang() === "tl";
     const set = (id: string, v: string) => {
       const el = document.getElementById(id);
       if (el) el.textContent = v;
     };
-    set("kpi-beta-raw", fmtSigned(r.canopy_beta_bivariate));
-    set("kpi-beta-ctrl", fmtSigned(r.canopy_beta_controlled));
-    set("kpi-r2", `${r.ols_bivariate.r2.toFixed(2)}→${r.ols_controlled.r2.toFixed(2)}`);
-    set("kpi-flooded", `${summary.n_observed_inundation}/${summary.n_barangays}`);
+    set("kpi-checked", String(summary.n_barangays));
+    set("kpi-flooded", String(summary.n_observed_inundation));
+    set("kpi-priority", String(summary.n_priority));
+    set("kpi-effect", tl ? "halos wala" : "almost none");
 
-    const moran = r.spatial_residual_moran;
     const capEn = document.getElementById("stats-caption-en");
     const capTl = document.getElementById("stats-caption-tl");
-    const moranEn = moran
-      ? ` Residuals show weak but real spatial clustering (Moran's I ${fmtSigned(moran.I, 2)}, p ${moran.p_sim.toFixed(3)}), so standard errors are read conservatively.`
-      : "";
-    const moranTl = moran
-      ? ` May mahina ngunit totoong spatial clustering ang residuals (Moran's I ${fmtSigned(moran.I, 2)}, p ${moran.p_sim.toFixed(3)}).`
-      : "";
     if (capEn)
       capEn.textContent =
-        `Canopy's standardized pull more than halves once the real flood drivers are added, and the model explains far ` +
-        `more of where it flooded. ${summary.n_priority} barangays are both flood-exposed and in the lowest canopy third.` +
-        moranEn;
+        `Of the barangays the radar saw flood, ${summary.n_priority} also have few trees. Those are the places to fix ` +
+        `drainage and plant trees together. Tree cover on its own does almost nothing to the flooding once you account ` +
+        `for low ground and concrete.`;
     if (capTl)
       capTl.textContent =
-        `Lumiliit nang higit sa kalahati ang lakas ng canopy kapag idinagdag ang tunay na sanhi ng baha, at mas naipapaliwanag ` +
-        `ng modelo kung saan bumaha. ${summary.n_priority} barangay ang binaha at nasa pinakamababang ikatlo ng canopy.` +
-        moranTl;
+        `Sa mga barangay na nakita ng radar na binaha, ${summary.n_priority} ang kulang din sa puno. Doon dapat sabay na ` +
+        `ayusin ang drainage at magtanim. Mag-isa, halos wala ang epekto ng puno sa baha kapag isinaalang-alang na ang ` +
+        `mababang lupa at semento.`;
   }
 
   // ── tables ───────────────────────────────────────────────────────────
