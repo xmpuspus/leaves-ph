@@ -22,6 +22,14 @@ About **186,000 hectares** of tree cover were cleared inside the **251** nationa
 
 This is satellite tree-cover loss. It also picks up plantation harvest, fire, and storm damage, so it is not a finding of illegal logging. It is a place to start asking where to look, not a verdict on any site, and it is the national extension of the per-barangay [accountability](https://leaves.ph/accountability) method. Per-area figures: [`pa_forest_loss.csv`](data/protected_areas/pa_forest_loss.csv); rebuild with `make compute-pa`.
 
+## Does losing trees flood a barangay?
+
+A fair and tempting story: less canopy, more runoff, more flooding. The [flood and canopy page](https://leaves.ph/flood-risk) tests it for Metro Manila, pairing the per-barangay canopy series with how much of each barangay the radar actually saw under water in the July 2025 monsoon flood (a Sentinel-1 acquisition lands on the flood peak of 23 July 2025, when Metro Manila was placed under a state of calamity).
+
+The honest answer runs against the grain. The raw link is **positive**: greener barangays show *more* radar-detected flooding (r about +0.15). That is a measurement effect, not hydrology. Radar under-sees water between buildings, so open, greener barangays are simply where standing water is visible from orbit. Control for what actually drives barangay flooding (low ground, built-up fraction, distance to water) and canopy's own effect more than halves and is no longer statistically significant. The barangay-scale signals that matter are built-up fraction and low-lying ground, not tree cover.
+
+So trees are not the barangay-scale flood lever, and the page says so plainly. What it gives an LGU or MDRRMO is a prioritization screen: of the 892 barangays, the radar flagged observed inundation in **59**, and **10** of those are also in the lowest canopy third. Those 10 are where drainage upgrades and urban forestry both make sense and a cutting permit deserves a closer look. A co-occurrence screen, not a causal claim, and the observed inundation is a radar lower bound (dense urban flooding is under-counted). Per-barangay figures: [`flood_canopy_barangay.csv`](data/flood/flood_canopy_barangay.csv); rebuild with `make compute-flood`.
+
 ## What it measures
 
 For each year, what fraction of each LGU's area reads as tree canopy. The published figures come from a **human-calibrated canopy model** trained on manual high-resolution labels (it still carries a known grass/scrub margin, so read it as a tree-canopy estimate, not a pixel-exact census).
@@ -127,6 +135,7 @@ The research-track detection model's per-year density rasters are regenerable wi
 
 ## Roadmap
 
+- Flood and canopy is measured directly from Sentinel-1 radar because the official modeled flood-hazard layers we wanted to pair it with are not openly downloadable: DOST GeoRiskPH / HazardHunter return `499 Token Required` on the hazard endpoints, and Project NOAH is a single-page app with no addressable data URLs. Pairing observed inundation with an official hazard layer (once a stable source is reachable) and pooling a second clean radar flood event are the next steps on [/flood-risk](https://leaves.ph/flood-risk).
 - Per-barangay extension shipped at 892 OSM polygons; mapping them onto the PSA barangay roster is the next data-engineering step.
 - Cebu City proof shipped (`pipeline/fetch_cebu_proof.py`, `detection/scan/scan_cebu.py`). Davao, Iloilo, Cagayan de Oro are the next regional rollouts.
 - S2 10m chunked exports for a precision lift on the detection model over the same 240m physical window.

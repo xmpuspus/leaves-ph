@@ -1,0 +1,325 @@
+{
+  "event": "July 2025 southwest-monsoon flood (Sentinel-1 acquisition 2025-07-23)",
+  "n_barangays": 892,
+  "n_observed_inundation": 59,
+  "flag_threshold_pct": 0.5,
+  "flood_pct_max": 4.88,
+  "flood_pct_mean": 0.123,
+  "n_priority": 10,
+  "raw_canopy_flood_pearson_r": 0.149,
+  "regression": {
+    "outcome_note": "flood_pct is right-censored at 0; OLS uses HC3-robust SEs; logit models observed-inundation yes/no.",
+    "predictors_standardized": true,
+    "ols_bivariate": {
+      "r2": 0.0221,
+      "n": 892,
+      "coef": {
+        "const": 0.123,
+        "z_canopy_pct_2025": 0.0672
+      },
+      "p": {
+        "const": 0.0,
+        "z_canopy_pct_2025": 0.0002
+      },
+      "ci": {
+        "const": [
+          0.0936,
+          0.1524
+        ],
+        "z_canopy_pct_2025": [
+          0.0321,
+          0.1024
+        ]
+      }
+    },
+    "ols_controlled": {
+      "r2": 0.1479,
+      "n": 892,
+      "coef": {
+        "const": 0.123,
+        "z_canopy_pct_2025": 0.0266,
+        "z_hand_m": -0.0157,
+        "z_elev_m": -0.0151,
+        "z_builtup_prob": -0.1565,
+        "z_dist_water_m": -0.0201
+      },
+      "p": {
+        "const": 0.0,
+        "z_canopy_pct_2025": 0.1365,
+        "z_hand_m": 0.0975,
+        "z_elev_m": 0.2104,
+        "z_builtup_prob": 0.0001,
+        "z_dist_water_m": 0.0949
+      },
+      "ci": {
+        "const": [
+          0.0953,
+          0.1507
+        ],
+        "z_canopy_pct_2025": [
+          -0.0084,
+          0.0616
+        ],
+        "z_hand_m": [
+          -0.0344,
+          0.0029
+        ],
+        "z_elev_m": [
+          -0.0388,
+          0.0086
+        ],
+        "z_builtup_prob": [
+          -0.2355,
+          -0.0774
+        ],
+        "z_dist_water_m": [
+          -0.0437,
+          0.0035
+        ]
+      }
+    },
+    "logit_bivariate": {
+      "pseudo_r2": 0.0272,
+      "n": 892,
+      "coef": {
+        "const": -2.7297,
+        "z_canopy_pct_2025": 0.4202
+      },
+      "odds_ratio": {
+        "const": 0.0652,
+        "z_canopy_pct_2025": 1.5223
+      },
+      "p": {
+        "const": 0.0,
+        "z_canopy_pct_2025": 0.0004
+      }
+    },
+    "logit_controlled": {
+      "pseudo_r2": 0.1803,
+      "n": 892,
+      "coef": {
+        "const": -3.1334,
+        "z_canopy_pct_2025": 0.3097,
+        "z_hand_m": 0.0283,
+        "z_elev_m": -0.3404,
+        "z_builtup_prob": -0.5187,
+        "z_dist_water_m": -0.6245
+      },
+      "odds_ratio": {
+        "const": 0.0436,
+        "z_canopy_pct_2025": 1.363,
+        "z_hand_m": 1.0288,
+        "z_elev_m": 0.7115,
+        "z_builtup_prob": 0.5953,
+        "z_dist_water_m": 0.5355
+      },
+      "p": {
+        "const": 0.0,
+        "z_canopy_pct_2025": 0.0549,
+        "z_hand_m": 0.8988,
+        "z_elev_m": 0.2848,
+        "z_builtup_prob": 0.0,
+        "z_dist_water_m": 0.0506
+      }
+    },
+    "canopy_beta_bivariate": 0.0672,
+    "canopy_beta_controlled": 0.0266,
+    "vif": {
+      "z_canopy_pct_2025": 1.4,
+      "z_hand_m": 1.62,
+      "z_elev_m": 2.65,
+      "z_builtup_prob": 1.21,
+      "z_dist_water_m": 1.69
+    },
+    "spatial_residual_moran": {
+      "I": 0.0605,
+      "p_sim": 0.002,
+      "k": 8
+    }
+  },
+  "top_flood_exposed": [
+    {
+      "barangay": "Barangay 657",
+      "lgu": "Manila",
+      "flood_pct": 4.88,
+      "canopy_pct": 13.7,
+      "hand_m": 4.0
+    },
+    {
+      "barangay": "Barangay 186",
+      "lgu": "Pasay",
+      "flood_pct": 4.28,
+      "canopy_pct": 5.0,
+      "hand_m": 0.7
+    },
+    {
+      "barangay": "Barangay 174",
+      "lgu": "Manila",
+      "flood_pct": 4.27,
+      "canopy_pct": 1.8,
+      "hand_m": 2.4
+    },
+    {
+      "barangay": "Jesus Dela Pe\u00f1a",
+      "lgu": "Marikina",
+      "flood_pct": 3.67,
+      "canopy_pct": 9.1,
+      "hand_m": 4.9
+    },
+    {
+      "barangay": "Santa Ana",
+      "lgu": "Taguig",
+      "flood_pct": 3.16,
+      "canopy_pct": 11.2,
+      "hand_m": 1.2
+    },
+    {
+      "barangay": "Barangay 139",
+      "lgu": "Manila",
+      "flood_pct": 2.9,
+      "canopy_pct": 1.2,
+      "hand_m": 1.9
+    },
+    {
+      "barangay": "Malanday",
+      "lgu": "Marikina",
+      "flood_pct": 2.82,
+      "canopy_pct": 8.0,
+      "hand_m": 6.7
+    },
+    {
+      "barangay": "Carmona",
+      "lgu": "Makati",
+      "flood_pct": 2.52,
+      "canopy_pct": 6.6,
+      "hand_m": 3.0
+    },
+    {
+      "barangay": "Barangay 43",
+      "lgu": "Caloocan",
+      "flood_pct": 2.44,
+      "canopy_pct": 3.0,
+      "hand_m": 1.3
+    },
+    {
+      "barangay": "Tumana",
+      "lgu": "Marikina",
+      "flood_pct": 2.43,
+      "canopy_pct": 9.3,
+      "hand_m": 7.3
+    },
+    {
+      "barangay": "Barangay 103",
+      "lgu": "Caloocan",
+      "flood_pct": 2.4,
+      "canopy_pct": 1.4,
+      "hand_m": 3.5
+    },
+    {
+      "barangay": "Napindan",
+      "lgu": "Taguig",
+      "flood_pct": 2.21,
+      "canopy_pct": 6.7,
+      "hand_m": 2.8
+    },
+    {
+      "barangay": "Malanday",
+      "lgu": "Valenzuela",
+      "flood_pct": 2.15,
+      "canopy_pct": 12.4,
+      "hand_m": 0.9
+    },
+    {
+      "barangay": "Kalawaan",
+      "lgu": "Pasig",
+      "flood_pct": 2.14,
+      "canopy_pct": 6.7,
+      "hand_m": 2.6
+    },
+    {
+      "barangay": "Barangay 49",
+      "lgu": "Pasay",
+      "flood_pct": 2.1,
+      "canopy_pct": 3.5,
+      "hand_m": 0.3
+    }
+  ],
+  "priority_barangays": [
+    {
+      "barangay": "Barangay 174",
+      "lgu": "Manila",
+      "flood_pct": 4.27,
+      "canopy_pct": 1.8,
+      "hand_m": 2.4
+    },
+    {
+      "barangay": "Barangay 139",
+      "lgu": "Manila",
+      "flood_pct": 2.9,
+      "canopy_pct": 1.2,
+      "hand_m": 1.9
+    },
+    {
+      "barangay": "Barangay 43",
+      "lgu": "Caloocan",
+      "flood_pct": 2.44,
+      "canopy_pct": 3.0,
+      "hand_m": 1.3
+    },
+    {
+      "barangay": "Barangay 103",
+      "lgu": "Caloocan",
+      "flood_pct": 2.4,
+      "canopy_pct": 1.4,
+      "hand_m": 3.5
+    },
+    {
+      "barangay": "Barangay 173",
+      "lgu": "Manila",
+      "flood_pct": 2.0,
+      "canopy_pct": 2.1,
+      "hand_m": 2.3
+    },
+    {
+      "barangay": "Barangay 44",
+      "lgu": "Pasay",
+      "flood_pct": 1.51,
+      "canopy_pct": 2.3,
+      "hand_m": 1.9
+    },
+    {
+      "barangay": "Barangay 128",
+      "lgu": "Manila",
+      "flood_pct": 1.48,
+      "canopy_pct": 2.7,
+      "hand_m": 0.8
+    },
+    {
+      "barangay": "Barangay 79",
+      "lgu": "Caloocan",
+      "flood_pct": 0.6,
+      "canopy_pct": 0.7,
+      "hand_m": 2.7
+    },
+    {
+      "barangay": "Ramon Magsaysay",
+      "lgu": "Quezon City",
+      "flood_pct": 0.52,
+      "canopy_pct": 2.9,
+      "hand_m": 7.8
+    },
+    {
+      "barangay": "Barangay 191",
+      "lgu": "Pasay",
+      "flood_pct": 0.51,
+      "canopy_pct": 1.9,
+      "hand_m": 0.8
+    }
+  ],
+  "sources": {
+    "flood": "Sentinel-1 SAR (COPERNICUS/S1_GRD) change detection",
+    "canopy": "Leaves.PH human-calibrated Sentinel-2 classifier",
+    "confounders": "MERIT Hydro (HAND, elevation), Dynamic World (built-up), JRC Global Surface Water (distance to water)"
+  },
+  "disclaimer": "Statistical indicators derived from public satellite data. Observed inundation is a Sentinel-1 radar lower bound that under-detects flooding in dense built-up areas; this is an observed co-occurrence screen, not a causal model. Patterns may have legitimate explanations and warrant independent review."
+}

@@ -17,6 +17,10 @@ PER_LGU_GEOJSON := $(SITE_DATA)/per_lgu_canopy.geojson
 PA_LOSS_CSV := $(DATA)/protected_areas/pa_forest_loss.csv
 PA_LOSS_GEOJSON := $(SITE_DATA)/pa_forest_loss.geojson
 
+# Observed flood inundation x canopy per NCR barangay (Sentinel-1 SAR, July 2025)
+FLOOD_CSV := $(DATA)/flood/flood_canopy_barangay.csv
+FLOOD_GEOJSON := $(SITE_DATA)/flood_canopy_barangay.geojson
+
 # Animation outputs
 HERO_GIF := docs/demo/hero.gif
 SALEX_GIF := docs/demo/salex-timeline.gif
@@ -24,8 +28,8 @@ LAMESA_GIF := docs/demo/la-mesa-watershed.gif
 QUIRINO_GIF := docs/demo/quirino-avenue.gif
 CHOROPLETH_GIF := docs/demo/lgu-choropleth.gif
 
-.PHONY: all fetch compute compute-pa calibrate animate verify hash hash-verify \
-        hash-pa hash-verify-pa status test clean help \
+.PHONY: all fetch compute compute-pa compute-flood calibrate animate verify hash hash-verify \
+        hash-pa hash-verify-pa hash-flood hash-verify-flood status test clean help \
         train scan release-build release-tag release-zenodo release-hf release release-smoke
 
 help:
@@ -34,6 +38,7 @@ help:
 	@echo "  make fetch        Pull S2 + Hansen + ESA + Dynamic World + Meta from GEE (network)"
 	@echo "  make compute      Per-LGU canopy curves 2016-2026 from cached composites"
 	@echo "  make compute-pa   Forest loss inside PH protected areas (WDPA x Hansen, EE)"
+	@echo "  make compute-flood Observed flood inundation x canopy per NCR barangay (Sentinel-1 SAR, EE)"
 	@echo "  make calibrate    Tune NDVI threshold against Meta canopy height v2"
 	@echo "  make animate      Generate the 5 hero GIFs (hero, SALEX, La Mesa, Quirino, choropleth)"
 	@echo "  make verify       Run scripts/verify_release.py (release gate)"
@@ -82,6 +87,21 @@ $(PA_LOSS_CSV) $(PA_LOSS_GEOJSON): $(PIPELINE)/compute_pa_loss.py
 
 compute-pa: $(PA_LOSS_CSV)
 	@echo "[make compute-pa] $(PA_LOSS_CSV) ready"
+
+# ----- compute-flood (observed flood inundation x canopy per NCR barangay) -----
+# Two steps. compute_flood_canopy.py is the network step (Earth Engine, personal
+# key): Sentinel-1 SAR change detection for the July 2025 monsoon flood plus the
+# confounder bands, reduced per barangay to the hash-pinned CSV. analyze_flood_canopy.py
+# is offline: the confounder-controlled regression, the map GeoJSON, and the summary
+# JSON the /flood-risk page reads. No published number is hand-typed.
+$(FLOOD_CSV): $(PIPELINE)/compute_flood_canopy.py
+	$(PY) $(PIPELINE)/compute_flood_canopy.py
+
+$(FLOOD_GEOJSON): $(FLOOD_CSV) $(PIPELINE)/analyze_flood_canopy.py
+	$(PY) $(PIPELINE)/analyze_flood_canopy.py
+
+compute-flood: $(FLOOD_GEOJSON)
+	@echo "[make compute-flood] $(FLOOD_CSV) + $(FLOOD_GEOJSON) ready"
 
 $(PER_LGU_GEOJSON): $(PER_LGU_CSV) $(PIPELINE)/csv_to_geojson.py
 	$(PY) $(PIPELINE)/csv_to_geojson.py
@@ -154,6 +174,27 @@ hash-verify-pa: $(PA_LOSS_CSV)
 	else \
 	  echo "[hash-verify-pa] FAIL: pa_forest_loss.csv sha256 = $$actual (expected $$expected)"; \
 	  echo "[hash-verify-pa] Likely cause: WDPA/Hansen asset drift or dependency drift."; \
+	  exit 1; \
+	fi
+
+# Flood x canopy CSV is byte-pinned the same way (Sentinel-1 reduceRegions output).
+EXPECTED_HASH_FLOOD := 886400ea525f01d4
+
+hash-flood:
+	@$(PY) -c "import hashlib, os; \
+p='$(FLOOD_CSV)'; \
+print(p, 'sha256:', (hashlib.sha256(open(p,'rb').read()).hexdigest()[:16] if os.path.exists(p) else 'missing'))"
+
+hash-verify-flood: $(FLOOD_CSV)
+	@actual=$$($(PY) -c "import hashlib; print(hashlib.sha256(open('$(FLOOD_CSV)','rb').read()).hexdigest()[:16])"); \
+	expected="$(EXPECTED_HASH_FLOOD)"; \
+	if [ "$$expected" = "PENDING" ]; then \
+	  echo "[hash-verify-flood] SKIP: canonical hash not yet pinned (unpinned-hash)"; \
+	elif [ "$$actual" = "$$expected" ]; then \
+	  echo "[hash-verify-flood] OK: flood_canopy_barangay.csv sha256 = $$actual"; \
+	else \
+	  echo "[hash-verify-flood] FAIL: flood_canopy_barangay.csv sha256 = $$actual (expected $$expected)"; \
+	  echo "[hash-verify-flood] Likely cause: Sentinel-1/MERIT/Dynamic World asset drift or dependency drift."; \
 	  exit 1; \
 	fi
 
@@ -269,7 +310,7 @@ print('[smoke] title check:', 'Leaves.PH' in b); \
 print('[smoke] method check (NDVI):', 'NDVI' in b); \
 import sys; sys.exit(0 if ok else 1)"
 
-release: verify hash-verify hash-verify-pa release-build release-tag release-zenodo
+release: verify hash-verify hash-verify-pa hash-verify-flood release-build release-tag release-zenodo
 	@echo
 	@echo "[release] v$(VERSION) reached step 5/7."
 	@echo "  Step 6 (release-hf) requires HUGGINGFACE_HUB_TOKEN"

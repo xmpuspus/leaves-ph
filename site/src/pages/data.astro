@@ -46,6 +46,16 @@ import Base from "../layouts/Base.astro";
           <td class="px-3 py-2">Per-PA simplified polygons; props = loss_ha, forest2000_ha, pct_of_forest2000, pct_of_pa, desig, lon/lat. The protected-areas map layer.</td>
         </tr>
         <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/data/flood/flood_canopy_barangay.csv" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">flood_canopy_barangay.csv</a></td>
+          <td class="px-3 py-2">CSV</td>
+          <td class="px-3 py-2">One row per NCR barangay. Columns: barangay_name, lgu_name, total_ha, canopy_pct_2025, canopy_pct_2019, canopy_trend_pct_per_yr, flood_frac, flood_pct, hand_m, elev_m, builtup_prob, dist_water_m. Observed July 2025 Sentinel-1 inundation paired with canopy and flood confounders. Powers the <a href="/flood-risk" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">flood and canopy</a> screen. A radar lower bound, not a causal model.</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
+          <td class="px-3 py-2"><a href="/data/flood_canopy_barangay.geojson" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">flood_canopy_barangay.geojson</a></td>
+          <td class="px-3 py-2">GeoJSON</td>
+          <td class="px-3 py-2">892 barangay polygons; props = canopy_pct, canopy_trend, flood_pct, hand_m, builtup_prob, dist_water_m, flood_class, canopy_tercile, priority. The flood-and-canopy map layer.</td>
+        </tr>
+        <tr class="border-t border-ink-300/30">
           <td class="px-3 py-2"><a href="https://github.com/xmpuspus/leaves-ph/blob/main/BENCHMARKS.md" class="text-umber-700 underline decoration-umber-500/50 underline-offset-2">BENCHMARKS.md</a></td>
           <td class="px-3 py-2">Markdown</td>
           <td class="px-3 py-2">Methodology cross-reference: adjacent published NCR canopy estimates (DENR, GFW, EJN, ScienceKonek, Meta) with their respective definitions; per-LGU MAE against the Meta calibration layer</td>
